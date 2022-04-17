@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "665422451219",
+    "project_id": "tapea-do",
+    "storage_bucket": "tapea-do.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665422451219:android:197e9f064b4fcbc5c3e5e6",
+        "android_client_info": {
+          "package_name": "do.tapea"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "665422451219-njhjadfjba1ia7sl1f6f3d1q2k2fmu9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "do.tapea",
+            "certificate_hash": "bb763227f73cfbf0deb3542fda1ab4b34144e0af"
+          }
+        },
+        {
+          "client_id": "665422451219-5qfsblrfomh9u2t4425vc90fun5n8i9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwoSRiuBwneDYDE0OGa3KzLT_Y2RzIq8w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "665422451219-5qfsblrfomh9u2t4425vc90fun5n8i9r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "665422451219-gckv16ba3vlq49clorc50i2196tao8b5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tapea"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
