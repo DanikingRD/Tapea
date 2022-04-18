@@ -10,6 +10,7 @@ import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
 import 'package:tapea/widget/auth_text_field.dart';
+import 'package:tapea/widget/loading_indicator.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -39,33 +40,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
     service.signUp(
       email: _emailController.text,
       password: _passwordController.text,
-      onFail: notifySignUpError,
+      onFail: (msg) {
+        notifySignUpError(
+          code: msg,
+          onClose: () => setState(() => _loading = false),
+        );
+      },
       onSuccess: (User? user) async {
         await service.sendEmailVerification();
         notify(
-            context: context,
-            msg: 'We\'ve sent you an email verification link.',
-            onClose: () {
-              setState(() => _loading = false);
-              Navigator.pushNamed(context, Routes.login);
-            });
+          context: context,
+          msg: 'We\'ve sent you an email verification link.',
+          onClose: () {
+            setState(() => _loading = false);
+            Navigator.pushNamed(context, Routes.login);
+          },
+        );
       },
     );
   }
 
-  void notifySignUpError(String code) {
+  void notifySignUpError({
+    Function()? onClose,
+    required String code,
+  }) {
     // Auth service does not returns an error code for empty fields
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       notify(
         context: context,
         msg: 'The email and password fields are required.',
+        onClose: onClose,
       );
       return;
     } else {
-      notify(
-        context: context,
-        msg: code,
-      );
+      notify(context: context, msg: code, onClose: onClose);
     }
   }
 
@@ -109,112 +117,114 @@ class _SignUpScreenState extends State<SignUpScreen> {
       //   ),
       //   centerTitle: true,
       // ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: size.height * 0.1),
-                // Image.asset(
-                //   "assets/images/tapea_logo.png",
-                //   height: 64,
-                // ),
+      body: _loading
+          ? const LoadingIndicator()
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: size.height * 0.1),
+                      // Image.asset(
+                      //   "assets/images/tapea_logo.png",
+                      //   height: 64,
+                      // ),
 
-                // Stack(
-                //   children: [
-                //     CircleAvatar(
-                //       radius: 64,
-                //       backgroundImage: getAvatar(),
-                //     ),
-                //     Positioned(
-                //       bottom: -10,
-                //       left: 80,
-                //       child: IconButton(
-                //         onPressed: () async => selectImage(),
-                //         icon: const Icon(Icons.add_a_photo),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                Text(
-                  'Email',
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(
-                    controller: _emailController,
-                  ),
-                ),
-                Text(
-                  'Password',
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(
-                    hiddenText: true,
-                    controller: _passwordController,
-                  ),
-                ),
-                margin,
-                AuthButton(onTap: () => signUp(), text: 'Sign up'),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Flexible(
-                //       child: Container(
-                //         height: 1,
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //     const Padding(
-                //       padding: EdgeInsets.symmetric(horizontal: 18),
-                //       child: Text('OR'),
-                //     ),
-                //     Flexible(
-                //       child: Container(
-                //         height: 1,
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                margin,
-                // buildLoginButton(
-                //   text: 'Sign up with Google',
-                //   img: Image.asset('assets/icons/google.png'),
-                //   onTap: () {},
-                // ),
-                // margin,
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Have an account ? '),
-                    GestureDetector(
-                      onTap: () =>
-                          Navigator.pushReplacementNamed(context, Routes.login),
-                      child: Text(
-                        'Log in',
+                      // Stack(
+                      //   children: [
+                      //     CircleAvatar(
+                      //       radius: 64,
+                      //       backgroundImage: getAvatar(),
+                      //     ),
+                      //     Positioned(
+                      //       bottom: -10,
+                      //       left: 80,
+                      //       child: IconButton(
+                      //         onPressed: () async => selectImage(),
+                      //         icon: const Icon(Icons.add_a_photo),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      Text(
+                        'Email',
                         style: theme.textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: AuthTextField(
+                          controller: _emailController,
+                        ),
+                      ),
+                      Text(
+                        'Password',
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: AuthTextField(
+                          hiddenText: true,
+                          controller: _passwordController,
+                        ),
+                      ),
+                      margin,
+                      AuthButton(onTap: () => signUp(), text: 'Sign up'),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Flexible(
+                      //       child: Container(
+                      //         height: 1,
+                      //         color: Colors.black,
+                      //       ),
+                      //     ),
+                      //     const Padding(
+                      //       padding: EdgeInsets.symmetric(horizontal: 18),
+                      //       child: Text('OR'),
+                      //     ),
+                      //     Flexible(
+                      //       child: Container(
+                      //         height: 1,
+                      //         color: Colors.black,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      margin,
+                      // buildLoginButton(
+                      //   text: 'Sign up with Google',
+                      //   img: Image.asset('assets/icons/google.png'),
+                      //   onTap: () {},
+                      // ),
+                      // margin,
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Have an account ? '),
+                          GestureDetector(
+                            onTap: () => Navigator.pushReplacementNamed(
+                                context, Routes.login),
+                            child: Text(
+                              'Log in',
+                              style: theme.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 

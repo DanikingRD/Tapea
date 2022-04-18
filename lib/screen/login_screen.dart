@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart' as constants;
 import 'package:tapea/routes.dart';
-import 'package:tapea/screen/verification_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
@@ -20,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _loading = false;
 
   @override
   void dispose() {
@@ -30,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void logIn() async {
     if (hasEmptyInputs()) return;
+    setState(() => _loading = true);
     final FirebaseAuthService service = context.read<FirebaseAuthService>();
     await service.signIn(
       email: _emailController.text,
@@ -37,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onFail: (String msg) => notify(
         context: context,
         msg: msg,
+        onClose: () => setState(() => _loading = false),
       ),
       onSuccess: (User? user) {
         if (!service.isEmailVerified) {
@@ -45,6 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
           notify(
             context: context,
             msg: 'Signed In successfully!',
+            onClose: () {
+              Navigator.pushReplacementNamed(context, Routes.home);
+              setState(() => _loading = false);
+            },
           );
         }
       },
