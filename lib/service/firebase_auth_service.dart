@@ -63,8 +63,9 @@ class FirebaseAuthService {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-     await FirebaseAuth.instance.signInWithCredential(credential);
+    await FirebaseAuth.instance.signInWithCredential(credential);
   }
+
   /// Sends a verification email to a user.
   Future<void> sendEmailVerification() {
     return _instance.currentUser!.sendEmailVerification();
@@ -77,6 +78,9 @@ class FirebaseAuthService {
   Future<void> updateName(String name) {
     return _instance.currentUser!.updateDisplayName(name);
   }
+
+  Stream<User?> get authStateChanges => _instance.authStateChanges();
+
   /// Refreshes the current user, if signed in.
   Future<void> reloadUser() => _instance.currentUser!.reload();
 

@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tapea/auth_listener.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/firebase_options.dart';
 import 'package:tapea/routes.dart';
+import 'package:tapea/screen/profile_setup.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:flutter/services.dart';
@@ -37,20 +39,19 @@ class AppInitializer extends StatelessWidget {
         title: 'Tapea',
         // Light theme
         theme: ThemeData(
-          brightness: Brightness.light, 
+          brightness: Brightness.light,
           scaffoldBackgroundColor: colors.kBackgroundColor,
           fontFamily: 'Montserrat',
           appBarTheme: AppBarTheme.of(context).copyWith(
             backgroundColor: colors.kBackgroundColor,
             elevation: 0,
             titleTextStyle: const TextStyle(
-              color: colors.kPrimaryColor,
-              fontSize: 20,
-              fontWeight: FontWeight.w600
-            ),
+                color: colors.kPrimaryColor,
+                fontSize: 20,
+                fontWeight: FontWeight.w600),
             iconTheme: const IconThemeData(
-            color: colors.kPrimaryColor,
-          ),
+              color: colors.kPrimaryColor,
+            ),
           ),
           textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(
@@ -59,7 +60,11 @@ class AppInitializer extends StatelessWidget {
           ),
         ),
         themeMode: ThemeMode.light,
-        home: const WelcomeScreen(),
+        home: const AuthListener(
+          root: WelcomeScreen(),
+          home: ProfileSetup(),
+        ),
+        //home: const ProfileSetup(),
         onGenerateRoute: Routes.build,
         // home: const ResponsiveLayout(
         //   desktopLayout: DesktopLayout(),
