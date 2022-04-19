@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/widget/loading_indicator.dart';
 
 class AuthButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+  final bool loading;
   const AuthButton({
     Key? key,
     required this.onTap,
     required this.text,
+    this.loading = false,
   }) : super(key: key);
-  final String text;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class AuthButton extends StatelessWidget {
         minimumSize: const Size(double.infinity, 40),
       ),
       onPressed: onTap,
-      child: Text(text),
+      child: loading ? const LoadingIndicator() : Text(text),
     );
   }
 }

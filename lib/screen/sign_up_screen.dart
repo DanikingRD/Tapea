@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart' as constants;
+import 'package:tapea/model/user_model.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
 import 'package:tapea/widget/auth_text_field.dart';
@@ -77,22 +79,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void selectImage() async {
-    final Uint8List? data = await pickImage();
-    // Prevents resetting the selected image back to null if the user cancels the action.
-    if (data != null) {
-      setState(() => _selectedImage = data);
-    }
-  }
-
-  ImageProvider<Object> getAvatar() {
-    if (_selectedImage == null) {
-      return const AssetImage('assets/icons/default_avatar.jpg');
-    } else {
-      return MemoryImage(_selectedImage!);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -132,22 +118,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //   height: 64,
                       // ),
 
-                      // Stack(
-                      //   children: [
-                      //     CircleAvatar(
-                      //       radius: 64,
-                      //       backgroundImage: getAvatar(),
-                      //     ),
-                      //     Positioned(
-                      //       bottom: -10,
-                      //       left: 80,
-                      //       child: IconButton(
-                      //         onPressed: () async => selectImage(),
-                      //         icon: const Icon(Icons.add_a_photo),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                       Text(
                         'Email',
                         style: theme.textTheme.bodyLarge!.copyWith(

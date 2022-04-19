@@ -1,8 +1,14 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tapea/model/card_model.dart';
+import 'package:tapea/model/user_model.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/service/firestore_datadase_service.dart';
+import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
+import 'package:tapea/widget/auth_text_field.dart';
 
 class ProfileSetup extends StatefulWidget {
   const ProfileSetup({Key? key}) : super(key: key);
@@ -12,22 +18,148 @@ class ProfileSetup extends StatefulWidget {
 }
 
 class _ProfileSetupState extends State<ProfileSetup> {
+  final TextEditingController _profileTitle = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _jobController = TextEditingController();
+  final TextEditingController _companyController = TextEditingController();
+  Uint8List? _selectedImage;
+  bool _loading = false;
+
+  @override
+  void dispose() {
+    _profileTitle.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _jobController.dispose();
+    _companyController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    final TextStyle textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
+          fontWeight: FontWeight.bold,
+        );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create your first profile'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            AuthButton(onTap: () async => saveProfile(), text: 'Save')
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 64,
+                      backgroundImage: getAvatar(),
+                    ),
+                    Positioned(
+                      bottom: -10,
+                      left: 80,
+                      child: IconButton(
+                        onPressed: () async => selectImage(),
+                        icon: const Icon(Icons.add_a_photo),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: size.height * 0.05),
+              Text('Profile Title', style: textStyle),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: AuthTextField(controller: _profileTitle),
+              ),
+              Text('First Name', style: textStyle),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: AuthTextField(controller: _firstNameController),
+              ),
+              Text('Last Name', style: textStyle),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: AuthTextField(controller: _lastNameController),
+              ),
+              Text('Job', style: textStyle),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: AuthTextField(controller: _jobController),
+              ),
+              Text('Company', style: textStyle),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: AuthTextField(controller: _companyController),
+              ),
+              AuthButton(
+                onTap: () async => saveAll(),
+                text: 'Save',
+                loading: _loading,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void saveProfile() async {}
+  void saveAll() async {
+    if (_profileTitle.text.isEmpty) {
+      notify(context: context, msg: 'You must provide a profile title.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+    });
+    final FirebaseAuthService auth = context.read<FirebaseAuthService>();
+    final String userId = auth.user!.uid;
+    await saveUser(userId);
+    await saveProfile(userId);
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> saveUser(String id) async {
+    final UserModel model = UserModel(
+      id: id,
+    );
+    final database = context.read<FirestoreDatabaseService>();
+    return await database.addUser(user: model);
+  }
+
+  Future<void> saveProfile(String userId) async {
+    final ProfileModel profile = ProfileModel(
+      title: _profileTitle.text,
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      jobTitle: _jobController.text,
+      company: _companyController.text,
+    );
+    final database = context.read<FirestoreDatabaseService>();
+    return await database.addUserProfile(userId: userId, profile: profile);
+  }
+
+  void selectImage() async {
+    final Uint8List? data = await pickImage();
+    // Prevents resetting the selected image back to null if the user cancels the action.
+    if (data != null) {
+      setState(() => _selectedImage = data);
+    }
+  }
+
+  ImageProvider<Object> getAvatar() {
+    if (_selectedImage == null) {
+      return const AssetImage('assets/icons/default_avatar.jpg');
+    } else {
+      return MemoryImage(_selectedImage!);
+    }
+  }
 }

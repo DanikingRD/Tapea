@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:tapea/screen/profile_setup.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:flutter/services.dart';
+import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/colors.dart' as colors;
 
 void main(List<String> args) async {
@@ -32,6 +34,9 @@ class AppInitializer extends StatelessWidget {
       providers: [
         Provider<FirebaseAuthService>(
           create: (_) => FirebaseAuthService(FirebaseAuth.instance),
+        ),
+        Provider<FirestoreDatabaseService>(
+          create: (_) => FirestoreDatabaseService(FirebaseFirestore.instance),
         )
       ],
       child: MaterialApp(
@@ -60,8 +65,8 @@ class AppInitializer extends StatelessWidget {
           ),
         ),
         themeMode: ThemeMode.light,
-        home: const AuthListener(
-          root: WelcomeScreen(),
+        home: AuthListener(
+          root: const WelcomeScreen(),
           home: ProfileSetup(),
         ),
         //home: const ProfileSetup(),

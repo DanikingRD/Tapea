@@ -27,14 +27,14 @@ class AuthListener extends StatelessWidget {
     return StreamBuilder(
       stream: service.authStateChanges,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const LoadingIndicator();
-        } else {
-          if (snapshot.hasData) {
-            return home;
-          } else {
+        if (snapshot.connectionState == ConnectionState.active) {
+          if (!snapshot.hasData) {
             return root;
+          } else {
+            return home;
           }
+        } else {
+          return const LoadingIndicator();
         }
       },
     );
