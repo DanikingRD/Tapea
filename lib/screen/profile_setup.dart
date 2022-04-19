@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tapea/model/card_model.dart';
 import 'package:tapea/model/user_model.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/service/firebase_storage_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
@@ -121,7 +122,11 @@ class _ProfileSetupState extends State<ProfileSetup> {
     final FirebaseAuthService auth = context.read<FirebaseAuthService>();
     final String userId = auth.user!.uid;
     await saveUser(userId);
-    await saveProfile(userId);
+    String? url;
+    if (_selectedImage != null) {
+      url = await savePhoto(userId, _profileTitle.text);
+    }
+    await saveProfile(userId, url);
     setState(() {
       _loading = false;
     });
@@ -135,16 +140,30 @@ class _ProfileSetupState extends State<ProfileSetup> {
     return await database.addUser(user: model);
   }
 
-  Future<void> saveProfile(String userId) async {
+  Future<void> saveProfile(String userId, String? photoUrl) async {
     final ProfileModel profile = ProfileModel(
       title: _profileTitle.text,
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
       jobTitle: _jobController.text,
       company: _companyController.text,
+      photoUrl: photoUrl,
     );
     final database = context.read<FirestoreDatabaseService>();
     return await database.addUserProfile(userId: userId, profile: profile);
+  }
+
+  Future<String?> savePhoto(String userId, String profileTitle) async {
+    final storage = context.read<FirebaseStorageService>();
+    String? url;
+    await storage.uploadProfilePhoto(
+      userId: userId,
+      profileTitle: profileTitle,
+      photo: _selectedImage!,
+      onSuccess: (_url) => url = _url,
+      onFail: (msg) => notify(context: context, msg: msg),
+    );
+    return url;
   }
 
   void selectImage() async {

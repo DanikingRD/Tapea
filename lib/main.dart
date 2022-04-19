@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/auth_listener.dart';
@@ -11,6 +12,7 @@ import 'package:tapea/screen/profile_setup.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:flutter/services.dart';
+import 'package:tapea/service/firebase_storage_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/colors.dart' as colors;
 
@@ -37,6 +39,9 @@ class AppInitializer extends StatelessWidget {
         ),
         Provider<FirestoreDatabaseService>(
           create: (_) => FirestoreDatabaseService(FirebaseFirestore.instance),
+        ),
+        Provider<FirebaseStorageService>(
+          create: (_) => FirebaseStorageService(FirebaseStorage.instance),
         )
       ],
       child: MaterialApp(

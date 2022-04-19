@@ -4,6 +4,7 @@ class ProfileModel {
   final String lastName;
   final String jobTitle;
   final String company;
+  final String? photoUrl;
 
   ProfileModel({
     required this.title,
@@ -11,6 +12,7 @@ class ProfileModel {
     required this.lastName,
     required this.jobTitle,
     required this.company,
+    this.photoUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class ProfileModel {
       'lastName': lastName,
       'jobTitle': jobTitle,
       'company': company,
+      'photoUrl': photoUrl
     };
   }
 
@@ -30,11 +33,12 @@ class ProfileModel {
       lastName: map['lastName'],
       jobTitle: map['jobTitle'],
       company: map['company'],
+      photoUrl: map['photoUrl'],
     );
   }
 
   @override
   String toString() {
-    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company)';
+    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl)';
   }
 }
