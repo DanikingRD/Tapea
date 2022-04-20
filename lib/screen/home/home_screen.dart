@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:tapea/model/card_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/screen/home/components/home_layout_component.dart';
+import 'package:tapea/screen/home/profile_screen.dart';
 import 'package:tapea/screen/home/share_profile_screen.dart';
 import 'package:tapea/util/colors.dart';
 
@@ -45,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> readProfile() async {
     final ProfileNotifier notifier = context.read<ProfileNotifier>();
-    return await notifier.update(context);
+    final String profile = context.read<UserNotifier>().user.defaultProfile;
+    return await notifier.read(context, profile);
   }
 
   @override
@@ -65,9 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return IndexedStack(
       index: _selectedPage,
       children: [
-        Text('kadosk'),
+        const ProfileScreen(),
         Text('dsa'),
-        ShareProfileScreen(),
+        ShareProfileScreen(profile: context.read<ProfileNotifier>().profile),
       ],
     );
   }

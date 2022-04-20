@@ -9,10 +9,10 @@ class ProfileNotifier extends ChangeNotifier {
 
   ProfileModel get profile => _profile!;
 
-  Future<void> update(BuildContext context) async {
+  Future<void> read(BuildContext context, String title) async {
     final id = context.read<UserNotifier>().user.id;
     final database = context.read<FirestoreDatabaseService>();
-    _profile = await database.readProfile(userId: id);
+    _profile = await database.readProfile(userId: id, title: title);
     notifyListeners();
   }
 }

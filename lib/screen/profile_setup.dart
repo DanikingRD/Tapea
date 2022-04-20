@@ -148,10 +148,8 @@ class _ProfileSetupState extends State<ProfileSetup> {
   }
 
   Future<void> saveUser(String id) async {
-    final UserModel model = UserModel(
-      id: id,
-      profiles: 1,
-    );
+    final UserModel model =
+        UserModel(id: id, profiles: 1, defaultProfile: _profileTitle.text);
     final database = context.read<FirestoreDatabaseService>();
     return await database.addUser(user: model);
   }

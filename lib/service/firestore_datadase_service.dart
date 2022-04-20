@@ -25,10 +25,9 @@ class FirestoreDatabaseService {
     return json.data()!;
   }
 
-  Future<ProfileModel> readProfile({
-    required String userId,
-  }) async {
-    final json = await profilesRef(userId: userId).doc(userId).get();
+  Future<ProfileModel> readProfile(
+      {required String userId, required String title}) async {
+    final json = await profilesRef(userId: userId).doc(title).get();
     return json.data()!;
   }
 

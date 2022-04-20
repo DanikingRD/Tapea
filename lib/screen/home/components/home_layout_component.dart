@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tapea/constants.dart';
 
 class HomeLayoutComponent extends StatefulWidget {
   final Widget body;
@@ -19,7 +20,10 @@ class _HomeLayoutComponentState extends State<HomeLayoutComponent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widget.body,
+      backgroundColor: kHomeBgColor,
+      body: SafeArea(
+        child: widget.body,
+      ),
       bottomNavigationBar: widget.footer,
     );
   }
