@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/model/card_model.dart';
 import 'package:tapea/model/user_model.dart';
+import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firebase_storage_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
@@ -111,11 +112,24 @@ class _ProfileSetupState extends State<ProfileSetup> {
     );
   }
 
-  void saveAll() async {
+  bool isValid() {
     if (_profileTitle.text.isEmpty) {
-      notify(context: context, msg: 'You must provide a profile title.');
-      return;
+      notify(context: context, msg: 'Profile title is a mandatory field.');
+      return false;
     }
+    if (_firstNameController.text.isEmpty) {
+      notify(context: context, msg: 'Your name is empty.');
+      return false;
+    }
+    return true;
+  }
+
+  void onFinish() {
+    Navigator.pushNamedAndRemoveUntil(context, Routes.home, (_) => false);
+  }
+
+  void saveAll() async {
+    if (!isValid()) return;
     setState(() {
       _loading = true;
     });
@@ -130,11 +144,13 @@ class _ProfileSetupState extends State<ProfileSetup> {
     setState(() {
       _loading = false;
     });
+    onFinish();
   }
 
   Future<void> saveUser(String id) async {
     final UserModel model = UserModel(
       id: id,
+      profiles: 1,
     );
     final database = context.read<FirestoreDatabaseService>();
     return await database.addUser(user: model);

@@ -15,9 +15,18 @@ class FirebaseStorageService {
     Function(String)? onFail,
   }) async {
     try {
-      Reference ref =
-          _instance.ref().child('profiles').child(userId).child(profileTitle);
-      TaskSnapshot task = await ref.putData(photo);
+      Reference ref = _instance
+          .ref()
+          .child('users')
+          .child(userId)
+          .child(profileTitle)
+          .child('Avatar');
+      TaskSnapshot task = await ref.putData(
+        photo,
+        SettableMetadata(
+          contentType: 'image/jpg',
+        ),
+      );
       print('photo uploaded at bucket ${ref.bucket}');
       final String url = await task.ref.getDownloadURL();
       if (onSuccess != null) onSuccess(url);

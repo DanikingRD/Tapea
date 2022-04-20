@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:tapea/constants.dart';
 import 'package:tapea/routes.dart';
-import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
@@ -19,7 +17,7 @@ class VerificationScreen extends StatelessWidget {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verify your email'),
+        title: const Text('Verify your email'),
         centerTitle: true,
       ),
       body: Padding(
@@ -84,7 +82,7 @@ class VerificationScreen extends StatelessWidget {
         msg: 'Your email has been successfully verified!',
         onClose: () => Navigator.pushReplacementNamed(
           context,
-          Routes.home
+          Routes.profileSetup,
         ),
         content: const Icon(
           Icons.done,

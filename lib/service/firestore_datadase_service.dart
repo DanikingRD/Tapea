@@ -20,6 +20,11 @@ class FirestoreDatabaseService {
     await profilesRef(userId: userId).doc(profile.title).set(profile);
   }
 
+  Future<bool> containsUser(String id) async {
+    final DocumentSnapshot<UserModel> doc = await usersRef().doc(id).get();
+    return doc.exists;
+  }
+
   CollectionReference<UserModel> usersRef() {
     return _instance.collection('users').withConverter<UserModel>(
           fromFirestore: (doc, _) => UserModel.fromJson(doc.data()!),

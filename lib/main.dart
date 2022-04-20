@@ -8,6 +8,7 @@ import 'package:tapea/auth_listener.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/firebase_options.dart';
 import 'package:tapea/routes.dart';
+import 'package:tapea/screen/home/home_screen.dart';
 import 'package:tapea/screen/profile_setup.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
@@ -72,7 +73,7 @@ class AppInitializer extends StatelessWidget {
         themeMode: ThemeMode.light,
         home: AuthListener(
           root: const WelcomeScreen(),
-          home: ProfileSetup(),
+          home: HomeScreen(),
         ),
         //home: const ProfileSetup(),
         onGenerateRoute: Routes.build,

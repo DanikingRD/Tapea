@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart' as constants;
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
 import 'package:tapea/widget/auth_text_field.dart';
@@ -48,13 +49,25 @@ class _LoginScreenState extends State<LoginScreen> {
             context: context,
             msg: 'Signed In successfully!',
             onClose: () {
-              Navigator.pushReplacementNamed(context, Routes.home);
+              onLoggedIn(user!.uid);
               setState(() => _loading = false);
             },
           );
         }
       },
     );
+  }
+
+  void onLoggedIn(String id) async {
+    final database = context.read<FirestoreDatabaseService>();
+    final bool exists = await database.containsUser(id);
+    final String route;
+    if (!exists) {
+      route = Routes.profileSetup;
+    } else {
+      route = Routes.home;
+    }
+    Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
   }
 
   bool hasEmptyInputs() {

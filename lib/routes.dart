@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:tapea/screen/home_screen.dart';
+import 'package:tapea/screen/home/home_screen.dart';
 import 'package:tapea/screen/login_screen.dart';
+import 'package:tapea/screen/profile_setup.dart';
 import 'package:tapea/screen/sign_up_screen.dart';
 import 'package:tapea/screen/verification_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
@@ -11,6 +12,7 @@ class Routes {
   static const String signUp = '/sign_up';
   static const String login = '/log_in';
   static const String verification = '/verification';
+  static const String profileSetup = '/profile_setup';
   static const String home = '/home';
 
   static Route<dynamic> build(RouteSettings settings) {
@@ -33,6 +35,8 @@ class Routes {
           screen: const VerificationScreen(),
           settings: settings,
         );
+      case profileSetup:
+        return bottomToTop(screen: const ProfileSetup(), settings: settings);
       case home:
         return fade(
           screen: const HomeScreen(),
