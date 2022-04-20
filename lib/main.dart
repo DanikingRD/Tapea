@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:tapea/auth_listener.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/firebase_options.dart';
+import 'package:tapea/provider/profile_notifier.dart';
+import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/screen/home/home_screen.dart';
 import 'package:tapea/screen/profile_setup.dart';
@@ -43,6 +45,12 @@ class AppInitializer extends StatelessWidget {
         ),
         Provider<FirebaseStorageService>(
           create: (_) => FirebaseStorageService(FirebaseStorage.instance),
+        ),
+        ChangeNotifierProvider<UserNotifier>(
+          create: (_) => UserNotifier(),
+        ),
+        ChangeNotifierProvider<ProfileNotifier>(
+          create: (_) => ProfileNotifier(),
         )
       ],
       child: MaterialApp(

@@ -20,6 +20,18 @@ class FirestoreDatabaseService {
     await profilesRef(userId: userId).doc(profile.title).set(profile);
   }
 
+  Future<UserModel> readUser(String userId) async {
+    final json = await usersRef().doc(userId).get();
+    return json.data()!;
+  }
+
+  Future<ProfileModel> readProfile({
+    required String userId,
+  }) async {
+    final json = await profilesRef(userId: userId).doc(userId).get();
+    return json.data()!;
+  }
+
   Future<bool> containsUser(String id) async {
     final DocumentSnapshot<UserModel> doc = await usersRef().doc(id).get();
     return doc.exists;
