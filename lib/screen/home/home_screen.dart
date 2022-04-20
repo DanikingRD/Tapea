@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tapea/constants.dart';
 import 'package:tapea/screen/home/components/home_layout_component.dart';
+import 'package:tapea/screen/home/share_profile_screen.dart';
 import 'package:tapea/util/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,8 +25,19 @@ class _HomeScreenState extends State<HomeScreen> {
       FontAwesomeIcons.qrcode,
     ];
     return HomeLayoutComponent(
-      body: Container(),
+      body: getBody(),
       footer: getFooter(context, items),
+    );
+  }
+
+  Widget getBody() {
+    return IndexedStack(
+      index: _selectedPage,
+      children: [
+        Text('kadosk'),
+        Text('dsa'),
+        ShareProfileScreen(),
+      ],
     );
   }
 
@@ -56,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icon(
                       items[index],
                       size: 28,
-                      color: Colors.black,
+                      color: _selectedPage == index
+                          ? kSelectedPageColor
+                          : kRedColor,
                     ),
                     const SizedBox(
                       height: 5,
@@ -66,9 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 6,
                         height: 6,
                         decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black,
-                        ),
+                            shape: BoxShape.circle, color: kRedColor),
                       ),
                     }
                   ],
