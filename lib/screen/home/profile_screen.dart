@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/card_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
+import 'package:tapea/routes.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -32,6 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kHomeBgColor,
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, Routes.profileEditor),
+            icon: const FaIcon(FontAwesomeIcons.pencil),
+          )
+        ],
       ),
       backgroundColor: kHomeBgColor,
       body: SingleChildScrollView(

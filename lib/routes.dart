@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:tapea/screen/auth/login_screen.dart';
 import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
+import 'package:tapea/screen/home/components/profile_editor_screen.dart';
 import 'package:tapea/screen/home/home_screen.dart';
 import 'package:tapea/screen/profile_setup.dart';
 import 'package:tapea/screen/welcome_screen.dart';
@@ -14,6 +15,7 @@ class Routes {
   static const String verification = '/verification';
   static const String profileSetup = '/profile_setup';
   static const String home = '/home';
+  static const String profileEditor = '/profile_editor';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -42,8 +44,13 @@ class Routes {
           screen: const HomeScreen(),
           settings: settings,
         );
+      case profileEditor:
+        return bottomToTop(
+          screen: const ProfileEditorScreen(),
+          settings: settings,
+        );
       default:
-        throw ('Tried to access an unregistered named screen');
+        throw ('Tried to access an unregistered named route');
     }
   }
 

@@ -2,21 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tapea/constants.dart';
 
-class HomeLayoutComponent extends StatefulWidget {
+class HomeLayout extends StatefulWidget {
   final Widget body;
   final Widget footer;
 
-  const HomeLayoutComponent({
+  const HomeLayout({
     Key? key,
     required this.body,
     required this.footer,
   }) : super(key: key);
 
   @override
-  State<HomeLayoutComponent> createState() => _HomeLayoutComponentState();
+  State<HomeLayout> createState() => _HomeLayoutState();
 }
 
-class _HomeLayoutComponentState extends State<HomeLayoutComponent> {
+class _HomeLayoutState extends State<HomeLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
