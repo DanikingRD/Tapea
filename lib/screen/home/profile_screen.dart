@@ -36,7 +36,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: kHomeBgColor,
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, Routes.profileEditor),
+            onPressed: () => Navigator.pushNamed(
+              context,
+              Routes.profileEditor,
+              arguments: true,
+            ),
             icon: const FaIcon(FontAwesomeIcons.pencil),
           )
         ],

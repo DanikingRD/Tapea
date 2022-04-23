@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
-import 'package:tapea/model/card_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
-import 'package:tapea/screen/home/components/home_layout_component.dart';
+import 'package:tapea/screen/home/components/home_layout.dart';
 import 'package:tapea/screen/home/profile_screen.dart';
 import 'package:tapea/screen/home/share_profile_screen.dart';
 import 'package:tapea/util/colors.dart';
@@ -23,32 +21,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedPage = 0;
   bool _loading = false;
+  late final Future<void> user;
+  late final Future<void> profile;
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  void fetchData() async {
-    setState(() {
-      _loading = true;
-    });
-    await readUser();
-    await readProfile();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  Future<void> readUser() async {
-    final UserNotifier notifier = context.read<UserNotifier>();
-    return await notifier.update(context);
-  }
-
-  Future<void> readProfile() async {
-    final ProfileNotifier notifier = context.read<ProfileNotifier>();
-    final String profile = context.read<UserNotifier>().user.defaultProfile;
-    return await notifier.read(context, profile);
   }
 
   @override
@@ -58,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       FontAwesomeIcons.addressBook,
       FontAwesomeIcons.qrcode,
     ];
-    return HomeLayoutComponent(
+    return HomeLayout(
       body: getBody(),
       footer: getFooter(context, items),
     );
@@ -70,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         const ProfileScreen(),
         Text('dsa'),
-        ShareProfileScreen(profile: context.read<ProfileNotifier>().profile),
+        ShareProfileScreen(),
       ],
     );
   }

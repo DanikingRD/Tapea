@@ -15,6 +15,17 @@ class ProfileModel {
     this.photoUrl,
   });
 
+  factory ProfileModel.fromJson(Map<String, dynamic> map) {
+    return ProfileModel(
+      title: map['title'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      jobTitle: map['jobTitle'],
+      company: map['company'],
+      photoUrl: map['photoUrl'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'title': title,
@@ -26,15 +37,16 @@ class ProfileModel {
     };
   }
 
-  factory ProfileModel.fromJson(Map<String, dynamic> map) {
-    return ProfileModel(
-      title: map['title'],
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-      jobTitle: map['jobTitle'],
-      company: map['company'],
-      photoUrl: map['photoUrl'],
-    );
+  // Text-only properties.
+  // Url is not included.
+  List<String> toList() {
+    return [
+      title,
+      firstName,
+      lastName,
+      jobTitle,
+      company,
+    ];
   }
 
   @override

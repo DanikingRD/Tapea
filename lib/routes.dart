@@ -45,8 +45,11 @@ class Routes {
           settings: settings,
         );
       case profileEditor:
+        final bool edit = settings.arguments as bool;
         return bottomToTop(
-          screen: const ProfileEditorScreen(),
+          screen: ProfileEditorScreen(
+            edit: edit,
+          ),
           settings: settings,
         );
       default:
