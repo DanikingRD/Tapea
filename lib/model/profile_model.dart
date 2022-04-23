@@ -1,3 +1,30 @@
+enum ProfileTextField {
+  title,
+  firstName,
+  lastName,
+  jobTitle,
+  company,
+}
+
+extension ProfileTextFieldExtension on ProfileTextField {
+  static String _id(ProfileTextField field) {
+    switch (field) {
+      case ProfileTextField.title:
+        return 'title';
+      case ProfileTextField.firstName:
+        return 'firstName';
+      case ProfileTextField.lastName:
+        return 'lastName';
+      case ProfileTextField.jobTitle:
+        return 'jobTitle';
+      case ProfileTextField.company:
+        return 'company';
+    }
+  }
+
+  String get id => _id(this);
+}
+
 class ProfileModel {
   final String title;
   final String firstName;
@@ -37,16 +64,19 @@ class ProfileModel {
     };
   }
 
-  // Text-only properties.
-  // Url is not included.
-  List<String> toList() {
-    return [
-      title,
-      firstName,
-      lastName,
-      jobTitle,
-      company,
-    ];
+  String getTextField(ProfileTextField field) {
+    switch (field) {
+      case ProfileTextField.title:
+        return title;
+      case ProfileTextField.firstName:
+        return firstName;
+      case ProfileTextField.lastName:
+        return lastName;
+      case ProfileTextField.jobTitle:
+        return jobTitle;
+      case ProfileTextField.company:
+        return company;
+    }
   }
 
   @override

@@ -44,7 +44,7 @@ class _HomeLayoutState extends State<HomeLayout> {
 
   Future<void> readProfile(BuildContext context, String profileTitle) async {
     final ProfileNotifier notifier = context.read<ProfileNotifier>();
-    await notifier.read(context, profileTitle);
+    await notifier.update(context, profileTitle);
   }
 
   @override

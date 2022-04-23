@@ -73,6 +73,7 @@ class AppInitializer extends StatelessWidget {
               color: colors.kPrimaryColor,
             ),
           ),
+          primarySwatch: Colors.red,
           textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(kRedColor),

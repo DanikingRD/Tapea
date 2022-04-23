@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tapea/model/card_model.dart';
+import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';

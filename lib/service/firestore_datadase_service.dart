@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tapea/model/card_model.dart';
+import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 
 class FirestoreDatabaseService {
@@ -25,10 +25,27 @@ class FirestoreDatabaseService {
     return json.data()!;
   }
 
-  Future<ProfileModel> readProfile(
-      {required String userId, required String title}) async {
+  Future<ProfileModel> readProfile({
+    required String userId,
+    required String title,
+  }) async {
     final json = await profilesRef(userId: userId).doc(title).get();
     return json.data()!;
+  }
+
+  Future<void> updateProfile({
+    required String userId,
+    required String title,
+    required Map<String, Object?> data,
+  }) async {
+    await profilesRef(userId: userId).doc(title).update(data);
+  }
+
+  Future<void> updateUser({
+    required String userId,
+    required Map<String, Object?> data,
+  }) async {
+    await usersRef().doc(userId).update(data);
   }
 
   Future<bool> containsUser(String id) async {

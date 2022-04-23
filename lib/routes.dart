@@ -4,6 +4,7 @@ import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/home/components/profile_editor_screen.dart';
 import 'package:tapea/screen/home/home_screen.dart';
+import 'package:tapea/screen/home/profile/add_phone_number_screen.dart';
 import 'package:tapea/screen/profile_setup.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
@@ -16,6 +17,7 @@ class Routes {
   static const String profileSetup = '/profile_setup';
   static const String home = '/home';
   static const String profileEditor = '/profile_editor';
+  static const String addPhoneField = '/add_phone_field';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -52,6 +54,11 @@ class Routes {
           ),
           settings: settings,
         );
+      case addPhoneField:
+        return rightToLeft(
+          screen: const PhoneNumberScreen(),
+          settings: settings,
+        );
       default:
         throw ('Tried to access an unregistered named route');
     }
@@ -75,6 +82,17 @@ class Routes {
     return Transition(
       builder: ((_) => screen),
       transitionEffect: TransitionEffect.fade,
+      settings: settings,
+    );
+  }
+
+  static Transition rightToLeft({
+    required Widget screen,
+    required RouteSettings settings,
+  }) {
+    return Transition(
+      builder: ((_) => screen),
+      transitionEffect: TransitionEffect.rightToLeft,
       settings: settings,
     );
   }
