@@ -1,4 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:tapea/constants.dart';
+
+class CircleIconButton extends StatelessWidget {
+  final Icon icon;
+  final Color? circleColor;
+  final Function()? onPressed;
+
+  const CircleIconButton({
+    Key? key,
+    required this.icon,
+    required this.onPressed,
+    this.circleColor = kSelectedPageColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: icon,
+      style: ElevatedButton.styleFrom(
+        shape: const CircleBorder(),
+        primary: kSelectedPageColor, // <-- Button color
+      ),
+    );
+  }
+}
 
 class CircleIcon extends StatelessWidget {
   final Color backgroundColor;

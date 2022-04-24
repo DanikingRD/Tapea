@@ -10,6 +10,7 @@ import 'package:tapea/screen/home/profile/add_phone_number_screen.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
+import 'package:tapea/widget/circle_icon.dart';
 
 class ProfileEditorScreen extends StatefulWidget {
   final bool edit;
@@ -24,12 +25,12 @@ class ProfileEditorScreen extends StatefulWidget {
 }
 
 class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
-  final List<TextFieldEntry> entries = [
-    TextFieldEntry(label: 'Title', field: ProfileTextField.title),
-    TextFieldEntry(label: 'First Name', field: ProfileTextField.firstName),
-    TextFieldEntry(label: 'Last Name', field: ProfileTextField.lastName),
-    TextFieldEntry(label: 'Company', field: ProfileTextField.company),
-    TextFieldEntry(label: 'Job Title', field: ProfileTextField.jobTitle)
+  final List<_TextFieldEntry> entries = [
+    _TextFieldEntry(label: 'Title', field: ProfileTextField.title),
+    _TextFieldEntry(label: 'First Name', field: ProfileTextField.firstName),
+    _TextFieldEntry(label: 'Last Name', field: ProfileTextField.lastName),
+    _TextFieldEntry(label: 'Company', field: ProfileTextField.company),
+    _TextFieldEntry(label: 'Job Title', field: ProfileTextField.jobTitle)
   ];
   final Map<IconData, Widget> items = {
     FontAwesomeIcons.phone: const PhoneNumberScreen()
@@ -58,7 +59,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       final profileNotifier = context.read<ProfileNotifier>();
       final profile = profileNotifier.profile;
       for (int i = 0; i < entries.length; i++) {
-        final TextFieldEntry entry = entries[i];
+        final _TextFieldEntry entry = entries[i];
         final String text = entry.innerText;
         final ProfileTextField field = entry.field;
         final Map<String, String> checkList = {};
@@ -190,15 +191,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         crossAxisCount: 3,
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
         children: List.generate(3, (index) {
-          return ElevatedButton(
+          return CircleIconButton(
             onPressed: () => selectIcon(context, icons[index]),
-            child: Icon(
+            icon: Icon(
               icons[index],
               color: Colors.white,
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              primary: kSelectedPageColor, // <-- Button color
             ),
           );
         }),
@@ -207,11 +204,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   }
 }
 
-class TextFieldEntry {
+class _TextFieldEntry {
   final String label;
   final ProfileTextField field;
   final TextEditingController controller = TextEditingController();
-  TextFieldEntry({
+  _TextFieldEntry({
     required this.label,
     required this.field,
   });
