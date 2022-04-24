@@ -6,21 +6,21 @@ import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 
-class HomeLayout extends StatefulWidget {
+class HomeView extends StatefulWidget {
   final Widget body;
   final Widget footer;
 
-  const HomeLayout({
+  const HomeView({
     Key? key,
     required this.body,
     required this.footer,
   }) : super(key: key);
 
   @override
-  State<HomeLayout> createState() => _HomeLayoutState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeLayoutState extends State<HomeLayout> {
+class _HomeViewState extends State<HomeView> {
   bool _loading = false;
 
   @override

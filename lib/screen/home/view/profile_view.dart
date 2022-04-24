@@ -7,16 +7,16 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
+class ProfileView extends StatefulWidget {
+  const ProfileView({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileViewState extends State<ProfileView> {
   late final ProfileModel profile;
 
   @override

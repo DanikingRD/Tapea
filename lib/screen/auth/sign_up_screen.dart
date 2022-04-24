@@ -2,13 +2,9 @@ import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tapea/constants.dart' as constants;
-import 'package:tapea/model/user_model.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
-import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
 import 'package:tapea/widget/auth_text_field.dart';

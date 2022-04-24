@@ -7,7 +7,6 @@ import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/screen/home/profile/add_phone_number_screen.dart';
-import 'package:tapea/screen/home/profile/profile_icon.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
@@ -92,7 +91,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Card'),
@@ -129,6 +127,10 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                 const SizedBox(
                   height: 40,
                 ),
+                explanationBox('Tap a field below to add it'),
+                const SizedBox(
+                  height: 10,
+                ),
                 getFields(context)
               }
             ],
@@ -138,7 +140,27 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     );
   }
 
-  static void selectIcon(BuildContext context, IconData profileIcon) {
+  Widget explanationBox(String name) {
+    final Size size = MediaQuery.of(context).size;
+    return SizedBox(
+      width: size.width,
+      height: size.height * 0.05,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 50),
+        child: Card(
+          color: Colors.grey.shade200,
+          child: Center(
+            child: Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void selectIcon(BuildContext context, IconData profileIcon) {
     final String route;
     if (profileIcon == FontAwesomeIcons.phone) {
       route = Routes.addPhoneField;
@@ -148,7 +170,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     Navigator.pushNamed(context, route);
   }
 
-  static Widget getFields(BuildContext context) {
+  Widget getFields(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final List<IconData> icons = [
       FontAwesomeIcons.phone,

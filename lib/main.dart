@@ -66,11 +66,12 @@ class AppInitializer extends StatelessWidget {
             backgroundColor: colors.kBackgroundColor,
             elevation: 0,
             titleTextStyle: const TextStyle(
-                color: colors.kPrimaryColor,
-                fontSize: 20,
-                fontWeight: FontWeight.w600),
-            iconTheme: const IconThemeData(
               color: colors.kPrimaryColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+            iconTheme: const IconThemeData(
+              color: kRedColor,
             ),
           ),
           primarySwatch: Colors.red,

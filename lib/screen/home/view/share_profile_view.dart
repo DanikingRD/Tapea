@@ -4,14 +4,14 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 
-class ShareProfileScreen extends StatefulWidget {
-  ShareProfileScreen();
+class ShareProfileView extends StatefulWidget {
+  const ShareProfileView();
 
   @override
-  State<ShareProfileScreen> createState() => _ShareProfileScreenState();
+  State<ShareProfileView> createState() => _ShareProfileViewState();
 }
 
-class _ShareProfileScreenState extends State<ShareProfileScreen> {
+class _ShareProfileViewState extends State<ShareProfileView> {
   late final ProfileModel profile;
 
   @override

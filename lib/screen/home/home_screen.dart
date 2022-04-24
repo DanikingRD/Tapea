@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
-import 'package:tapea/provider/profile_notifier.dart';
-import 'package:tapea/provider/user_notifier.dart';
-import 'package:tapea/screen/home/components/home_layout.dart';
-import 'package:tapea/screen/home/profile_screen.dart';
-import 'package:tapea/screen/home/share_profile_screen.dart';
+import 'package:tapea/screen/home/view/home_view.dart';
+import 'package:tapea/screen/home/view/profile_view.dart';
+import 'package:tapea/screen/home/view/share_profile_view.dart';
 import 'package:tapea/util/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,9 +17,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedPage = 0;
-  bool _loading = false;
-  late final Future<void> user;
-  late final Future<void> profile;
   @override
   void initState() {
     super.initState();
@@ -35,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
       FontAwesomeIcons.addressBook,
       FontAwesomeIcons.qrcode,
     ];
-    return HomeLayout(
+    return HomeView(
       body: getBody(),
       footer: getFooter(context, items),
     );
@@ -44,10 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget getBody() {
     return IndexedStack(
       index: _selectedPage,
-      children: [
-        const ProfileScreen(),
+      children: const [
+        ProfileView(),
         Text('dsa'),
-        ShareProfileScreen(),
+        ShareProfileView(),
       ],
     );
   }
