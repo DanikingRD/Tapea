@@ -44,6 +44,7 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(widget.icons.length, (index) {
+            final bool selected = widget.currentIndex == index;
             return InkWell(
               onTap: () {
                 widget.onTap!(index);
@@ -53,12 +54,12 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                   Icon(
                     widget.icons[index],
                     size: 28,
-                    color: kRedColor,
+                    color: selected ? kSelectedPageColor : kRedColor,
                   ),
                   const SizedBox(
                     height: 5,
                   ),
-                  if (widget.currentIndex == index) ...{
+                  if (selected) ...{
                     getIndicator(),
                   }
                 ],

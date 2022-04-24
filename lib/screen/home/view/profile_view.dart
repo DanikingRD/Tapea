@@ -5,6 +5,7 @@ import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
+import 'package:tapea/widget/circle_icon.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({
@@ -49,9 +50,44 @@ class _ProfileViewState extends State<ProfileView> {
         child: Column(
           children: [
             getMainInfo(),
+            ..._getTiles(),
           ],
         ),
       ),
+    );
+  }
+
+  List<Widget> _getTiles() {
+    return [
+      _tile(
+        title: '8494069669',
+        icon: FontAwesomeIcons.phone,
+        onPressed: () {},
+      ),
+    ];
+  }
+
+  Widget _tile({
+    required IconData icon,
+    required Function() onPressed,
+    required String title,
+  }) {
+    return ListTile(
+      leading: CircleIconButton(
+        circleSize: 54,
+        icon: Icon(
+          icon,
+          size: 24,
+        ),
+        onPressed: onPressed,
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: const Text('Mobile'),
     );
   }
 

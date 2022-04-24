@@ -5,22 +5,27 @@ class CircleIconButton extends StatelessWidget {
   final Icon icon;
   final Color? circleColor;
   final Function()? onPressed;
-
+  final double circleSize;
   const CircleIconButton({
     Key? key,
     required this.icon,
     required this.onPressed,
     this.circleColor = kSelectedPageColor,
+    this.circleSize = 64,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: icon,
-      style: ElevatedButton.styleFrom(
-        shape: const CircleBorder(),
-        primary: kSelectedPageColor, // <-- Button color
+    return SizedBox(
+      width: circleSize,
+      height: circleSize,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: icon,
+        style: ElevatedButton.styleFrom(
+          shape: const CircleBorder(),
+          primary: kSelectedPageColor, // <-- Button color
+        ),
       ),
     );
   }
