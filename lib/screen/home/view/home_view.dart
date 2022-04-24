@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/user_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
+import 'package:tapea/widget/home_navbar.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 
 class HomeView extends StatefulWidget {
-  final Widget body;
-  final Widget footer;
+  final List<Widget> views;
 
   const HomeView({
     Key? key,
-    required this.body,
-    required this.footer,
+    required this.views,
   }) : super(key: key);
 
   @override
@@ -21,12 +21,20 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final PageController _pageController = PageController();
+  int _view = 0;
   bool _loading = false;
 
   @override
   void initState() {
     super.initState();
     loadUser(context);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   void loadUser(BuildContext context) async {
@@ -53,10 +61,25 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: kHomeBgColor,
       body: _loading
           ? const LoadingIndicator()
-          : SafeArea(
-              child: widget.body,
+          : PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (int page) => setState(() => _view = page),
+              children: widget.views,
             ),
-      bottomNavigationBar: widget.footer,
+      bottomNavigationBar: HomeBottomNavBar(
+        icons: const [
+          FontAwesomeIcons.user,
+          FontAwesomeIcons.addressBook,
+          FontAwesomeIcons.qrcode,
+        ],
+        onTap: (int index) => setView(index),
+        currentIndex: _view,
+      ),
     );
+  }
+
+  void setView(int view) {
+    _pageController.jumpToPage(view);
   }
 }

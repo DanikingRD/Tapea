@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
@@ -49,33 +48,37 @@ class _ProfileViewState extends State<ProfileView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ListTile(
-              title: Text(
-                profile.firstName + profile.lastName,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: profile.jobTitle + "\n",
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    TextSpan(
-                      text: profile.company,
-                      style: Theme.of(context).textTheme.headline6,
-                    )
-                  ],
-                ),
-              ),
-              isThreeLine: true,
-            ),
+            getMainInfo(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget getMainInfo() {
+    return ListTile(
+      title: Text(
+        profile.firstName + profile.lastName,
+        style: const TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: profile.jobTitle + "\n",
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            TextSpan(
+              text: profile.company,
+              style: Theme.of(context).textTheme.headline6,
+            )
+          ],
+        ),
+      ),
+      isThreeLine: true,
     );
   }
 
