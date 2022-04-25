@@ -2,7 +2,13 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_code_picker/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/profile_model.dart';
+import 'package:tapea/provider/profile_notifier.dart';
+import 'package:tapea/provider/user_notifier.dart';
+import 'package:tapea/service/firestore_datadase_service.dart';
+import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
@@ -22,6 +28,22 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   final CountryCode code = CountryCode.fromJson(codes[61]);
   bool internationalNumber = true;
 
+  Future<void> saveChanges(String userId) async {
+    final database = context.read<FirestoreDatabaseService>();
+    final title = context.read<UserNotifier>().user.defaultProfile;
+    await database.updateProfile(
+      userId: userId,
+      title: title,
+      data: {
+        'labels': {
+          ProfileTextFieldType.phoneNumber.id: _optionalField.text,
+        },
+        'phoneNumber': _phoneNumberController.text,
+        'phoneExt': _phoneExt.text,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -33,7 +55,11 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
         backgroundColor: kHomeBgColor,
         actions: [
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              final String? userId = getIdentifier(context);
+              if (userId != null) {
+                await saveChanges(userId);
+              }
               Navigator.pop(context);
             },
             child: const Text(

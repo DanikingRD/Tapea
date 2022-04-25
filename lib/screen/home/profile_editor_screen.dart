@@ -26,11 +26,11 @@ class ProfileEditorScreen extends StatefulWidget {
 
 class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final List<_TextFieldEntry> entries = [
-    _TextFieldEntry(label: 'Title', field: ProfileTextField.title),
-    _TextFieldEntry(label: 'First Name', field: ProfileTextField.firstName),
-    _TextFieldEntry(label: 'Last Name', field: ProfileTextField.lastName),
-    _TextFieldEntry(label: 'Company', field: ProfileTextField.company),
-    _TextFieldEntry(label: 'Job Title', field: ProfileTextField.jobTitle)
+    _TextFieldEntry(label: 'Title', field: ProfileTextFieldType.title),
+    _TextFieldEntry(label: 'First Name', field: ProfileTextFieldType.firstName),
+    _TextFieldEntry(label: 'Last Name', field: ProfileTextFieldType.lastName),
+    _TextFieldEntry(label: 'Company', field: ProfileTextFieldType.company),
+    _TextFieldEntry(label: 'Job Title', field: ProfileTextFieldType.jobTitle)
   ];
   final Map<IconData, Widget> items = {
     FontAwesomeIcons.phone: const PhoneNumberScreen()
@@ -61,10 +61,10 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       for (int i = 0; i < entries.length; i++) {
         final _TextFieldEntry entry = entries[i];
         final String text = entry.innerText;
-        final ProfileTextField field = entry.field;
+        final ProfileTextFieldType field = entry.field;
         final Map<String, String> checkList = {};
-        final String storedData = profile.getTextField(field);
-        if (text != storedData) {
+        final Object? storedData = profile.getFieldByType(field);
+        if (storedData is String) {
           checkList[field.id] = text;
         }
         if (checkList.isNotEmpty) {
@@ -206,7 +206,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
 class _TextFieldEntry {
   final String label;
-  final ProfileTextField field;
+  final ProfileTextFieldType field;
   final TextEditingController controller = TextEditingController();
   _TextFieldEntry({
     required this.label,

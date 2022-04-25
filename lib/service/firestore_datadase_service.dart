@@ -25,6 +25,18 @@ class FirestoreDatabaseService {
     return json.data()!;
   }
 
+  Future<void> updateUser({
+    required String userId,
+    required Map<String, Object?> data,
+  }) async {
+    await usersRef().doc(userId).update(data);
+  }
+
+  Future<bool> containsUser(String id) async {
+    final DocumentSnapshot<UserModel> doc = await usersRef().doc(id).get();
+    return doc.exists;
+  }
+
   Future<ProfileModel> readProfile({
     required String userId,
     required String title,
@@ -39,18 +51,6 @@ class FirestoreDatabaseService {
     required Map<String, Object?> data,
   }) async {
     await profilesRef(userId: userId).doc(title).update(data);
-  }
-
-  Future<void> updateUser({
-    required String userId,
-    required Map<String, Object?> data,
-  }) async {
-    await usersRef().doc(userId).update(data);
-  }
-
-  Future<bool> containsUser(String id) async {
-    final DocumentSnapshot<UserModel> doc = await usersRef().doc(id).get();
-    return doc.exists;
   }
 
   CollectionReference<UserModel> usersRef() {

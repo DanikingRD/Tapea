@@ -1,24 +1,30 @@
-enum ProfileTextField {
+enum ProfileTextFieldType {
   title,
   firstName,
   lastName,
   jobTitle,
   company,
+  phoneNumber,
+  phoneExt,
 }
 
-extension ProfileTextFieldExtension on ProfileTextField {
-  static String _id(ProfileTextField field) {
+extension ProfileFieldTypeExtension on ProfileTextFieldType {
+  static String _id(ProfileTextFieldType field) {
     switch (field) {
-      case ProfileTextField.title:
+      case ProfileTextFieldType.title:
         return 'title';
-      case ProfileTextField.firstName:
+      case ProfileTextFieldType.firstName:
         return 'firstName';
-      case ProfileTextField.lastName:
+      case ProfileTextFieldType.lastName:
         return 'lastName';
-      case ProfileTextField.jobTitle:
+      case ProfileTextFieldType.jobTitle:
         return 'jobTitle';
-      case ProfileTextField.company:
+      case ProfileTextFieldType.company:
         return 'company';
+      case ProfileTextFieldType.phoneNumber:
+        return 'phoneNumber';
+      case ProfileTextFieldType.phoneExt:
+        return 'phoneExt';
     }
   }
 
@@ -32,6 +38,10 @@ class ProfileModel {
   final String jobTitle;
   final String company;
   final String? photoUrl;
+  // Optional fields
+  final Map<String, dynamic>? labels;
+  final String? phoneNumber;
+  final String? phoneExt;
 
   ProfileModel({
     required this.title,
@@ -40,6 +50,9 @@ class ProfileModel {
     required this.jobTitle,
     required this.company,
     this.photoUrl,
+    this.labels,
+    this.phoneNumber,
+    this.phoneExt,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> map) {
@@ -50,6 +63,9 @@ class ProfileModel {
       jobTitle: map['jobTitle'],
       company: map['company'],
       photoUrl: map['photoUrl'],
+      labels: map['labels'],
+      phoneNumber: map['phoneNumber'],
+      phoneExt: map['phoneExt'],
     );
   }
 
@@ -60,27 +76,34 @@ class ProfileModel {
       'lastName': lastName,
       'jobTitle': jobTitle,
       'company': company,
-      'photoUrl': photoUrl
+      'photoUrl': photoUrl,
+      'labels': labels,
+      'phoneNumber': phoneNumber,
+      'phoneExt': phoneExt,
     };
   }
 
-  String getTextField(ProfileTextField field) {
-    switch (field) {
-      case ProfileTextField.title:
+  Object? getFieldByType(ProfileTextFieldType type) {
+    switch (type) {
+      case ProfileTextFieldType.title:
         return title;
-      case ProfileTextField.firstName:
+      case ProfileTextFieldType.firstName:
         return firstName;
-      case ProfileTextField.lastName:
+      case ProfileTextFieldType.lastName:
         return lastName;
-      case ProfileTextField.jobTitle:
+      case ProfileTextFieldType.jobTitle:
         return jobTitle;
-      case ProfileTextField.company:
+      case ProfileTextFieldType.company:
         return company;
+      case ProfileTextFieldType.phoneNumber:
+        return phoneNumber;
+      case ProfileTextFieldType.phoneExt:
+        return phoneExt;
     }
   }
 
   @override
   String toString() {
-    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl)';
+    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl, phoneNumber: $phoneNumber, phoneExt: $phoneExt)';
   }
 }

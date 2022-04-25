@@ -23,6 +23,7 @@ class _ProfileViewState extends State<ProfileView> {
   void initState() {
     super.initState();
     profile = getProfile();
+    print(profile.toString());
   }
 
   ProfileModel getProfile() {
@@ -36,11 +37,11 @@ class _ProfileViewState extends State<ProfileView> {
         backgroundColor: kHomeBgColor,
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(
+            onPressed: () async => await Navigator.pushNamed(
               context,
               Routes.profileEditor,
               arguments: true,
-            ),
+            ).then((value) => setState(() {})),
             icon: const FaIcon(FontAwesomeIcons.pencil),
           )
         ],
