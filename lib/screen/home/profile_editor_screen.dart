@@ -53,11 +53,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     entries[4].text = profile.jobTitle;
   }
 
-  Future<void> updateProfile() async {
+  Future<void> updateProfile(ProfileModel profile) async {
     final String? id = getIdentifier(context);
     if (id != null) {
-      final profileNotifier = context.read<ProfileNotifier>();
-      final profile = profileNotifier.profile;
       for (int i = 0; i < entries.length; i++) {
         final _TextFieldEntry entry = entries[i];
         final String text = entry.innerText;
@@ -68,40 +66,32 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
           checkList[field.id] = text;
         }
         if (checkList.isNotEmpty) {
-          final user = context.read<UserNotifier>().user;
           final database = context.read<FirestoreDatabaseService>();
-          await database.updateProfile(
+          await database.updateDefaultProfile(
             userId: id,
-            title: user.defaultProfile,
             data: checkList,
           );
-          // final profileTitle = ProfileTextField.title.id;
-          // if (checkList.containsKey(profileTitle)) {
-          //   print('UPDATING USER');
-          //   await database.updateUser(
-          //     userId: id,
-          //     data: {
-          //       profileTitle: checkList[profileTitle],
-          //     },
-          //   );
-          // }
         }
       }
     }
   }
 
+  Future<void> saveChanges(ProfileModel profile) async {
+    await updateProfile(profile);
+    await context.read<ProfileNotifier>().update(context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Card'),
         actions: [
           IconButton(
             onPressed: () async {
-              await updateProfile();
+              await saveChanges(profile);
               Navigator.pop(context);
-              String profile = context.read<UserNotifier>().user.defaultProfile;
-              await context.read<ProfileNotifier>().update(context, profile);
             },
             icon: const FaIcon(FontAwesomeIcons.check),
           )

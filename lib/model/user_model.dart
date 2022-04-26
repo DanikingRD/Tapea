@@ -3,8 +3,11 @@ class UserModel {
   final int profiles;
   final String defaultProfile;
 
-  UserModel(
-      {required this.id, required this.profiles, required this.defaultProfile});
+  UserModel({
+    required this.id,
+    required this.profiles,
+    required this.defaultProfile,
+  });
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
@@ -23,5 +26,6 @@ class UserModel {
   }
 
   @override
-  String toString() => 'UserModel(id: $id, profiles: $profiles)';
+  String toString() =>
+      'UserModel(id: $id, profiles: $profiles, defaultProfile: $defaultProfile)';
 }

@@ -9,6 +9,10 @@ enum ProfileTextFieldType {
 }
 
 extension ProfileFieldTypeExtension on ProfileTextFieldType {
+  static bool _label(ProfileTextFieldType type) {
+    return type == ProfileTextFieldType.phoneExt;
+  }
+
   static String _id(ProfileTextFieldType field) {
     switch (field) {
       case ProfileTextFieldType.title:
@@ -29,6 +33,7 @@ extension ProfileFieldTypeExtension on ProfileTextFieldType {
   }
 
   String get id => _id(this);
+  bool get isLabel => _label(this);
 }
 
 class ProfileModel {
@@ -39,9 +44,8 @@ class ProfileModel {
   final String company;
   final String? photoUrl;
   // Optional fields
+  final Map<String, dynamic>? fields;
   final Map<String, dynamic>? labels;
-  final String? phoneNumber;
-  final String? phoneExt;
 
   ProfileModel({
     required this.title,
@@ -50,9 +54,8 @@ class ProfileModel {
     required this.jobTitle,
     required this.company,
     this.photoUrl,
+    this.fields,
     this.labels,
-    this.phoneNumber,
-    this.phoneExt,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> map) {
@@ -63,9 +66,8 @@ class ProfileModel {
       jobTitle: map['jobTitle'],
       company: map['company'],
       photoUrl: map['photoUrl'],
+      fields: map['fields'],
       labels: map['labels'],
-      phoneNumber: map['phoneNumber'],
-      phoneExt: map['phoneExt'],
     );
   }
 
@@ -77,9 +79,8 @@ class ProfileModel {
       'jobTitle': jobTitle,
       'company': company,
       'photoUrl': photoUrl,
+      'fields': fields,
       'labels': labels,
-      'phoneNumber': phoneNumber,
-      'phoneExt': phoneExt,
     };
   }
 
@@ -95,15 +96,25 @@ class ProfileModel {
         return jobTitle;
       case ProfileTextFieldType.company:
         return company;
-      case ProfileTextFieldType.phoneNumber:
-        return phoneNumber;
-      case ProfileTextFieldType.phoneExt:
-        return phoneExt;
+      default:
+        if (type.isLabel) {
+          if (labels == null) {
+            return null; // Prevents 'Null check operator used on a null value'.
+          } else {
+            return labels![type.id];
+          }
+        } else {
+          if (fields == null) {
+            return null; // Prevents 'Null check operator used on a null value'.
+          } else {
+            return fields![type.id];
+          }
+        }
     }
   }
 
   @override
   String toString() {
-    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl, phoneNumber: $phoneNumber, phoneExt: $phoneExt)';
+    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl, phoneNumber: ${fields!['phoneNumber']}, phoneExt: ${labels!['phoneNumber']})';
   }
 }

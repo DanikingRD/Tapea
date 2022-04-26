@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
+import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
@@ -17,23 +18,18 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  late final ProfileModel profile;
-
   @override
   void initState() {
     super.initState();
-    profile = getProfile();
-    print(profile.toString());
-  }
-
-  ProfileModel getProfile() {
-    return context.read<ProfileNotifier>().profile;
   }
 
   @override
   Widget build(BuildContext context) {
+    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
       appBar: AppBar(
+        title: Text(profile.title),
+        centerTitle: true,
         backgroundColor: kHomeBgColor,
         actions: [
           IconButton(
@@ -50,22 +46,29 @@ class _ProfileViewState extends State<ProfileView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            getMainInfo(),
-            ..._getTiles(),
+            getMainInfo(profile),
+            ..._getTiles(profile),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _getTiles() {
-    return [
-      _tile(
-        title: '8494069669',
-        icon: FontAwesomeIcons.phone,
-        onPressed: () {},
-      ),
-    ];
+  List<Widget> _getTiles(ProfileModel profile) {
+    final List<Widget> tiles = [];
+    final phoneNumber = profile.getFieldByType(
+      ProfileTextFieldType.phoneNumber,
+    );
+    if (phoneNumber != null) {
+      tiles.add(
+        _tile(
+          title: phoneNumber as String,
+          icon: FontAwesomeIcons.phone,
+          onPressed: () {},
+        ),
+      );
+    }
+    return tiles;
   }
 
   Widget _tile({
@@ -92,7 +95,7 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget getMainInfo() {
+  Widget getMainInfo(ProfileModel profile) {
     return ListTile(
       title: Text(
         profile.firstName + profile.lastName,

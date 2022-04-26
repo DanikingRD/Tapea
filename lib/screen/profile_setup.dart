@@ -164,7 +164,10 @@ class _ProfileSetupState extends State<ProfileSetup> {
       photoUrl: photoUrl,
     );
     final database = context.read<FirestoreDatabaseService>();
-    return await database.addUserProfile(userId: userId, profile: profile);
+    return await database.addDefaultUserProfile(
+      userId: userId,
+      profile: profile,
+    );
   }
 
   Future<String?> savePhoto(String userId, String profileTitle) async {

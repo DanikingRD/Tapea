@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
@@ -22,13 +24,14 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController();
+  late Future<UserModel> userFuture;
+  late Future<ProfileModel> profileFuture;
   int _view = 0;
-  bool _loading = false;
 
   @override
   void initState() {
     super.initState();
-    loadUser(context);
+    readAll(context);
   }
 
   @override
@@ -37,36 +40,47 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
-  void loadUser(BuildContext context) async {
-    setState(() => _loading = true);
-    final UserModel user = await readUser(context);
-    await readProfile(context, user.defaultProfile);
-    setState(() => _loading = false);
+  void readAll(BuildContext context) async {
+    userFuture = _readUser(context);
+    profileFuture = _readProfile(context);
   }
 
-  Future<UserModel> readUser(BuildContext context) async {
+  Future<UserModel> _readUser(BuildContext context) async {
     final UserNotifier notifier = context.read<UserNotifier>();
     await notifier.update(context);
     return notifier.user;
   }
 
-  Future<void> readProfile(BuildContext context, String profileTitle) async {
+  Future<ProfileModel> _readProfile(
+    BuildContext context,
+  ) async {
     final ProfileNotifier notifier = context.read<ProfileNotifier>();
-    await notifier.update(context, profileTitle);
+    await notifier.update(context);
+    return notifier.profile;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kHomeBgColor,
-      body: _loading
-          ? const LoadingIndicator()
-          : PageView(
+      body: FutureBuilder<List<Object>>(
+        future: Future.wait<Object>([
+          userFuture,
+          profileFuture,
+        ]),
+        builder: (BuildContext context, AsyncSnapshot<Object?> snapshot) {
+          if (snapshot.hasData) {
+            return PageView(
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (int page) => setState(() => _view = page),
               children: widget.views,
-            ),
+            );
+          } else {
+            return const LoadingIndicator();
+          }
+        },
+      ),
       bottomNavigationBar: HomeBottomNavBar(
         icons: const [
           FontAwesomeIcons.user,
