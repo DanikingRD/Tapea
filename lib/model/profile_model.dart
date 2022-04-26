@@ -1,4 +1,4 @@
-enum ProfileTextFieldType {
+enum ProfileFieldType {
   title,
   firstName,
   lastName,
@@ -8,31 +8,32 @@ enum ProfileTextFieldType {
   phoneExt,
 }
 
-extension ProfileFieldTypeExtension on ProfileTextFieldType {
-  static bool _label(ProfileTextFieldType type) {
-    return type == ProfileTextFieldType.phoneExt;
+extension ProfileFieldTypeExtension on ProfileFieldType {
+  static bool _label(ProfileFieldType type) {
+    return type == ProfileFieldType.phoneExt;
   }
 
-  static String _id(ProfileTextFieldType field) {
+  static String _id(ProfileFieldType field) {
     switch (field) {
-      case ProfileTextFieldType.title:
+      case ProfileFieldType.title:
         return 'title';
-      case ProfileTextFieldType.firstName:
+      case ProfileFieldType.firstName:
         return 'firstName';
-      case ProfileTextFieldType.lastName:
+      case ProfileFieldType.lastName:
         return 'lastName';
-      case ProfileTextFieldType.jobTitle:
+      case ProfileFieldType.jobTitle:
         return 'jobTitle';
-      case ProfileTextFieldType.company:
+      case ProfileFieldType.company:
         return 'company';
-      case ProfileTextFieldType.phoneNumber:
+      case ProfileFieldType.phoneNumber:
         return 'phoneNumber';
-      case ProfileTextFieldType.phoneExt:
+      case ProfileFieldType.phoneExt:
         return 'phoneExt';
     }
   }
 
   String get id => _id(this);
+
   bool get isLabel => _label(this);
 }
 
@@ -43,9 +44,8 @@ class ProfileModel {
   final String jobTitle;
   final String company;
   final String? photoUrl;
-  // Optional fields
-  final Map<String, dynamic>? fields;
-  final Map<String, dynamic>? labels;
+  final Map<String, dynamic> fields;
+  final Map<String, dynamic> labels;
 
   ProfileModel({
     required this.title,
@@ -54,8 +54,13 @@ class ProfileModel {
     required this.jobTitle,
     required this.company,
     this.photoUrl,
-    this.fields,
-    this.labels,
+    this.fields = const {
+      'phoneNumber': null,
+      'phoneExt': null,
+    },
+    this.labels = const {
+      'phoneNumber': null,
+    },
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> map) {
@@ -84,37 +89,29 @@ class ProfileModel {
     };
   }
 
-  Object? getFieldByType(ProfileTextFieldType type) {
+  Object? getFieldByType(ProfileFieldType type) {
     switch (type) {
-      case ProfileTextFieldType.title:
+      case ProfileFieldType.title:
         return title;
-      case ProfileTextFieldType.firstName:
+      case ProfileFieldType.firstName:
         return firstName;
-      case ProfileTextFieldType.lastName:
+      case ProfileFieldType.lastName:
         return lastName;
-      case ProfileTextFieldType.jobTitle:
+      case ProfileFieldType.jobTitle:
         return jobTitle;
-      case ProfileTextFieldType.company:
+      case ProfileFieldType.company:
         return company;
       default:
         if (type.isLabel) {
-          if (labels == null) {
-            return null; // Prevents 'Null check operator used on a null value'.
-          } else {
-            return labels![type.id];
-          }
+          return labels[type.id];
         } else {
-          if (fields == null) {
-            return null; // Prevents 'Null check operator used on a null value'.
-          } else {
-            return fields![type.id];
-          }
+          return fields[type.id];
         }
     }
   }
 
   @override
   String toString() {
-    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl, phoneNumber: ${fields!['phoneNumber']}, phoneExt: ${labels!['phoneNumber']})';
+    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl, phoneNumber: ${fields['phoneNumber']}, phoneExt: ${labels['phoneNumber']})';
   }
 }

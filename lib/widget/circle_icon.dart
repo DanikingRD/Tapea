@@ -42,8 +42,8 @@ class CircleIcon extends StatelessWidget {
     Key? key,
     required this.backgroundColor,
     required this.iconData,
-    this.iconSize = 32,
-    this.circleSize = 64,
+    this.iconSize = 24,
+    this.circleSize = 48,
     this.foregroundColor = Colors.white,
   }) : super(key: key);
 

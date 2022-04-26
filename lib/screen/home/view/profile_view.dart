@@ -57,7 +57,7 @@ class _ProfileViewState extends State<ProfileView> {
   List<Widget> _getTiles(ProfileModel profile) {
     final List<Widget> tiles = [];
     final phoneNumber = profile.getFieldByType(
-      ProfileTextFieldType.phoneNumber,
+      ProfileFieldType.phoneNumber,
     );
     if (phoneNumber != null) {
       tiles.add(

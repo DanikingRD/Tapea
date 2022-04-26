@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
+import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
@@ -32,14 +33,16 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
       userId: userId,
       data: {
         'labels': {
-          ProfileTextFieldType.phoneNumber.id: _optionalField.text,
+          ProfileFieldType.phoneNumber.id: _optionalField.text,
         },
         'fields': {
-          ProfileTextFieldType.phoneNumber.id: _phoneNumberController.text,
-          ProfileTextFieldType.phoneExt.id: _phoneExtController.text,
+          ProfileFieldType.phoneNumber.id: _phoneNumberController.text,
+          ProfileFieldType.phoneExt.id: _phoneExtController.text,
         }
       },
     );
+    final profile = context.read<ProfileNotifier>();
+    await profile.update(context);
   }
 
   @override

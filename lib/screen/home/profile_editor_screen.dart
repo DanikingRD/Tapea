@@ -26,15 +26,24 @@ class ProfileEditorScreen extends StatefulWidget {
 
 class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final List<_TextFieldEntry> entries = [
-    _TextFieldEntry(label: 'Title', field: ProfileTextFieldType.title),
-    _TextFieldEntry(label: 'First Name', field: ProfileTextFieldType.firstName),
-    _TextFieldEntry(label: 'Last Name', field: ProfileTextFieldType.lastName),
-    _TextFieldEntry(label: 'Company', field: ProfileTextFieldType.company),
-    _TextFieldEntry(label: 'Job Title', field: ProfileTextFieldType.jobTitle)
+    _TextFieldEntry(label: 'Title', field: ProfileFieldType.title),
+    _TextFieldEntry(label: 'First Name', field: ProfileFieldType.firstName),
+    _TextFieldEntry(label: 'Last Name', field: ProfileFieldType.lastName),
+    _TextFieldEntry(label: 'Company', field: ProfileFieldType.company),
+    _TextFieldEntry(label: 'Job Title', field: ProfileFieldType.jobTitle)
   ];
-  final Map<IconData, Widget> items = {
-    FontAwesomeIcons.phone: const PhoneNumberScreen()
+  static final Map<String, IconData> icons = {
+    ProfileFieldType.phoneNumber.id: FontAwesomeIcons.phone,
   };
+
+  final List<_TextFieldEntry> optionalFields = [
+    _TextFieldEntry(
+      label: 'Enter your phone number',
+      field: ProfileFieldType.phoneNumber,
+      hasOptionalLabel: true,
+      optionalController: TextEditingController(),
+    ),
+  ];
 
   @override
   void initState() {
@@ -59,7 +68,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       for (int i = 0; i < entries.length; i++) {
         final _TextFieldEntry entry = entries[i];
         final String text = entry.innerText;
-        final ProfileTextFieldType field = entry.field;
+        final ProfileFieldType field = entry.field;
         final Map<String, String> checkList = {};
         final Object? storedData = profile.getFieldByType(field);
         if (storedData is String) {
@@ -84,6 +93,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
+    final List<Widget> tiles = _editableTiles(profile);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Card'),
@@ -116,9 +126,22 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
               ),
               if (index == entries.length - 1) ...{
                 const SizedBox(
-                  height: 40,
+                  height: 20,
                 ),
-                explanationBox('Tap a field below to add it'),
+                if (tiles.isNotEmpty) ...{
+                  _explanationBox(
+                    explanation: 'Hold each field to re-order it',
+                    icon: FontAwesomeIcons.upDown,
+                  ),
+                  ...tiles,
+                  const SizedBox(
+                    height: 20,
+                  ),
+                },
+                _explanationBox(
+                  explanation: 'Tap a field below to add it',
+                  icon: FontAwesomeIcons.plus,
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -131,20 +154,93 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     );
   }
 
-  Widget explanationBox(String name) {
+  List<Widget> _editableTiles(ProfileModel profile) {
+    final List<Widget> _tiles = [];
+    // We iterate over all available fields
+    for (int i = 0; i < optionalFields.length; i++) {
+      final _TextFieldEntry entry = optionalFields[i];
+      final Object? field = profile.getFieldByType(entry.field);
+      // If this is true, the user has already initialized the tile
+      if (field != null) {
+        final IconData? icon = icons[entry.field.id];
+        // This shouldn't be null, but who knows.
+        if (icon != null) {
+          entry.controller.text = profile.fields[entry.field.id];
+          if (entry.hasOptionalLabel) {
+            entry.optionalController!.text = profile.labels[entry.field.id];
+          }
+          _tiles.add(
+            _editableField(
+              icon: icon,
+              titleLabel: entry.label,
+              titleController: entry.controller,
+              labelController: entry.optionalController,
+              hasLabel: entry.hasOptionalLabel,
+            ),
+          );
+        }
+      }
+    }
+    return _tiles;
+  }
+
+  Widget _editableField({
+    required IconData icon,
+    required String titleLabel,
+    required TextEditingController titleController,
+    TextEditingController? labelController,
+    bool hasLabel = false,
+  }) {
+    return ListTile(
+      //trailing: Text('dasd'),
+      minVerticalPadding: 0,
+      leading: Column(
+        children: const [
+          SizedBox(
+            height: 8,
+          ),
+          CircleIcon(
+            backgroundColor: kSelectedPageColor,
+            iconData: FontAwesomeIcons.phone,
+          ),
+        ],
+      ),
+      title: BorderlessTextField(
+        controller: titleController,
+        floatingLabel: titleLabel,
+      ),
+      subtitle: hasLabel
+          ? BorderlessTextField(
+              controller: labelController,
+              floatingLabel: 'Label (Optional)',
+            )
+          : const SizedBox.shrink(),
+    );
+  }
+
+  Widget _explanationBox({
+    required String explanation,
+    IconData? icon,
+  }) {
     final Size size = MediaQuery.of(context).size;
     return SizedBox(
-      width: size.width,
+      width: double.infinity,
       height: size.height * 0.05,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50),
+        padding: const EdgeInsets.symmetric(horizontal: 60),
         child: Card(
           color: Colors.grey.shade200,
-          child: Center(
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                explanation,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              if (icon != null) ...{
+                Icon(icon),
+              }
+            ],
           ),
         ),
       ),
@@ -196,11 +292,15 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
 class _TextFieldEntry {
   final String label;
-  final ProfileTextFieldType field;
+  final ProfileFieldType field;
   final TextEditingController controller = TextEditingController();
+  final TextEditingController? optionalController;
+  bool hasOptionalLabel = false;
   _TextFieldEntry({
     required this.label,
     required this.field,
+    this.hasOptionalLabel = false,
+    this.optionalController,
   });
   set text(String _text) => controller.text = _text;
   get innerText => controller.text;
