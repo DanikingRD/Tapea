@@ -5,8 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
-import 'package:tapea/provider/profile_notifier.dart';
-import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
@@ -23,23 +21,23 @@ class PhoneNumberScreen extends StatefulWidget {
 
 class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _phoneExt = TextEditingController();
+  final TextEditingController _phoneExtController = TextEditingController();
   final TextEditingController _optionalField = TextEditingController();
   final CountryCode code = CountryCode.fromJson(codes[61]);
   bool internationalNumber = true;
 
   Future<void> saveChanges(String userId) async {
     final database = context.read<FirestoreDatabaseService>();
-    final title = context.read<UserNotifier>().user.defaultProfile;
-    await database.updateProfile(
+    await database.updateDefaultProfile(
       userId: userId,
-      title: title,
       data: {
         'labels': {
           ProfileTextFieldType.phoneNumber.id: _optionalField.text,
         },
-        'phoneNumber': _phoneNumberController.text,
-        'phoneExt': _phoneExt.text,
+        'fields': {
+          ProfileTextFieldType.phoneNumber.id: _phoneNumberController.text,
+          ProfileTextFieldType.phoneExt.id: _phoneExtController.text,
+        }
       },
     );
   }
@@ -95,11 +93,11 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (_phoneExt.text.isNotEmpty) ...{
+                  if (_phoneExtController.text.isNotEmpty) ...{
                     Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
-                        'Ext. ' + _phoneExt.text,
+                        'Ext. ' + _phoneExtController.text,
                         style: theme.textTheme.bodyMedium!.copyWith(
                           color: theme.disabledColor,
                         ),
@@ -146,7 +144,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: BorderlessTextField(
-                    controller: _phoneExt,
+                    controller: _phoneExtController,
                     floatingLabel: 'Ext.',
                     onChanged: (_) => setState(() => {}),
                     keyboardType: TextInputType.phone,
