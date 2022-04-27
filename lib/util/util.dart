@@ -6,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tapea/constants.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/widget/loading_indicator.dart';
 
 String? getIdentifier(BuildContext context) {
   final provider = context.read<FirebaseAuthService>();
@@ -60,6 +62,27 @@ void notify({
             child: const Text('OK'),
           ),
         ],
+      );
+    },
+  );
+}
+
+void showLoadingBox({
+  required BuildContext context,
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Center(
+        child: Container(
+          width: 125,
+          height: 75,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: kProgressIndicatorBox,
+          ),
+          child: const LoadingIndicator(),
+        ),
       );
     },
   );

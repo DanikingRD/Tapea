@@ -9,3 +9,4 @@ const double kTabletScreenWidth = 900;
 const double kDesktopScreenWidth = 1200;
 const kSplashRadius = Material.defaultSplashRadius * 0.60; // 60%
 const kHomeBgColor = Color.fromARGB(255, 253, 251, 244);
+const kProgressIndicatorBox = Color.fromARGB(255, 234, 226, 203);

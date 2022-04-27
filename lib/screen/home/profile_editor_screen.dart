@@ -6,9 +6,11 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
+import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
+import 'package:tapea/widget/loading_indicator.dart';
 
 class ProfileEditorScreen extends StatefulWidget {
   final bool edit;
@@ -23,13 +25,11 @@ class ProfileEditorScreen extends StatefulWidget {
 }
 
 class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
-  final List<_TextFieldEntry> entries = [
-    _TextFieldEntry(label: 'Title', field: ProfileFieldType.title),
-    _TextFieldEntry(label: 'First Name', field: ProfileFieldType.firstName),
-    _TextFieldEntry(label: 'Last Name', field: ProfileFieldType.lastName),
-    _TextFieldEntry(label: 'Company', field: ProfileFieldType.company),
-    _TextFieldEntry(label: 'Job Title', field: ProfileFieldType.jobTitle)
-  ];
+  final TextFieldManager titleField = TextFieldManager(label: 'Title');
+  final TextFieldManager firstNameField = TextFieldManager(label: 'First Name');
+  final TextFieldManager lastNameField = TextFieldManager(label: 'Last Name');
+  final TextFieldManager companyField = TextFieldManager(label: 'Company');
+  final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
   static final Map<String, IconData> icons = {
     ProfileFieldType.phoneNumber.id: FontAwesomeIcons.phone,
   };
@@ -47,38 +47,54 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   void initState() {
     super.initState();
     if (widget.edit) {
-      collectProfileInfo();
+      updateControllers();
     }
   }
 
-  void collectProfileInfo() {
-    final ProfileModel profile = context.read<ProfileNotifier>().profile;
-    entries[0].text = profile.title;
-    entries[1].text = profile.firstName;
-    entries[2].text = profile.lastName;
-    entries[3].text = profile.company;
-    entries[4].text = profile.jobTitle;
+  @override
+  void dispose() {
+    titleField.dispose();
+    firstNameField.dispose();
+    lastNameField.dispose();
+    companyField.dispose();
+    jobTitleField.dispose();
+    super.dispose();
   }
 
-  Future<void> updateProfile(ProfileModel profile) async {
+  void updateControllers() {
+    final ProfileModel profile = context.read<ProfileNotifier>().profile;
+    titleField.update(profile.title);
+    firstNameField.update(profile.firstName);
+    lastNameField.update(profile.lastName);
+    companyField.update(profile.company);
+    jobTitleField.update(profile.jobTitle);
+  }
+
+  Future<void> updateProfile(ProfileModel oldProfile) async {
     final String? id = getIdentifier(context);
     if (id != null) {
-      for (int i = 0; i < entries.length; i++) {
-        final _TextFieldEntry entry = entries[i];
-        final String text = entry.innerText;
-        final ProfileFieldType field = entry.field;
-        final Map<String, String> checkList = {};
-        final Object? storedData = profile.getFieldByType(field);
-        if (storedData is String) {
-          checkList[field.id] = text;
-        }
-        if (checkList.isNotEmpty) {
-          final database = context.read<FirestoreDatabaseService>();
-          await database.updateDefaultProfile(
-            userId: id,
-            data: checkList,
-          );
-        }
+      final Map<String, dynamic> changes = {};
+      if (titleField.text != oldProfile.title) {
+        changes['title'] = titleField.text;
+      }
+      if (firstNameField.text != oldProfile.firstName) {
+        changes['firstName'] = firstNameField.text;
+      }
+      if (lastNameField.text != oldProfile.lastName) {
+        changes['lastName'] = lastNameField.text;
+      }
+      if (companyField.text != oldProfile.company) {
+        changes['company'] = companyField.text;
+      }
+      if (jobTitleField.text != oldProfile.jobTitle) {
+        changes['jobTitle'] = jobTitleField.text;
+      }
+      if (changes.isNotEmpty) {
+        final db = context.read<FirestoreDatabaseService>();
+        await db.updateDefaultProfile(
+          userId: id,
+          data: changes,
+        );
       }
     }
   }
@@ -86,6 +102,40 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   Future<void> saveChanges(ProfileModel profile) async {
     await updateProfile(profile);
     await context.read<ProfileNotifier>().update(context);
+  }
+
+  TextEditingController getControllers(int index) {
+    switch (index) {
+      case 0:
+        return titleField.controller;
+      case 1:
+        return firstNameField.controller;
+      case 2:
+        return lastNameField.controller;
+      case 3:
+        return companyField.controller;
+      case 4:
+        return jobTitleField.controller;
+      default:
+        throw ('Tried to access an undefined text field');
+    }
+  }
+
+  String getLabels(int index) {
+    switch (index) {
+      case 0:
+        return titleField.label;
+      case 1:
+        return firstNameField.label;
+      case 2:
+        return lastNameField.label;
+      case 3:
+        return companyField.label;
+      case 4:
+        return jobTitleField.label;
+      default:
+        throw ('Tried to access an undefined text field');
+    }
   }
 
   @override
@@ -98,7 +148,10 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         actions: [
           IconButton(
             onPressed: () async {
+              showLoadingBox(context: context);
               await saveChanges(profile);
+              // Pop off to home screen
+              Navigator.pop(context);
               Navigator.pop(context);
             },
             icon: const FaIcon(FontAwesomeIcons.check),
@@ -107,7 +160,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       ),
       body: ListView(
           children: List.generate(
-        entries.length,
+        5, // Text fields
         (index) {
           return Column(
             children: [
@@ -118,11 +171,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                 ),
                 child: BorderlessTextField(
                   centerAll: index == 0,
-                  controller: entries[index].controller,
-                  floatingLabel: entries[index].label,
+                  controller: getControllers(index),
+                  floatingLabel: getLabels(index),
                 ),
               ),
-              if (index == entries.length - 1) ...{
+              if (index == 4) ...{
                 const SizedBox(
                   height: 20,
                 ),
