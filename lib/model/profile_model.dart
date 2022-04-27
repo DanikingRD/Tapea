@@ -89,6 +89,26 @@ class ProfileModel {
     };
   }
 
+  Map<String, dynamic> getInitializedFields() {
+    final Map<String, dynamic> data = {};
+    fields.forEach((key, value) {
+      if (value != null) {
+        data[key] = value;
+      }
+    });
+    return data;
+  }
+
+  Map<String, dynamic> getInitializedLabels() {
+    final Map<String, dynamic> data = {};
+    labels.forEach((key, value) {
+      if (value != null) {
+        data[key] = value;
+      }
+    });
+    return data;
+  }
+
   Object? getFieldByType(ProfileFieldType type) {
     switch (type) {
       case ProfileFieldType.title:

@@ -10,7 +10,6 @@ import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
-import 'package:tapea/widget/loading_indicator.dart';
 
 class ProfileEditorScreen extends StatefulWidget {
   final bool edit;
@@ -30,16 +29,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager lastNameField = TextFieldManager(label: 'Last Name');
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
-  static final Map<String, IconData> icons = {
-    ProfileFieldType.phoneNumber.id: FontAwesomeIcons.phone,
-  };
 
-  final List<_TextFieldEntry> optionalFields = [
-    _TextFieldEntry(
-      label: 'Enter your phone number',
-      field: ProfileFieldType.phoneNumber,
-      hasOptionalLabel: true,
-      optionalController: TextEditingController(),
+  final List<ListTileFieldManager> listTileFields = [
+    ListTileFieldManager(
+      mainFieldLabel: 'Phone Number',
+      type: ProfileFieldType.phoneNumber,
     ),
   ];
 
@@ -47,7 +41,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   void initState() {
     super.initState();
     if (widget.edit) {
-      updateControllers();
+      final ProfileModel profile = context.read<ProfileNotifier>().profile;
+      updateControllers(profile);
+      updateListTilesControllers(profile);
     }
   }
 
@@ -61,8 +57,25 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     super.dispose();
   }
 
-  void updateControllers() {
-    final ProfileModel profile = context.read<ProfileNotifier>().profile;
+  void updateListTilesControllers(ProfileModel profile) {
+    final userFields = profile.getInitializedFields();
+    final userLabels = profile.getInitializedLabels();
+    if (userFields.isNotEmpty) {
+      for (int i = 0; i < listTileFields.length; i++) {
+        final ListTileFieldManager manager = listTileFields[i];
+        if (userFields.containsKey(manager.type.id)) {
+          manager.mainFieldController.text = userFields[manager.type.id];
+          if (userLabels.isNotEmpty) {
+            if (userLabels.containsKey(manager.type.id)) {
+              manager.labelController.text = userLabels[manager.type.id];
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void updateControllers(ProfileModel profile) {
     titleField.update(profile.title);
     firstNameField.update(profile.firstName);
     lastNameField.update(profile.lastName);
@@ -141,7 +154,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
-    final List<Widget> tiles = _editableTiles(profile);
+    final List<Widget> tiles = _createEditableTiles(profile);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Card'),
@@ -205,31 +218,30 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     );
   }
 
-  List<Widget> _editableTiles(ProfileModel profile) {
+  IconData _tileIconFor(ProfileFieldType type) {
+    switch (type) {
+      case ProfileFieldType.phoneNumber:
+        return FontAwesomeIcons.phone;
+      default:
+        throw ('Tried to render an undefined list tile');
+    }
+  }
+
+  List<Widget> _createEditableTiles(ProfileModel profile) {
     final List<Widget> _tiles = [];
-    // We iterate over all available fields
-    for (int i = 0; i < optionalFields.length; i++) {
-      final _TextFieldEntry entry = optionalFields[i];
-      final Object? field = profile.getFieldByType(entry.field);
-      // If this is true, the user has already initialized the tile
-      if (field != null) {
-        final IconData? icon = icons[entry.field.id];
-        // This shouldn't be null, but who knows.
-        if (icon != null) {
-          entry.controller.text = profile.fields[entry.field.id];
-          if (entry.hasOptionalLabel) {
-            entry.optionalController!.text = profile.labels[entry.field.id];
-          }
-          _tiles.add(
-            _editableField(
-              icon: icon,
-              titleLabel: entry.label,
-              titleController: entry.controller,
-              labelController: entry.optionalController,
-              hasLabel: entry.hasOptionalLabel,
-            ),
-          );
-        }
+    final Map<String, dynamic> _userFields = profile.getInitializedFields();
+    final Map<String, dynamic> _userLabels = profile.getInitializedLabels();
+    if (_userFields.isNotEmpty) {
+      for (int i = 0; i < listTileFields.length; i++) {
+        final ListTileFieldManager manager = listTileFields[i];
+        _tiles.add(
+          _editableField(
+            icon: _tileIconFor(manager.type),
+            titleLabel: manager.mainFieldLabel,
+            titleController: manager.mainFieldController,
+            labelController: manager.labelController,
+          ),
+        );
       }
     }
     return _tiles;
@@ -239,20 +251,19 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     required IconData icon,
     required String titleLabel,
     required TextEditingController titleController,
-    TextEditingController? labelController,
-    bool hasLabel = false,
+    required TextEditingController labelController,
   }) {
     return ListTile(
       //trailing: Text('dasd'),
       minVerticalPadding: 0,
       leading: Column(
-        children: const [
-          SizedBox(
+        children: [
+          const SizedBox(
             height: 8,
           ),
           CircleIcon(
             backgroundColor: kSelectedPageColor,
-            iconData: FontAwesomeIcons.phone,
+            iconData: icon,
           ),
         ],
       ),
@@ -260,12 +271,10 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         controller: titleController,
         floatingLabel: titleLabel,
       ),
-      subtitle: hasLabel
-          ? BorderlessTextField(
-              controller: labelController,
-              floatingLabel: 'Label (Optional)',
-            )
-          : const SizedBox.shrink(),
+      subtitle: BorderlessTextField(
+        controller: labelController,
+        floatingLabel: 'Label (Optional)',
+      ),
     );
   }
 
@@ -315,7 +324,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       Icons.email,
       FontAwesomeIcons.youtube,
     ];
-
     return Container(
       width: size.width,
       height: size.height / 2,
@@ -338,25 +346,5 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         }),
       ),
     );
-  }
-}
-
-class _TextFieldEntry {
-  final String label;
-  final ProfileFieldType field;
-  final TextEditingController controller = TextEditingController();
-  final TextEditingController? optionalController;
-  bool hasOptionalLabel = false;
-  _TextFieldEntry({
-    required this.label,
-    required this.field,
-    this.hasOptionalLabel = false,
-    this.optionalController,
-  });
-  set text(String _text) => controller.text = _text;
-  get innerText => controller.text;
-
-  void dispose() {
-    controller.dispose();
   }
 }

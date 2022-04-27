@@ -24,7 +24,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _phoneExtController = TextEditingController();
   final TextEditingController _optionalField = TextEditingController();
-  final CountryCode code = CountryCode.fromJson(codes[61]);
+  CountryCode _code = CountryCode.fromJson(codes[61]);
   bool internationalNumber = true;
 
   Future<void> saveChanges(String userId) async {
@@ -66,7 +66,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
               }
             },
             child: TextButton(
-              onPressed: _phoneExtController.text.isNotEmpty
+              onPressed: _phoneNumberController.text.isNotEmpty
                   ? () async {
                       final String? userId = getIdentifier(context);
                       if (userId != null) {
@@ -141,6 +141,11 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                   child: CountryCodePicker(
                     initialSelection: 'DO',
                     favorite: const ['DO', 'US'],
+                    onChanged: (CountryCode code) {
+                      setState(() {
+                        _code = code;
+                      });
+                    },
                   ),
                 ),
               },
@@ -226,7 +231,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   }
 
   String getCountryCode() {
-    return internationalNumber ? code.toString() : '';
+    return internationalNumber ? _code.toString() : '';
   }
 
   Widget getButton(String name) {
