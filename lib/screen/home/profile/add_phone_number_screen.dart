@@ -55,20 +55,33 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
         title: const Text('Add Phone Number'),
         backgroundColor: kHomeBgColor,
         actions: [
-          TextButton(
-            onPressed: () async {
-              final String? userId = getIdentifier(context);
-              if (userId != null) {
-                await saveChanges(userId);
+          GestureDetector(
+            onTap: () {
+              if (_phoneNumberController.text.isEmpty) {
+                notify(
+                  context: context,
+                  msg:
+                      'Enter your phone number if you want to save this field to your profile.',
+                );
               }
-              Navigator.pop(context);
             },
-            child: const Text(
-              'SAVE',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            style: TextButton.styleFrom(
-              splashFactory: NoSplash.splashFactory,
+            child: TextButton(
+              onPressed: _phoneExtController.text.isNotEmpty
+                  ? () async {
+                      final String? userId = getIdentifier(context);
+                      if (userId != null) {
+                        await saveChanges(userId);
+                      }
+                      Navigator.pop(context);
+                    }
+                  : null,
+              child: const Text(
+                'SAVE',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              style: TextButton.styleFrom(
+                splashFactory: NoSplash.splashFactory,
+              ),
             ),
           ),
         ],
