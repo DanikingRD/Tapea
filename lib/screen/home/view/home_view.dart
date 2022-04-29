@@ -77,7 +77,13 @@ class _HomeViewState extends State<HomeView> {
               children: widget.views,
             );
           } else {
-            return const LoadingIndicator();
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(snapshot.error.toString()), // Debugging
+                const LoadingIndicator(),
+              ],
+            );
           }
         },
       ),

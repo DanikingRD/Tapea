@@ -30,6 +30,41 @@ Future<Uint8List?> pickImage() async {
     return null;
   }
 }
+void showWarning({
+  required BuildContext context,
+  required String msg,
+  Function()? onClose,
+  Widget? content,
+  bool dismissible = true,
+}) {
+  showDialog(
+    context: context,
+    barrierDismissible: dismissible,
+    builder: (ctx) {
+      return AlertDialog(
+        title: Text(
+          msg,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
+        content: content,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              if (onClose != null) {
+                onClose();
+              }
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 void notify({
   required BuildContext context,

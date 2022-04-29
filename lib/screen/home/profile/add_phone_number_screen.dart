@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_code_picker/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
-import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
@@ -32,13 +32,9 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     await database.updateDefaultProfile(
       userId: userId,
       data: {
-        'labels': {
-          ProfileFieldType.phoneNumber.id: _optionalField.text,
-        },
-        'fields': {
-          ProfileFieldType.phoneNumber.id: _phoneNumberController.text,
-          ProfileFieldType.phoneExt.id: _phoneExtController.text,
-        }
+        'phoneNumbers': FieldValue.arrayUnion([
+          _phoneNumberController.text,
+        ])
       },
     );
     final profile = context.read<ProfileNotifier>();

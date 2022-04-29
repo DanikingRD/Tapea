@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
-import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
@@ -18,10 +17,16 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  final List<String> profiles = [
+    'Personal',
+    'Work',
+  ];
+
   @override
   void initState() {
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,30 +48,32 @@ class _ProfileViewState extends State<ProfileView> {
         ],
       ),
       backgroundColor: kHomeBgColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            getMainInfo(profile),
-            ..._getTiles(profile),
-          ],
-        ),
-      ),
+      body: Column(
+        children: [
+          getMainInfo(profile),
+          ..._getTiles(profile),
+        ],
+      )
     );
   }
 
+  // getMainInfo(profile),
+  // ..._getTiles(profile),
   List<Widget> _getTiles(ProfileModel profile) {
     final List<Widget> tiles = [];
     final phoneNumber = profile.getFieldByType(
       ProfileFieldType.phoneNumber,
     );
-    if (phoneNumber != null) {
-      tiles.add(
-        _tile(
-          title: phoneNumber as String,
-          icon: FontAwesomeIcons.phone,
-          onPressed: () {},
-        ),
-      );
+    if ((phoneNumber as List).isNotEmpty) {
+      for (var entry in phoneNumber) {
+        tiles.add(
+          _tile(
+            title: entry,
+            icon: FontAwesomeIcons.phone,
+            onPressed: () {},
+          ),
+        );
+      }
     }
     return tiles;
   }

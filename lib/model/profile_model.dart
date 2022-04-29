@@ -26,7 +26,7 @@ extension ProfileFieldTypeExtension on ProfileFieldType {
       case ProfileFieldType.company:
         return 'company';
       case ProfileFieldType.phoneNumber:
-        return 'phoneNumber';
+        return 'phoneNumbers';
       case ProfileFieldType.phoneExt:
         return 'phoneExt';
     }
@@ -44,8 +44,7 @@ class ProfileModel {
   final String jobTitle;
   final String company;
   final String? photoUrl;
-  final Map<String, dynamic> fields;
-  final Map<String, dynamic> labels;
+  final List<dynamic> phoneNumbers;
 
   ProfileModel({
     required this.title,
@@ -54,25 +53,18 @@ class ProfileModel {
     required this.jobTitle,
     required this.company,
     this.photoUrl,
-    this.fields = const {
-      'phoneNumber': null,
-      'phoneExt': null,
-    },
-    this.labels = const {
-      'phoneNumber': null,
-    },
+    this.phoneNumbers = const [],
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> map) {
     return ProfileModel(
-      title: map['title'],
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-      jobTitle: map['jobTitle'],
-      company: map['company'],
-      photoUrl: map['photoUrl'],
-      fields: map['fields'],
-      labels: map['labels'],
+        title: map['title'],
+        firstName: map['firstName'],
+        lastName: map['lastName'],
+        jobTitle: map['jobTitle'],
+        company: map['company'],
+        photoUrl: map['photoUrl'],
+        phoneNumbers: map['phoneNumbers'],
     );
   }
 
@@ -84,30 +76,29 @@ class ProfileModel {
       'jobTitle': jobTitle,
       'company': company,
       'photoUrl': photoUrl,
-      'fields': fields,
-      'labels': labels,
+      'phoneNumbers': phoneNumbers,
     };
   }
 
-  Map<String, dynamic> getInitializedFields() {
-    final Map<String, dynamic> data = {};
-    fields.forEach((key, value) {
-      if (value != null) {
-        data[key] = value;
-      }
-    });
-    return data;
-  }
+  // Map<String, dynamic> getInitializedFields() {
+  //   final Map<String, dynamic> data = {};
+  //   fields.forEach((key, value) {
+  //     if (value != null) {
+  //       data[key] = value;
+  //     }
+  //   });
+  //   return data;
+  // }
 
-  Map<String, dynamic> getInitializedLabels() {
-    final Map<String, dynamic> data = {};
-    labels.forEach((key, value) {
-      if (value != null) {
-        data[key] = value;
-      }
-    });
-    return data;
-  }
+  // Map<String, dynamic> getInitializedLabels() {
+  //   final Map<String, dynamic> data = {};
+  //   labels.forEach((key, value) {
+  //     if (value != null) {
+  //       data[key] = value;
+  //     }
+  //   });
+  //   return data;
+  // }
 
   Object? getFieldByType(ProfileFieldType type) {
     switch (type) {
@@ -121,17 +112,18 @@ class ProfileModel {
         return jobTitle;
       case ProfileFieldType.company:
         return company;
-      default:
-        if (type.isLabel) {
-          return labels[type.id];
-        } else {
-          return fields[type.id];
-        }
+      case ProfileFieldType.phoneNumber:
+        return phoneNumbers;
+        // if (type.isLabel) {
+        //   return fields[type.id];
+        // } else {
+        //   return fields[type.id];
+        // }
     }
   }
 
   @override
   String toString() {
-    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl, phoneNumber: ${fields['phoneNumber']}, phoneExt: ${labels['phoneNumber']})';
+    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl)';
   }
 }

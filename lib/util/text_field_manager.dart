@@ -2,17 +2,22 @@ import 'package:flutter/widgets.dart';
 import 'package:tapea/model/profile_model.dart';
 
 class ListTileFieldManager {
-  final String mainFieldLabel;
-  final TextEditingController mainFieldController = TextEditingController();
+  final String dataLabel;
+  final TextEditingController data = TextEditingController();
   final TextEditingController labelController = TextEditingController();
   final ProfileFieldType type;
   TextEditingController? phoneExtController;
 
   ListTileFieldManager({
-    required this.mainFieldLabel,
+    required this.dataLabel,
     required this.type,
   }) {
     init();
+  }
+  set innerText(String text) => data.text = text;
+  set labelText(String text) => labelController.text = text;
+  set phoneExtText(String text) {
+    if (phoneExtController != null) phoneExtController!.text = text;
   }
 
   void init() {
@@ -20,8 +25,6 @@ class ListTileFieldManager {
       phoneExtController = TextEditingController();
       phoneExtController!.text = 'Ext.';
     }
-    mainFieldController.text = mainFieldLabel;
-    labelController.text = 'Label (optional)';
   }
 }
 

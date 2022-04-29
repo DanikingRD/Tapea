@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
+import 'package:tapea/widget/warning_box.dart';
 
 class ProfileEditorScreen extends StatefulWidget {
   final bool edit;
@@ -32,10 +34,38 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   final List<ListTileFieldManager> listTileFields = [
     ListTileFieldManager(
-      mainFieldLabel: 'Phone Number',
+      dataLabel: 'Phone Number',
       type: ProfileFieldType.phoneNumber,
     ),
   ];
+
+  List<Widget> _createEditableTiles(ProfileModel profile) {
+    final List<Widget> _tiles = [];
+    for (int i = 0; i < listTileFields.length; i++) {
+      final ListTileFieldManager manager = listTileFields[i];
+      final field = profile.getFieldByType(manager.type);
+      if (field != null) {
+        final data = field as List<dynamic>;
+        if (field.isNotEmpty) {
+          for (int j = 0; j < data.length; j++) {
+            manager.innerText = data[j];
+            _tiles.add(
+              _editableField(
+                key: manager.type.id,
+                data: manager.data.text,
+                icon: _tileIconFor(manager.type),
+                titleLabel: manager.dataLabel,
+                titleController: TextEditingController.fromValue(
+                    TextEditingValue(text: data[j])),
+                labelController: manager.labelController,
+              ),
+            );
+          }
+        }
+      }
+    }
+    return _tiles;
+  }
 
   @override
   void initState() {
@@ -58,21 +88,21 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   }
 
   void updateListTilesControllers(ProfileModel profile) {
-    final userFields = profile.getInitializedFields();
-    final userLabels = profile.getInitializedLabels();
-    if (userFields.isNotEmpty) {
-      for (int i = 0; i < listTileFields.length; i++) {
-        final ListTileFieldManager manager = listTileFields[i];
-        if (userFields.containsKey(manager.type.id)) {
-          manager.mainFieldController.text = userFields[manager.type.id];
-          if (userLabels.isNotEmpty) {
-            if (userLabels.containsKey(manager.type.id)) {
-              manager.labelController.text = userLabels[manager.type.id];
-            }
-          }
-        }
-      }
-    }
+    // final userFields = profile.getInitializedFields();
+    // final userLabels = profile.getInitializedLabels();
+    // if (userFields.isNotEmpty) {
+    //   for (int i = 0; i < listTileFields.length; i++) {
+    //     final ListTileFieldManager manager = listTileFields[i];
+    //     if (userFields.containsKey(manager.type.id)) {
+    //       manager.mainFieldController.text = userFields[manager.type.id];
+    //       if (userLabels.isNotEmpty) {
+    //         if (userLabels.containsKey(manager.type.id)) {
+    //           manager.labelController.text = userLabels[manager.type.id];
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   void updateControllers(ProfileModel profile) {
@@ -227,34 +257,68 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     }
   }
 
-  List<Widget> _createEditableTiles(ProfileModel profile) {
-    final List<Widget> _tiles = [];
-    final Map<String, dynamic> _userFields = profile.getInitializedFields();
-    final Map<String, dynamic> _userLabels = profile.getInitializedLabels();
-    if (_userFields.isNotEmpty) {
-      for (int i = 0; i < listTileFields.length; i++) {
-        final ListTileFieldManager manager = listTileFields[i];
-        _tiles.add(
-          _editableField(
-            icon: _tileIconFor(manager.type),
-            titleLabel: manager.mainFieldLabel,
-            titleController: manager.mainFieldController,
-            labelController: manager.labelController,
-          ),
-        );
-      }
+  Future<void> deleteField({
+    required BuildContext context,
+    required String key,
+    required String data,
+  }) async {
+    final String? id = getIdentifier(context);
+    if (id != null) {
+      final database = context.read<FirestoreDatabaseService>();
+      await database.updateDefaultProfile(userId: id, data: {
+        key: FieldValue.arrayRemove([data])
+      });
     }
-    return _tiles;
   }
 
   Widget _editableField({
     required IconData icon,
+    required String data,
+    required String key,
     required String titleLabel,
     required TextEditingController titleController,
     required TextEditingController labelController,
   }) {
     return ListTile(
-      //trailing: Text('dasd'),
+      trailing: IconButton(
+        onPressed: () async {
+          await deleteField(
+              context: context,
+              key: key,
+              data: data,
+          ).then((value) {
+            setState(() {
+
+            });
+          });
+
+          // showDialog(
+          //   context: context,
+          //   builder: (BuildContext context) {
+          //     return WarningBox(
+          //       dialog: 'Are you sure you want to delete this field?',
+          //       onAccept: () async {
+          //        Navigator.pop(context);
+          //         await deleteField(
+          //           context: context,
+          //           key: key,
+          //           data: data,
+          //         );
+          //         setState(() {
+          //
+          //         });
+          //       },
+          //       accept: 'YES, DELETE FIELD',
+          //     );
+          //   },
+          // );
+        },
+        splashRadius: kSplashRadius,
+        icon: const Icon(
+          Icons.close,
+          color: Colors.black,
+        ),
+      ),
       minVerticalPadding: 0,
       leading: Column(
         children: [
