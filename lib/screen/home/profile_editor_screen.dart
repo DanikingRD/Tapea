@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
@@ -26,18 +27,6 @@ class ProfileEditorScreen extends StatefulWidget {
   State<ProfileEditorScreen> createState() => _ProfileEditorScreenState();
 }
 
-class ProfileField {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  const ProfileField({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-}
-
 class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager titleField = TextFieldManager(label: 'Title');
   final TextFieldManager firstNameField = TextFieldManager(label: 'First Name');
@@ -45,14 +34,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
   bool _dirty = false;
-
-  static const List<FieldManager> globalFields = [
-    FieldManager(
-      titleLabel: 'Phone Number',
-      type: ProfileFieldType.phoneNumber,
-      icon: FontAwesomeIcons.phone,
-    ),
-  ];
 
   late List<ProfileField> profileFields;
 
@@ -63,30 +44,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       final ProfileModel profile = context.read<ProfileNotifier>().profile;
       updateControllers(profile);
     }
-  }
-
-  List<ProfileField> getProfileFields(ProfileModel profile) {
-    final List<ProfileField> fields = [];
-    // We iterate over all the global fields and for each one
-    // We get how many instances does the user has created.
-    for (int i = 0; i < globalFields.length; i++) {
-      final manager = globalFields[i];
-      final Map<String, List<dynamic>> mapList = profile.mapFields();
-      final List<dynamic> data = mapList[manager.type.id]!;
-      if (data.isNotEmpty) {
-        // Iteration over all the fields of a certain type.
-        for (int j = 0; j < data.length; j++) {
-          final String text = data[j];
-          final ProfileField field = ProfileField(
-            title: text,
-            subtitle: 'subtitle',
-            icon: manager.icon,
-          );
-          fields.add(field);
-        }
-      }
-    }
-    return fields;
   }
 
   @override
@@ -136,7 +93,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
-    profileFields = getProfileFields(profile);
+    profileFields = findProfileFields(profile);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Card'),
@@ -186,6 +143,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                   ),
                   ReorderableListView.builder(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       final ProfileField field = profileFields[index];
                       return _editableField(field);
@@ -311,6 +269,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         color: kProfileEditorFieldContainer,
       ),
       child: GridView.count(
+        physics: const NeverScrollableScrollPhysics(),
         crossAxisSpacing: 50,
         crossAxisCount: 3,
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),

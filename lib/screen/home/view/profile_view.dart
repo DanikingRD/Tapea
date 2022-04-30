@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/util/field_identifiers.dart';
+import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
 class ProfileView extends StatefulWidget {
@@ -18,10 +20,7 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  final List<String> profiles = [
-    'Personal',
-    'Work',
-  ];
+  late List<ProfileField> profileFields;
 
   @override
   void initState() {
@@ -31,6 +30,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
+    profileFields = findProfileFields(profile);
     return Scaffold(
         appBar: AppBar(
           title: Text(profile.title),
@@ -48,33 +48,24 @@ class _ProfileViewState extends State<ProfileView> {
           ],
         ),
         backgroundColor: kHomeBgColor,
-        body: Column(
+        body: ListView(
           children: [
             getMainInfo(profile),
-            ..._getTiles(profile),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: profileFields.length,
+              itemBuilder: (BuildContext context, int index) {
+                final ProfileField field = profileFields[index];
+                return _tile(
+                  icon: field.icon,
+                  onPressed: () {},
+                  title: field.title,
+                );
+              },
+            )
           ],
         ));
-  }
-
-  // getMainInfo(profile),
-  // ..._getTiles(profile),
-  List<Widget> _getTiles(ProfileModel profile) {
-    final List<Widget> tiles = [];
-    final phoneNumber = profile.getFieldByType(
-      ProfileFieldType.phoneNumber,
-    );
-    // if ((phoneNumber as List).isNotEmpty) {
-    //   for (var entry in phoneNumber) {
-    //     tiles.add(
-    //       _tile(
-    //         title: entry,
-    //         icon: FontAwesomeIcons.phone,
-    //         onPressed: () {},
-    //       ),
-    //     );
-    //   }
-    // }
-    return tiles;
   }
 
   Widget _tile({
@@ -104,7 +95,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget getMainInfo(ProfileModel profile) {
     return ListTile(
       title: Text(
-        profile.firstName + profile.lastName,
+        profile.firstName + ' ' + profile.lastName,
         style: const TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.bold,
@@ -115,35 +106,21 @@ class _ProfileViewState extends State<ProfileView> {
           children: [
             TextSpan(
               text: profile.jobTitle + "\n",
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.headline6!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             TextSpan(
               text: profile.company,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6!
+                  .copyWith(fontWeight: FontWeight.bold),
             )
           ],
         ),
       ),
       isThreeLine: true,
-    );
-  }
-
-  Widget buildProfileItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return ListTile(
-      leading: ClipOval(
-        child: Container(
-          height: 40,
-          width: 40,
-          color: kRedColor,
-          child: Icon(icon),
-        ),
-      ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(subtitle),
     );
   }
 }

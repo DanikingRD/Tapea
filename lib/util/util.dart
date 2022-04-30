@@ -7,8 +7,35 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/profile_field.dart';
+import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/widget/loading_indicator.dart';
+
+List<ProfileField> findProfileFields(ProfileModel profile) {
+  final List<ProfileField> fields = [];
+  // We iterate over all the global fields and for each one
+  // We get how many instances does the user has created.
+  for (int i = 0; i < kGlobalProfileFields.length; i++) {
+    final manager = kGlobalProfileFields[i];
+    final Map<String, List<dynamic>> mapList = profile.mapFields();
+    final List<dynamic> data = mapList[manager.type.id]!;
+    if (data.isNotEmpty) {
+      // Iteration over all the fields of a certain type.
+      for (int j = 0; j < data.length; j++) {
+        final String text = data[j];
+        final ProfileField field = ProfileField(
+          title: text,
+          subtitle: 'subtitle',
+          icon: manager.icon,
+        );
+        fields.add(field);
+      }
+    }
+  }
+  return fields;
+}
 
 String? getIdentifier(BuildContext context) {
   final provider = context.read<FirebaseAuthService>();
@@ -30,6 +57,7 @@ Future<Uint8List?> pickImage() async {
     return null;
   }
 }
+
 void showWarning({
   required BuildContext context,
   required String msg,
