@@ -5,6 +5,7 @@ import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
+import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
 class ProfileView extends StatefulWidget {
@@ -27,34 +28,32 @@ class _ProfileViewState extends State<ProfileView> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(profile.title),
-        centerTitle: true,
+        appBar: AppBar(
+          title: Text(profile.title),
+          centerTitle: true,
+          backgroundColor: kHomeBgColor,
+          actions: [
+            IconButton(
+              onPressed: () => Navigator.pushNamed(
+                context,
+                Routes.profileEditor,
+                arguments: true,
+              ),
+              icon: const FaIcon(FontAwesomeIcons.pencil),
+            )
+          ],
+        ),
         backgroundColor: kHomeBgColor,
-        actions: [
-          IconButton(
-            onPressed: () async => await Navigator.pushNamed(
-              context,
-              Routes.profileEditor,
-              arguments: true,
-            ).then((value) => setState(() {})),
-            icon: const FaIcon(FontAwesomeIcons.pencil),
-          )
-        ],
-      ),
-      backgroundColor: kHomeBgColor,
-      body: Column(
-        children: [
-          getMainInfo(profile),
-          ..._getTiles(profile),
-        ],
-      )
-    );
+        body: Column(
+          children: [
+            getMainInfo(profile),
+            ..._getTiles(profile),
+          ],
+        ));
   }
 
   // getMainInfo(profile),
@@ -64,17 +63,17 @@ class _ProfileViewState extends State<ProfileView> {
     final phoneNumber = profile.getFieldByType(
       ProfileFieldType.phoneNumber,
     );
-    if ((phoneNumber as List).isNotEmpty) {
-      for (var entry in phoneNumber) {
-        tiles.add(
-          _tile(
-            title: entry,
-            icon: FontAwesomeIcons.phone,
-            onPressed: () {},
-          ),
-        );
-      }
-    }
+    // if ((phoneNumber as List).isNotEmpty) {
+    //   for (var entry in phoneNumber) {
+    //     tiles.add(
+    //       _tile(
+    //         title: entry,
+    //         icon: FontAwesomeIcons.phone,
+    //         onPressed: () {},
+    //       ),
+    //     );
+    //   }
+    // }
     return tiles;
   }
 

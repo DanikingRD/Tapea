@@ -7,11 +7,11 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
+import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
-import 'package:tapea/widget/warning_box.dart';
 
 class ProfileEditorScreen extends StatefulWidget {
   final bool edit;
@@ -25,6 +25,18 @@ class ProfileEditorScreen extends StatefulWidget {
   State<ProfileEditorScreen> createState() => _ProfileEditorScreenState();
 }
 
+class ProfileField {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  const ProfileField({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+}
+
 class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager titleField = TextFieldManager(label: 'Title');
   final TextFieldManager firstNameField = TextFieldManager(label: 'First Name');
@@ -32,40 +44,15 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
 
-  final List<ListTileFieldManager> listTileFields = [
-    ListTileFieldManager(
-      dataLabel: 'Phone Number',
+  static const List<FieldManager> globalFields = [
+    FieldManager(
+      titleLabel: 'Phone Number',
       type: ProfileFieldType.phoneNumber,
+      icon: FontAwesomeIcons.phone,
     ),
   ];
 
-  List<Widget> _createEditableTiles(ProfileModel profile) {
-    final List<Widget> _tiles = [];
-    for (int i = 0; i < listTileFields.length; i++) {
-      final ListTileFieldManager manager = listTileFields[i];
-      final field = profile.getFieldByType(manager.type);
-      if (field != null) {
-        final data = field as List<dynamic>;
-        if (field.isNotEmpty) {
-          for (int j = 0; j < data.length; j++) {
-            manager.innerText = data[j];
-            _tiles.add(
-              _editableField(
-                key: manager.type.id,
-                data: manager.data.text,
-                icon: _tileIconFor(manager.type),
-                titleLabel: manager.dataLabel,
-                titleController: TextEditingController.fromValue(
-                    TextEditingValue(text: data[j])),
-                labelController: manager.labelController,
-              ),
-            );
-          }
-        }
-      }
-    }
-    return _tiles;
-  }
+  late List<ProfileField> profileFields;
 
   @override
   void initState() {
@@ -73,8 +60,31 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     if (widget.edit) {
       final ProfileModel profile = context.read<ProfileNotifier>().profile;
       updateControllers(profile);
-      updateListTilesControllers(profile);
     }
+  }
+
+  List<ProfileField> getProfileFields(ProfileModel profile) {
+    final List<ProfileField> fields = [];
+    // We iterate over all the global fields and for each one
+    // We get how many instances does the user has created.
+    for (int i = 0; i < globalFields.length; i++) {
+      final manager = globalFields[i];
+      final Map<String, List<dynamic>> mapList = profile.mapFields();
+      final List<dynamic> data = mapList[manager.type.id]!;
+      if (data.isNotEmpty) {
+        // Iteration over all the fields of a certain type.
+        for (int j = 0; j < data.length; j++) {
+          final String text = data[j];
+          final ProfileField field = ProfileField(
+            title: text,
+            subtitle: 'subtitle',
+            icon: manager.icon,
+          );
+          fields.add(field);
+        }
+      }
+    }
+    return fields;
   }
 
   @override
@@ -85,24 +95,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     companyField.dispose();
     jobTitleField.dispose();
     super.dispose();
-  }
-
-  void updateListTilesControllers(ProfileModel profile) {
-    // final userFields = profile.getInitializedFields();
-    // final userLabels = profile.getInitializedLabels();
-    // if (userFields.isNotEmpty) {
-    //   for (int i = 0; i < listTileFields.length; i++) {
-    //     final ListTileFieldManager manager = listTileFields[i];
-    //     if (userFields.containsKey(manager.type.id)) {
-    //       manager.mainFieldController.text = userFields[manager.type.id];
-    //       if (userLabels.isNotEmpty) {
-    //         if (userLabels.containsKey(manager.type.id)) {
-    //           manager.labelController.text = userLabels[manager.type.id];
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
   }
 
   void updateControllers(ProfileModel profile) {
@@ -184,7 +176,16 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
-    final List<Widget> tiles = _createEditableTiles(profile);
+    profileFields = getProfileFields(profile);
+    final fieldsView = ReorderableListView.builder(
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        final ProfileField field = profileFields[index];
+        return _editableField(field);
+      },
+      itemCount: profileFields.length,
+      onReorder: (previousIndex, newIndex) {},
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Card'),
@@ -222,15 +223,15 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                if (tiles.isNotEmpty) ...{
+                if (fieldsView.itemCount > 0) ...{
                   _explanationBox(
                     explanation: 'Hold each field to re-order it',
                     icon: FontAwesomeIcons.upDown,
                   ),
-                  ...tiles,
                   const SizedBox(
                     height: 20,
                   ),
+                  fieldsView,
                 },
                 _explanationBox(
                   explanation: 'Tap a field below to add it',
@@ -248,13 +249,15 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     );
   }
 
-  IconData _tileIconFor(ProfileFieldType type) {
-    switch (type) {
-      case ProfileFieldType.phoneNumber:
-        return FontAwesomeIcons.phone;
-      default:
-        throw ('Tried to render an undefined list tile');
-    }
+  Widget _editableField(ProfileField field) {
+    return ListTile(
+      key: ValueKey(field),
+      leading: CircleIcon(
+        iconData: field.icon,
+      ),
+      title: Text(field.title),
+      subtitle: Text(field.subtitle),
+    );
   }
 
   Future<void> deleteField({
@@ -269,77 +272,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         key: FieldValue.arrayRemove([data])
       });
     }
-  }
-
-  Widget _editableField({
-    required IconData icon,
-    required String data,
-    required String key,
-    required String titleLabel,
-    required TextEditingController titleController,
-    required TextEditingController labelController,
-  }) {
-    return ListTile(
-      trailing: IconButton(
-        onPressed: () async {
-          await deleteField(
-              context: context,
-              key: key,
-              data: data,
-          ).then((value) {
-            setState(() {
-
-            });
-          });
-
-          // showDialog(
-          //   context: context,
-          //   builder: (BuildContext context) {
-          //     return WarningBox(
-          //       dialog: 'Are you sure you want to delete this field?',
-          //       onAccept: () async {
-          //        Navigator.pop(context);
-          //         await deleteField(
-          //           context: context,
-          //           key: key,
-          //           data: data,
-          //         );
-          //         setState(() {
-          //
-          //         });
-          //       },
-          //       accept: 'YES, DELETE FIELD',
-          //     );
-          //   },
-          // );
-        },
-        splashRadius: kSplashRadius,
-        icon: const Icon(
-          Icons.close,
-          color: Colors.black,
-        ),
-      ),
-      minVerticalPadding: 0,
-      leading: Column(
-        children: [
-          const SizedBox(
-            height: 8,
-          ),
-          CircleIcon(
-            backgroundColor: kSelectedPageColor,
-            iconData: icon,
-          ),
-        ],
-      ),
-      title: BorderlessTextField(
-        controller: titleController,
-        floatingLabel: titleLabel,
-      ),
-      subtitle: BorderlessTextField(
-        controller: labelController,
-        floatingLabel: 'Label (Optional)',
-      ),
-    );
   }
 
   Widget _explanationBox({

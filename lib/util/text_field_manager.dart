@@ -1,31 +1,17 @@
-import 'package:flutter/widgets.dart';
-import 'package:tapea/model/profile_model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:tapea/util/field_identifiers.dart';
 
-class ListTileFieldManager {
-  final String dataLabel;
-  final TextEditingController data = TextEditingController();
-  final TextEditingController labelController = TextEditingController();
+class FieldManager {
+  final String titleLabel;
+  final String subtitleLabel;
   final ProfileFieldType type;
-  TextEditingController? phoneExtController;
-
-  ListTileFieldManager({
-    required this.dataLabel,
+  final IconData icon;
+  const FieldManager({
+    required this.titleLabel,
+    this.subtitleLabel = 'Label (optional)',
     required this.type,
-  }) {
-    init();
-  }
-  set innerText(String text) => data.text = text;
-  set labelText(String text) => labelController.text = text;
-  set phoneExtText(String text) {
-    if (phoneExtController != null) phoneExtController!.text = text;
-  }
-
-  void init() {
-    if (type == ProfileFieldType.phoneNumber) {
-      phoneExtController = TextEditingController();
-      phoneExtController!.text = 'Ext.';
-    }
-  }
+    required this.icon,
+  });
 }
 
 class TextFieldManager {

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
+import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
@@ -29,16 +31,16 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
 
   Future<void> saveChanges(String userId) async {
     final database = context.read<FirestoreDatabaseService>();
+
     await database.updateDefaultProfile(
       userId: userId,
       data: {
-        'phoneNumbers': FieldValue.arrayUnion([
-          _phoneNumberController.text,
-        ])
+        ProfileFieldID.phoneNumbers: FieldValue.arrayUnion(
+          [_phoneNumberController.text],
+        )
       },
     );
-    final profile = context.read<ProfileNotifier>();
-    await profile.update(context);
+    await context.read<ProfileNotifier>().update(context);
   }
 
   @override

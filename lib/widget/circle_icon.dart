@@ -40,7 +40,7 @@ class CircleIcon extends StatelessWidget {
 
   const CircleIcon({
     Key? key,
-    required this.backgroundColor,
+    this.backgroundColor = kRedColor,
     required this.iconData,
     this.iconSize = 24,
     this.circleSize = 48,
