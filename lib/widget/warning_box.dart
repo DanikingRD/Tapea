@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WarningBox extends StatelessWidget {
-  
   final String dialog;
   final String accept;
   final String cancel;
@@ -22,6 +20,7 @@ class WarningBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const style = TextStyle(fontWeight: FontWeight.bold);
     return AlertDialog(
       title: Text(
         dialog,
@@ -40,15 +39,20 @@ class WarningBox extends StatelessWidget {
               Navigator.pop(context);
             }
           },
-          child: Text(cancel),
+          child: Text(
+            cancel,
+            style: style,
+          ),
         ),
         TextButton(
           onPressed: () {
             onAccept();
           },
-          child: Text(accept),
+          child: Text(
+            accept,
+            style: style,
+          ),
         ),
-
       ],
     );
   }

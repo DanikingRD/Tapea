@@ -151,7 +151,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
     final UserModel model =
         UserModel(id: id, profiles: 1, defaultProfile: _profileTitle.text);
     final database = context.read<FirestoreDatabaseService>();
-    return await database.addUser(user: model);
+    return await database.setUser(user: model);
   }
 
   Future<void> saveProfile(String userId, String? photoUrl) async {
@@ -164,7 +164,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
       photoUrl: photoUrl,
     );
     final database = context.read<FirestoreDatabaseService>();
-    return await database.addDefaultUserProfile(
+    return await database.setDefaultUserProfile(
       userId: userId,
       profile: profile,
     );

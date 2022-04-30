@@ -4,6 +4,7 @@ enum ProfileFieldType {
   lastName,
   jobTitle,
   company,
+  photoUrl,
   phoneNumber,
   phoneExt,
 }
@@ -25,6 +26,8 @@ extension ProfileFieldTypeExtension on ProfileFieldType {
         return ProfileFieldID.jobTitle;
       case ProfileFieldType.company:
         return ProfileFieldID.company;
+      case ProfileFieldType.photoUrl:
+        return ProfileFieldID.photoUrl;
       case ProfileFieldType.phoneNumber:
         return ProfileFieldID.phoneNumbers;
       case ProfileFieldType.phoneExt:
@@ -42,6 +45,7 @@ class ProfileFieldID {
   static const String lastName = 'lastName';
   static const String jobTitle = 'jobTitle';
   static const String company = 'company';
+  static const String photoUrl = 'photoUrl';
   static const String phoneNumbers = 'phoneNumbers';
   static const String phoneExts = 'phoneExts';
 }

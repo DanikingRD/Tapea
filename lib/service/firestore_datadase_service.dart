@@ -7,20 +7,20 @@ class FirestoreDatabaseService {
 
   FirestoreDatabaseService(this._instance);
 
-  Future<void> addUser({
+  Future<void> setUser({
     required UserModel user,
   }) async {
     await usersRef().doc(user.id).set(user);
   }
 
-  Future<void> addUserProfile({
+  Future<void> setUserProfile({
     required String userId,
     required ProfileModel profile,
   }) async {
     await profilesRef(userId: userId).doc(profile.title).set(profile);
   }
 
-  Future<void> addDefaultUserProfile({
+  Future<void> setDefaultUserProfile({
     required String userId,
     required ProfileModel profile,
   }) async {

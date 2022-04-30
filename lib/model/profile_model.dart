@@ -8,7 +8,7 @@ class ProfileModel {
   final String company;
   final String? photoUrl;
   final List<dynamic> phoneNumbers;
-  final Map<String, dynamic> labels;
+  final Map<dynamic, dynamic> labels;
 
   ProfileModel({
     required this.title,

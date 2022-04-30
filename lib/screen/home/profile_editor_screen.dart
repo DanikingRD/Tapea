@@ -12,6 +12,7 @@ import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
+import 'package:tapea/widget/warning_box.dart';
 
 class ProfileEditorScreen extends StatefulWidget {
   final bool edit;
@@ -43,6 +44,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager lastNameField = TextFieldManager(label: 'Last Name');
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
+  bool _dirty = false;
 
   static const List<FieldManager> globalFields = [
     FieldManager(
@@ -105,87 +107,36 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     jobTitleField.update(profile.jobTitle);
   }
 
-  Future<void> updateProfile(ProfileModel oldProfile) async {
-    final String? id = getIdentifier(context);
-    if (id != null) {
-      final Map<String, dynamic> changes = {};
-      if (titleField.text != oldProfile.title) {
-        changes['title'] = titleField.text;
-      }
-      if (firstNameField.text != oldProfile.firstName) {
-        changes['firstName'] = firstNameField.text;
-      }
-      if (lastNameField.text != oldProfile.lastName) {
-        changes['lastName'] = lastNameField.text;
-      }
-      if (companyField.text != oldProfile.company) {
-        changes['company'] = companyField.text;
-      }
-      if (jobTitleField.text != oldProfile.jobTitle) {
-        changes['jobTitle'] = jobTitleField.text;
-      }
-      if (changes.isNotEmpty) {
+  Future<void> updateDatabase(ProfileModel oldProfile) async {
+    if (_dirty) {
+      final String? id = getIdentifier(context);
+      if (id != null) {
+        final info = {
+          ProfileFieldID.title: titleField.text,
+          ProfileFieldID.firstName: firstNameField.text,
+          ProfileFieldID.lastName: lastNameField.text,
+          ProfileFieldID.company: companyField.text,
+          ProfileFieldID.jobTitle: jobTitleField.text,
+          ProfileFieldID.photoUrl: oldProfile.photoUrl,
+          ProfileFieldID.phoneNumbers: oldProfile.phoneNumbers,
+          'labels': {},
+        };
+        final ProfileModel newProfile = ProfileModel.fromJson(info);
         final db = context.read<FirestoreDatabaseService>();
-        await db.updateDefaultProfile(
-          userId: id,
-          data: changes,
-        );
+        await db.setDefaultUserProfile(userId: id, profile: newProfile);
       }
     }
   }
 
   Future<void> saveChanges(ProfileModel profile) async {
-    await updateProfile(profile);
+    await updateDatabase(profile);
     await context.read<ProfileNotifier>().update(context);
-  }
-
-  TextEditingController getControllers(int index) {
-    switch (index) {
-      case 0:
-        return titleField.controller;
-      case 1:
-        return firstNameField.controller;
-      case 2:
-        return lastNameField.controller;
-      case 3:
-        return companyField.controller;
-      case 4:
-        return jobTitleField.controller;
-      default:
-        throw ('Tried to access an undefined text field');
-    }
-  }
-
-  String getLabels(int index) {
-    switch (index) {
-      case 0:
-        return titleField.label;
-      case 1:
-        return firstNameField.label;
-      case 2:
-        return lastNameField.label;
-      case 3:
-        return companyField.label;
-      case 4:
-        return jobTitleField.label;
-      default:
-        throw ('Tried to access an undefined text field');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     profileFields = getProfileFields(profile);
-    final fieldsView = ReorderableListView.builder(
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final ProfileField field = profileFields[index];
-        return _editableField(field);
-      },
-      itemCount: profileFields.length,
-      onReorder: (previousIndex, newIndex) {},
-    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Card'),
@@ -214,16 +165,18 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                   vertical: 2.0,
                 ),
                 child: BorderlessTextField(
-                  centerAll: index == 0,
-                  controller: getControllers(index),
-                  floatingLabel: getLabels(index),
-                ),
+                    centerAll: index == 0,
+                    controller: getControllers(index),
+                    floatingLabel: getLabels(index),
+                    onChanged: (String? str) {
+                      _dirty = true;
+                    }),
               ),
               if (index == 4) ...{
                 const SizedBox(
                   height: 20,
                 ),
-                if (fieldsView.itemCount > 0) ...{
+                if (profileFields.isNotEmpty) ...{
                   _explanationBox(
                     explanation: 'Hold each field to re-order it',
                     icon: FontAwesomeIcons.upDown,
@@ -231,7 +184,15 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  fieldsView,
+                  ReorderableListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final ProfileField field = profileFields[index];
+                      return _editableField(field);
+                    },
+                    itemCount: profileFields.length,
+                    onReorder: (previousIndex, newIndex) {},
+                  )
                 },
                 _explanationBox(
                   explanation: 'Tap a field below to add it',
@@ -257,21 +218,43 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       ),
       title: Text(field.title),
       subtitle: Text(field.subtitle),
+      trailing: IconButton(
+        splashRadius: kSplashRadius,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return WarningBox(
+                dialog: 'Are you sure you want to delete this field?',
+                onAccept: () {
+                  Navigator.pop(context);
+                  deleteField(
+                    context: context,
+                    text: field.title,
+                  );
+                },
+                accept: 'YES, DELETE FIELD',
+              );
+            },
+          );
+        },
+        icon: const Icon(
+          FontAwesomeIcons.xmark,
+          color: Colors.black,
+        ),
+      ),
     );
   }
 
-  Future<void> deleteField({
+  void deleteField({
     required BuildContext context,
-    required String key,
-    required String data,
+    required String text,
   }) async {
-    final String? id = getIdentifier(context);
-    if (id != null) {
-      final database = context.read<FirestoreDatabaseService>();
-      await database.updateDefaultProfile(userId: id, data: {
-        key: FieldValue.arrayRemove([data])
-      });
-    }
+    final profile = context.read<ProfileNotifier>().profile;
+    profile.phoneNumbers.remove(text);
+    setState(() {
+      _dirty = true;
+    });
   }
 
   Widget _explanationBox({
@@ -342,5 +325,39 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         }),
       ),
     );
+  }
+
+  TextEditingController getControllers(int index) {
+    switch (index) {
+      case 0:
+        return titleField.controller;
+      case 1:
+        return firstNameField.controller;
+      case 2:
+        return lastNameField.controller;
+      case 3:
+        return companyField.controller;
+      case 4:
+        return jobTitleField.controller;
+      default:
+        throw ('Tried to access an undefined text field');
+    }
+  }
+
+  String getLabels(int index) {
+    switch (index) {
+      case 0:
+        return titleField.label;
+      case 1:
+        return firstNameField.label;
+      case 2:
+        return lastNameField.label;
+      case 3:
+        return companyField.label;
+      case 4:
+        return jobTitleField.label;
+      default:
+        throw ('Tried to access an undefined text field');
+    }
   }
 }

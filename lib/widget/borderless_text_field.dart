@@ -23,7 +23,11 @@ class BorderlessTextField extends StatelessWidget {
       cursorColor: kRedColor,
       textAlign: centerAll ? TextAlign.center : TextAlign.start,
       keyboardType: keyboardType,
-      onChanged: onChanged,
+      onChanged: (String text) {
+        if (onChanged != null) {
+          onChanged!(text);
+        }
+      },
       decoration: InputDecoration(
         alignLabelWithHint: true,
         floatingLabelBehavior: controller == null || controller!.text.isEmpty
