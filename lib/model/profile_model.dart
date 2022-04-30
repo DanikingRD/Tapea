@@ -1,3 +1,6 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tapea/field/phone_number_field.dart';
+import 'package:tapea/field/profile_field.dart';
 import 'package:tapea/util/field_identifiers.dart';
 
 class ProfileModel {
@@ -7,7 +10,7 @@ class ProfileModel {
   final String jobTitle;
   final String company;
   final String? photoUrl;
-  final Map<String, dynamic> phoneNumbers;
+  final List<ProfileField> fields;
 
   ProfileModel({
     required this.title,
@@ -16,18 +19,18 @@ class ProfileModel {
     required this.jobTitle,
     required this.company,
     this.photoUrl,
-    this.phoneNumbers = const {},
+    this.fields = const [],
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> map) {
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      title: map[ProfileFieldID.title],
-      firstName: map[ProfileFieldID.firstName],
-      lastName: map[ProfileFieldID.lastName],
-      jobTitle: map[ProfileFieldID.jobTitle],
-      company: map[ProfileFieldID.company],
-      photoUrl: map['photoUrl'],
-      phoneNumbers: map[ProfileFieldID.phoneNumbers],
+      title: json[ProfileFieldID.title],
+      firstName: json[ProfileFieldID.firstName],
+      lastName: json[ProfileFieldID.lastName],
+      jobTitle: json[ProfileFieldID.jobTitle],
+      company: json[ProfileFieldID.company],
+      photoUrl: json['photoUrl'],
+      fields: fieldsFromJson(json['fields']),
     );
   }
 
@@ -39,35 +42,49 @@ class ProfileModel {
       ProfileFieldID.jobTitle: jobTitle,
       ProfileFieldID.company: company,
       'photoUrl': photoUrl,
-      ProfileFieldID.phoneNumbers: phoneNumbers,
+      ProfileFieldID.fields: fieldsToJson(),
     };
   }
 
-  Map<String, Map<String, dynamic>> mapFields() {
-    return {
-      ProfileFieldID.phoneNumbers: phoneNumbers,
-    };
-  }
-
-  Object? getFieldByType(ProfileFieldType type) {
-    switch (type) {
-      case ProfileFieldType.title:
-        return title;
-      case ProfileFieldType.firstName:
-        return firstName;
-      case ProfileFieldType.lastName:
-        return lastName;
-      case ProfileFieldType.jobTitle:
-        return jobTitle;
-      case ProfileFieldType.company:
-        return company;
-      case ProfileFieldType.phoneNumber:
-        return phoneNumbers;
+  static List<ProfileField> fieldsFromJson(List<Map<String, dynamic>> fields) {
+    print(fields);
+    final List<ProfileField> allFields = [];
+    for (Map<String, dynamic> field in fields) {
+      if (field.isEmpty) continue;
+      final String title = field['title'];
+      final String subtitle = field['subtitle'];
+      switch (field['type']) {
+        case 0:
+          allFields.add(PhoneNumberField(
+              title: title,
+              subtitle: subtitle,
+              phoneExtension: field['phoneExtension'],
+              icon: FontAwesomeIcons.phone));
+          break;
+        default:
+          throw ('');
+      }
     }
+    return allFields;
+  }
+
+  List<Map<String, dynamic>> fieldsToJson() {
+    final List<Map<String, dynamic>> allJsons = [];
+    for (ProfileField field in fields) {
+      allJsons.add(
+        {
+          'type': field.type.id,
+          'title': field.title,
+          'subtitle': field.subtitle,
+        },
+      );
+    }
+    print(allJsons);
+    return allJsons;
   }
 
   @override
   String toString() {
-    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl, phoneNumbers: $phoneNumbers)';
+    return 'ProfileModel(title: $title, firstName: $firstName, lastName: $lastName, jobTitle: $jobTitle, company: $company, photoUrl: $photoUrl)';
   }
 }

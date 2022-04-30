@@ -1,18 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tapea/util/field_identifiers.dart';
-
-class FieldManager {
-  final String titleLabel;
-  final String subtitleLabel;
-  final ProfileFieldType type;
-  final IconData icon;
-  const FieldManager({
-    required this.titleLabel,
-    this.subtitleLabel = 'Label (optional)',
-    required this.type,
-    required this.icon,
-  });
-}
 
 class TextFieldManager {
   final String label;

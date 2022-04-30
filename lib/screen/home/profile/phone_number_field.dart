@@ -30,14 +30,14 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   Future<void> saveChanges(String userId) async {
     final database = context.read<FirestoreDatabaseService>();
     final notifier = context.read<ProfileNotifier>();
-    final data = notifier.profile.phoneNumbers;
-    data[getPhoneNumber()] = _labelController.text;
-    await database.updateDefaultProfile(
-      userId: userId,
-      data: {
-        ProfileFieldID.phoneNumbers: data,
-      },
-    );
+    // final data = notifier.profile.phoneNumbers;
+    // data[getPhoneNumber()] = _labelController.text;
+    // await database.updateDefaultProfile(
+    //   userId: userId,
+    //   data: {
+    //     ProfileFieldID.phoneNumbers: data,
+    //   },
+    // );
     await notifier.update(context);
   }
 

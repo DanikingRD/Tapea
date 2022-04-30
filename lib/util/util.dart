@@ -7,37 +7,37 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
-import 'package:tapea/model/profile_field.dart';
+import 'package:tapea/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
-import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 
 List<ProfileField> findProfileFields(ProfileModel profile) {
   final List<ProfileField> fields = [];
-  // We iterate over all the global fields and for each one
-  // We get how many instances does the user has created.
-  for (int i = 0; i < kGlobalProfileFields.length; i++) {
-    final manager = kGlobalProfileFields[i];
-    final Map<String, Map<String, dynamic>> mapFields = profile.mapFields();
-    final Map<String, dynamic> innerMap = mapFields[manager.type.id]!;
-    // We have at least one instance.
-    if (innerMap.isNotEmpty) {
-      // Iteration over all the fields of a certain type.
-      for (MapEntry entry in innerMap.entries) {
-        final String title = entry.key;
-        final String label = entry.value;
-        // Create the profile field
-        final ProfileField field = ProfileField(
-          title: title,
-          subtitle: label,
-          icon: manager.icon,
-        );
-        fields.add(field);
-      }
-    }
-  }
   return fields;
+  // // We iterate over all the global fields and for each one
+  // // We get how many instances does the user has created.
+  // for (int i = 0; i < kGlobalProfileFields.length; i++) {
+  //   final manager = kGlobalProfileFields[i];
+  //   final Map<String, Map<String, dynamic>> mapFields = profile.mapFields();
+  //   final Map<String, dynamic> innerMap = mapFields[manager.type.id]!;
+  //   // We have at least one instance.
+  //   if (innerMap.isNotEmpty) {
+  //     // Iteration over all the fields of a certain type.
+  //     for (MapEntry entry in innerMap.entries) {
+  //       final String title = entry.key;
+  //       final String label = entry.value;
+  //       // Create the profile field
+  //       final ProfileField field = ProfileField(
+  //         title: title,
+  //         subtitle: label,
+  //         icon: manager.icon,
+  //       );
+  //       fields.add(field);
+  //     }
+  //   }
+  // }
+  // return fields;
 }
 
 String? getIdentifier(BuildContext context) {

@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
-import 'package:tapea/model/profile_field.dart';
+import 'package:tapea/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
@@ -52,6 +51,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     lastNameField.dispose();
     companyField.dispose();
     jobTitleField.dispose();
+    // for (var field in profileFields) {
+    //   field.dispose();
+    // }
     super.dispose();
   }
 
@@ -74,7 +76,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
           ProfileFieldID.company: companyField.text,
           ProfileFieldID.jobTitle: jobTitleField.text,
           ProfileFieldID.photoUrl: oldProfile.photoUrl,
-          ProfileFieldID.phoneNumbers: oldProfile.phoneNumbers,
           'labels': {},
         };
         final ProfileModel newProfile = ProfileModel.fromJson(info);
@@ -173,7 +174,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       leading: CircleIcon(
         iconData: field.icon,
       ),
-      title: Text(field.title),
+      title: BorderlessTextField(
+        floatingLabel: 'Phone Number',
+        //  controller: field.titleController,
+        onChanged: (str) {},
+      ),
       subtitle: Text(field.subtitle),
       trailing: IconButton(
         splashRadius: kSplashRadius,
@@ -208,7 +213,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     required String text,
   }) async {
     final profile = context.read<ProfileNotifier>().profile;
-    profile.phoneNumbers.remove(text);
+    // profile.phoneNumbers.remove(text);
     setState(() {
       _dirty = true;
     });
