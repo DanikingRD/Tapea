@@ -6,7 +6,6 @@ import 'package:tapea/model/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
-import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/circle_icon.dart';
 

@@ -17,6 +17,7 @@ import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firebase_storage_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/colors.dart' as colors;
+import 'package:tapea/util/glowless_scroll_behaviour.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +56,7 @@ class AppInitializer extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Tapea',
+        scrollBehavior: const GlowlessScrollBehaviour(),
         // Light theme
         theme: ThemeData(
           brightness: Brightness.light,
