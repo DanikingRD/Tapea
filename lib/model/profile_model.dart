@@ -7,8 +7,7 @@ class ProfileModel {
   final String jobTitle;
   final String company;
   final String? photoUrl;
-  final List<dynamic> phoneNumbers;
-  final Map<dynamic, dynamic> labels;
+  final Map<String, dynamic> phoneNumbers;
 
   ProfileModel({
     required this.title,
@@ -17,8 +16,7 @@ class ProfileModel {
     required this.jobTitle,
     required this.company,
     this.photoUrl,
-    this.phoneNumbers = const [],
-    this.labels = const {},
+    this.phoneNumbers = const {},
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> map) {
@@ -30,7 +28,6 @@ class ProfileModel {
       company: map[ProfileFieldID.company],
       photoUrl: map['photoUrl'],
       phoneNumbers: map[ProfileFieldID.phoneNumbers],
-      labels: map['labels'],
     );
   }
 
@@ -43,11 +40,10 @@ class ProfileModel {
       ProfileFieldID.company: company,
       'photoUrl': photoUrl,
       ProfileFieldID.phoneNumbers: phoneNumbers,
-      'labels': labels,
     };
   }
 
-  Map<String, List<dynamic>> mapFields() {
+  Map<String, Map<String, dynamic>> mapFields() {
     return {
       ProfileFieldID.phoneNumbers: phoneNumbers,
     };
@@ -67,10 +63,6 @@ class ProfileModel {
         return company;
       case ProfileFieldType.phoneNumber:
         return phoneNumbers;
-      default:
-        if (type.isLabel) {
-          return labels;
-        }
     }
   }
 

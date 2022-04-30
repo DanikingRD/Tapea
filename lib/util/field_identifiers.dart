@@ -48,4 +48,5 @@ class ProfileFieldID {
   static const String photoUrl = 'photoUrl';
   static const String phoneNumbers = 'phoneNumbers';
   static const String phoneExts = 'phoneExts';
+  static const String phoneLabels = 'labels';
 }

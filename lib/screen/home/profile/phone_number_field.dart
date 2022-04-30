@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_code_picker/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
-import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/field_identifiers.dart';
@@ -25,22 +23,26 @@ class PhoneNumberScreen extends StatefulWidget {
 class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _phoneExtController = TextEditingController();
-  final TextEditingController _optionalField = TextEditingController();
+  final TextEditingController _labelController = TextEditingController();
   CountryCode _code = CountryCode.fromJson(codes[61]);
   bool internationalNumber = true;
 
   Future<void> saveChanges(String userId) async {
     final database = context.read<FirestoreDatabaseService>();
-
+    final notifier = context.read<ProfileNotifier>();
+    final data = notifier.profile.phoneNumbers;
+    data[getPhoneNumber()] = _labelController.text;
     await database.updateDefaultProfile(
       userId: userId,
       data: {
-        ProfileFieldID.phoneNumbers: FieldValue.arrayUnion(
-          [_phoneNumberController.text],
-        )
+        ProfileFieldID.phoneNumbers: data,
       },
     );
-    await context.read<ProfileNotifier>().update(context);
+    await notifier.update(context);
+  }
+
+  String getPhoneNumber() {
+    return _code.toString() + _phoneNumberController.text;
   }
 
   @override
@@ -121,10 +123,10 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 ],
               ),
             ),
-            subtitle: _optionalField.text.isEmpty
+            subtitle: _labelController.text.isEmpty
                 ? null
                 : Text(
-                    _optionalField.text,
+                    _labelController.text,
                   ),
           ),
           const Divider(
@@ -187,7 +189,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: BorderlessTextField(
-              controller: _optionalField,
+              controller: _labelController,
               floatingLabel: 'Label (optional)',
               onChanged: (_) => setState(() => {}),
             ),
@@ -236,7 +238,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: OutlinedButton(
-        onPressed: () => setState(() => _optionalField.text = name),
+        onPressed: () => setState(() => _labelController.text = name),
         child: Text(
           name,
           style: const TextStyle(color: kRedColor, fontWeight: FontWeight.bold),

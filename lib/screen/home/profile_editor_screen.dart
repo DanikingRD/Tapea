@@ -34,7 +34,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
   bool _dirty = false;
-
   late List<ProfileField> profileFields;
 
   @override

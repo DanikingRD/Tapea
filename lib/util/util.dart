@@ -19,15 +19,18 @@ List<ProfileField> findProfileFields(ProfileModel profile) {
   // We get how many instances does the user has created.
   for (int i = 0; i < kGlobalProfileFields.length; i++) {
     final manager = kGlobalProfileFields[i];
-    final Map<String, List<dynamic>> mapList = profile.mapFields();
-    final List<dynamic> data = mapList[manager.type.id]!;
-    if (data.isNotEmpty) {
+    final Map<String, Map<String, dynamic>> mapFields = profile.mapFields();
+    final Map<String, dynamic> innerMap = mapFields[manager.type.id]!;
+    // We have at least one instance.
+    if (innerMap.isNotEmpty) {
       // Iteration over all the fields of a certain type.
-      for (int j = 0; j < data.length; j++) {
-        final String text = data[j];
+      for (MapEntry entry in innerMap.entries) {
+        final String title = entry.key;
+        final String label = entry.value;
+        // Create the profile field
         final ProfileField field = ProfileField(
-          title: text,
-          subtitle: 'subtitle',
+          title: title,
+          subtitle: label,
           icon: manager.icon,
         );
         fields.add(field);

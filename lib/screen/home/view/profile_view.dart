@@ -61,6 +61,7 @@ class _ProfileViewState extends State<ProfileView> {
                   icon: field.icon,
                   onPressed: () {},
                   title: field.title,
+                  subtitle: field.subtitle,
                 );
               },
             )
@@ -72,6 +73,7 @@ class _ProfileViewState extends State<ProfileView> {
     required IconData icon,
     required Function() onPressed,
     required String title,
+    String? subtitle,
   }) {
     return ListTile(
       leading: CircleIconButton(
@@ -88,7 +90,7 @@ class _ProfileViewState extends State<ProfileView> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      subtitle: const Text('Mobile'),
+      subtitle: subtitle != null ? Text(subtitle) : null,
     );
   }
 
