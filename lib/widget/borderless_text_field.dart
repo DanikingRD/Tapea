@@ -7,6 +7,7 @@ class BorderlessTextField extends StatelessWidget {
   final bool centerAll;
   final TextInputType? keyboardType;
   final Function(String?)? onChanged;
+  final String? initialValue;
   const BorderlessTextField({
     Key? key,
     this.controller,
@@ -14,11 +15,13 @@ class BorderlessTextField extends StatelessWidget {
     this.centerAll = false,
     this.keyboardType,
     this.onChanged,
+    this.initialValue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      initialValue: initialValue,
       controller: controller,
       cursorColor: kRedColor,
       textAlign: centerAll ? TextAlign.center : TextAlign.start,

@@ -7,7 +7,6 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
-import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
@@ -33,14 +32,16 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
   bool _dirty = false;
-  late List<ProfileField> profileFields;
-
+  late final Profile oldProfile;
+  late int _fieldsLength;
   @override
   void initState() {
     super.initState();
     if (widget.edit) {
-      final ProfileModel profile = context.read<ProfileNotifier>().profile;
+      final Profile profile = context.read<ProfileNotifier>().profile;
+      oldProfile = profile;
       updateControllers(profile);
+      _fieldsLength = profile.fields.length;
     }
   }
 
@@ -51,13 +52,10 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     lastNameField.dispose();
     companyField.dispose();
     jobTitleField.dispose();
-    // for (var field in profileFields) {
-    //   field.dispose();
-    // }
     super.dispose();
   }
 
-  void updateControllers(ProfileModel profile) {
+  void updateControllers(Profile profile) {
     titleField.update(profile.title);
     firstNameField.update(profile.firstName);
     lastNameField.update(profile.lastName);
@@ -65,121 +63,156 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     jobTitleField.update(profile.jobTitle);
   }
 
-  Future<void> updateDatabase(ProfileModel oldProfile) async {
-    if (_dirty) {
-      final String? id = getIdentifier(context);
-      if (id != null) {
-        final info = {
-          ProfileFieldID.title: titleField.text,
-          ProfileFieldID.firstName: firstNameField.text,
-          ProfileFieldID.lastName: lastNameField.text,
-          ProfileFieldID.company: companyField.text,
-          ProfileFieldID.jobTitle: jobTitleField.text,
-          ProfileFieldID.photoUrl: oldProfile.photoUrl,
-          'labels': {},
-        };
-        final ProfileModel newProfile = ProfileModel.fromJson(info);
-        final db = context.read<FirestoreDatabaseService>();
-        await db.setDefaultUserProfile(userId: id, profile: newProfile);
+  Future<void> updateDatabase(Profile profile) async {
+    final String? id = getIdentifier(context);
+    if (id != null) {
+      final database = context.read<FirestoreDatabaseService>();
+      if (_dirty || _fieldsLength != profile.fields.length) {
+        await database.setDefaultUserProfile(
+          userId: id,
+          profile: profile.copyWith(
+            title: titleField.text,
+            firstName: firstNameField.text,
+            lastName: lastNameField.text,
+            company: companyField.text,
+            jobTitle: jobTitleField.text,
+          ),
+        );
       }
     }
   }
 
-  Future<void> saveChanges(ProfileModel profile) async {
+  Future<void> saveChanges(Profile profile) async {
     await updateDatabase(profile);
     await context.read<ProfileNotifier>().update(context);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
-    profileFields = findProfileFields(profile);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Card'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              showLoadingBox(context: context);
-              await saveChanges(profile);
-              // Pop off to home screen
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            icon: const FaIcon(FontAwesomeIcons.check),
-          )
-        ],
-      ),
-      body: ListView(
-          children: List.generate(
-        5, // Text fields
-        (index) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 2.0,
-                ),
-                child: BorderlessTextField(
-                    centerAll: index == 0,
-                    controller: getControllers(index),
-                    floatingLabel: getLabels(index),
-                    onChanged: (String? str) {
-                      _dirty = true;
-                    }),
-              ),
-              if (index == 4) ...{
-                const SizedBox(
-                  height: 20,
-                ),
-                if (profileFields.isNotEmpty) ...{
-                  _explanationBox(
-                    explanation: 'Hold each field to re-order it',
-                    icon: FontAwesomeIcons.upDown,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ReorderableListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final ProfileField field = profileFields[index];
-                      return _editableField(field);
-                    },
-                    itemCount: profileFields.length,
-                    onReorder: (previousIndex, newIndex) {},
-                  )
-                },
-                _explanationBox(
-                  explanation: 'Tap a field below to add it',
-                  icon: FontAwesomeIcons.plus,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                getFields(context)
-              }
-            ],
-          );
-        },
-      )),
+  Future<bool> onPop(Profile profile) async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return WarningBox(
+          dialog: 'Are you sure you want to discard your changes?',
+          onAccept: () {
+            Navigator.of(context).pop(true);
+          },
+          onCancel: () => Navigator.of(context).pop(false),
+        );
+      },
     );
   }
 
-  Widget _editableField(ProfileField field) {
+  @override
+  Widget build(BuildContext context) {
+    final Profile profile = context.watch<ProfileNotifier>().profile;
+    return WillPopScope(
+      onWillPop: () async => await onPop(profile),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Edit Card'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () async {
+                showLoadingBox(context: context);
+                await saveChanges(profile);
+                // Pop off to home screen
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              icon: const FaIcon(FontAwesomeIcons.check),
+            )
+          ],
+        ),
+        body: ListView(
+            children: List.generate(
+          5, // Text fields
+          (index) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 2.0,
+                  ),
+                  child: BorderlessTextField(
+                      centerAll: index == 0,
+                      controller: getControllers(index),
+                      floatingLabel: getLabels(index),
+                      onChanged: (String? str) {
+                        _dirty = true;
+                      }),
+                ),
+                if (index == 4) ...{
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  if (profile.fields.isNotEmpty) ...{
+                    _explanationBox(
+                      explanation: 'Hold each field to re-order it',
+                      icon: FontAwesomeIcons.upDown,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ReorderableListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final ProfileField field = profile.fields[index];
+                        return _editableField(
+                          field: field,
+                          index: index,
+                          profile: profile,
+                        );
+                      },
+                      itemCount: profile.fields.length,
+                      onReorder: (previousIndex, newIndex) {},
+                    )
+                  },
+                  _explanationBox(
+                    explanation: 'Tap a field below to add it',
+                    icon: FontAwesomeIcons.plus,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  getFields(context)
+                }
+              ],
+            );
+          },
+        )),
+      ),
+    );
+  }
+
+  Widget _editableField({
+    required ProfileField field,
+    required int index,
+    required Profile profile,
+  }) {
     return ListTile(
       key: ValueKey(field),
       leading: CircleIcon(
         iconData: field.icon,
       ),
       title: BorderlessTextField(
-        floatingLabel: 'Phone Number',
-        //  controller: field.titleController,
-        onChanged: (str) {},
+        initialValue: field.title,
+        floatingLabel: field.floatingLabel,
+        onChanged: (String? text) {
+          profile.fields[index].title = text!;
+          _dirty = true;
+        },
       ),
-      subtitle: Text(field.subtitle),
+      subtitle: BorderlessTextField(
+        initialValue: field.subtitle,
+        floatingLabel: 'Label (optional)',
+        onChanged: (String? text) {
+          profile.fields[index].subtitle = text!;
+          _dirty = true;
+        },
+      ),
       trailing: IconButton(
         splashRadius: kSplashRadius,
         onPressed: () {
@@ -191,8 +224,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                 onAccept: () {
                   Navigator.pop(context);
                   deleteField(
+                    profile: profile,
                     context: context,
-                    text: field.title,
+                    index: index,
                   );
                 },
                 accept: 'YES, DELETE FIELD',
@@ -210,11 +244,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   void deleteField({
     required BuildContext context,
-    required String text,
+    required Profile profile,
+    required int index,
   }) async {
-    final profile = context.read<ProfileNotifier>().profile;
-    // profile.phoneNumbers.remove(text);
     setState(() {
+      profile.fields.removeAt(index);
       _dirty = true;
     });
   }

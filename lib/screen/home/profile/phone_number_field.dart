@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/field/phone_number_field.dart';
 import 'package:tapea/provider/profile_notifier.dart';
-import 'package:tapea/service/firestore_datadase_service.dart';
-import 'package:tapea/util/field_identifiers.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
@@ -27,18 +26,15 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   CountryCode _code = CountryCode.fromJson(codes[61]);
   bool internationalNumber = true;
 
-  Future<void> saveChanges(String userId) async {
-    final database = context.read<FirestoreDatabaseService>();
+  void saveChanges(String userId) async {
     final notifier = context.read<ProfileNotifier>();
-    // final data = notifier.profile.phoneNumbers;
-    // data[getPhoneNumber()] = _labelController.text;
-    // await database.updateDefaultProfile(
-    //   userId: userId,
-    //   data: {
-    //     ProfileFieldID.phoneNumbers: data,
-    //   },
-    // );
-    await notifier.update(context);
+    notifier.profile.fields.add(
+      PhoneNumberField(
+        title: _phoneNumberController.text,
+        subtitle: _labelController.text,
+        phoneExtension: _phoneExtController.text,
+      ),
+    );
   }
 
   String getPhoneNumber() {
@@ -67,10 +63,10 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
             },
             child: TextButton(
               onPressed: _phoneNumberController.text.isNotEmpty
-                  ? () async {
+                  ? () {
                       final String? userId = getIdentifier(context);
                       if (userId != null) {
-                        await saveChanges(userId);
+                        saveChanges(userId);
                       }
                       Navigator.pop(context);
                     }

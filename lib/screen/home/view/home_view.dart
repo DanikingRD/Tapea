@@ -25,7 +25,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController();
   late Future<UserModel> userFuture;
-  late Future<ProfileModel> profileFuture;
+  late Future<Profile> profileFuture;
   int _view = 0;
 
   @override
@@ -51,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
     return notifier.user;
   }
 
-  Future<ProfileModel> _readProfile(
+  Future<Profile> _readProfile(
     BuildContext context,
   ) async {
     final ProfileNotifier notifier = context.read<ProfileNotifier>();

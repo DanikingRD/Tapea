@@ -155,7 +155,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
   }
 
   Future<void> saveProfile(String userId, String? photoUrl) async {
-    final ProfileModel profile = ProfileModel(
+    final Profile profile = Profile(
       title: _profileTitle.text,
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,

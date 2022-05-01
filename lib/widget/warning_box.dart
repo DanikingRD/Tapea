@@ -5,13 +5,13 @@ class WarningBox extends StatelessWidget {
   final String accept;
   final String cancel;
   final Widget? content;
-  final Function onAccept;
+  final Function() onAccept;
   final Function? onCancel;
 
   const WarningBox({
     Key? key,
     required this.dialog,
-    this.accept = 'GOT IT',
+    this.accept = 'CONTINUE',
     this.cancel = 'CANCEL',
     this.content,
     required this.onAccept,
@@ -45,9 +45,7 @@ class WarningBox extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () {
-            onAccept();
-          },
+          onPressed: onAccept,
           child: Text(
             accept,
             style: style,

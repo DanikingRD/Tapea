@@ -12,7 +12,7 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 
-List<ProfileField> findProfileFields(ProfileModel profile) {
+List<ProfileField> findProfileFields(Profile profile) {
   final List<ProfileField> fields = [];
   return fields;
   // // We iterate over all the global fields and for each one

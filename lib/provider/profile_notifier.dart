@@ -5,9 +5,9 @@ import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
 
 class ProfileNotifier extends ChangeNotifier {
-  ProfileModel? _profile;
+  Profile? _profile;
 
-  ProfileModel get profile => _profile!;
+  Profile get profile => _profile!;
 
   Future<void> update(BuildContext context) async {
     final String? id = getIdentifier(context);
@@ -16,5 +16,10 @@ class ProfileNotifier extends ChangeNotifier {
       _profile = await database.readDefaultProfile(userId: id);
       notifyListeners();
     }
+  }
+
+  void updateWith(Profile profile) {
+    _profile = profile;
+    notifyListeners();
   }
 }

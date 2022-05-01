@@ -12,7 +12,7 @@ class ShareProfileView extends StatefulWidget {
 }
 
 class _ShareProfileViewState extends State<ShareProfileView> {
-  late final ProfileModel profile;
+  late final Profile profile;
 
   @override
   void initState() {

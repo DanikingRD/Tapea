@@ -19,8 +19,6 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  late List<ProfileField> profileFields;
-
   @override
   void initState() {
     super.initState();
@@ -28,8 +26,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
-    profileFields = findProfileFields(profile);
+    final Profile profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
         appBar: AppBar(
           title: Text(profile.title),
@@ -53,9 +50,9 @@ class _ProfileViewState extends State<ProfileView> {
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: profileFields.length,
+              itemCount: profile.fields.length,
               itemBuilder: (BuildContext context, int index) {
-                final ProfileField field = profileFields[index];
+                final ProfileField field = profile.fields[index];
                 return _tile(
                   icon: field.icon,
                   onPressed: () {},
@@ -93,7 +90,7 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget getMainInfo(ProfileModel profile) {
+  Widget getMainInfo(Profile profile) {
     return ListTile(
       title: Text(
         profile.firstName + ' ' + profile.lastName,

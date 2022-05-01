@@ -29,10 +29,12 @@ void main(List<String> args) async {
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent),
   );
-  runApp(AppInitializer());
+  runApp(const AppInitializer());
 }
 
 class AppInitializer extends StatelessWidget {
+  const AppInitializer({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
