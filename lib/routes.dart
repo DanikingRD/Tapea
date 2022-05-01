@@ -2,10 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:tapea/screen/auth/login_screen.dart';
 import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
-import 'package:tapea/screen/home/home_screen.dart';
-import 'package:tapea/screen/home/profile/phone_number_field.dart';
-import 'package:tapea/screen/home/profile_editor_screen.dart';
-import 'package:tapea/screen/profile_setup.dart';
+import 'package:tapea/screen/auth/profile_setup.dart';
+import 'package:tapea/screen/home_screen.dart';
+import 'package:tapea/screen/profile/phone_number_field.dart';
+import 'package:tapea/screen/profile/profile_editor_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
 

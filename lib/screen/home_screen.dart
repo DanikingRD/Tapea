@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:tapea/screen/home/view/home_view.dart';
-import 'package:tapea/screen/home/view/profile_view.dart';
-import 'package:tapea/screen/home/view/share_profile_view.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:tapea/screen/home_view.dart';
+import 'package:tapea/screen/profile/profile_view.dart';
+import 'package:tapea/screen/share_profile_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({

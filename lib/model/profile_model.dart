@@ -1,6 +1,6 @@
-import 'package:tapea/field/email_field.dart';
-import 'package:tapea/field/phone_number_field.dart';
-import 'package:tapea/field/profile_field.dart';
+import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/phone_number_field.dart';
+import 'package:tapea/model/field/profile_field.dart';
 
 class ProfileModel {
   final String title;

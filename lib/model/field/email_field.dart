@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/icon_data.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tapea/field/profile_field.dart';
+import 'package:tapea/model/field/profile_field.dart';
 
 class EmailField extends ProfileField {
   EmailField({

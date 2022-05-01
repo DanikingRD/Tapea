@@ -12,7 +12,7 @@ import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/screen/auth/login_screen.dart';
-import 'package:tapea/screen/home/home_screen.dart';
+import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firebase_storage_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
@@ -84,7 +84,7 @@ class AppInitializer extends StatelessWidget {
           ),
         ),
         themeMode: ThemeMode.light,
-        home: AuthListener(
+        home: const AuthListener(
           root: LoginScreen(),
           home: HomeScreen(),
         ),
