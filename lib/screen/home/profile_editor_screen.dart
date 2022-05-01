@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/field/phone_number_field.dart';
 import 'package:tapea/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
@@ -205,39 +206,60 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
           _dirty = true;
         },
       ),
-      subtitle: BorderlessTextField(
-        initialValue: field.subtitle,
-        floatingLabel: 'Label (optional)',
-        onChanged: (String? text) {
-          profile.fields[index].subtitle = text!;
-          _dirty = true;
-        },
-      ),
-      trailing: IconButton(
-        splashRadius: kSplashRadius,
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return WarningBox(
-                dialog: 'Are you sure you want to delete this field?',
-                onAccept: () {
-                  Navigator.pop(context);
-                  deleteField(
-                    profile: profile,
-                    context: context,
-                    index: index,
-                  );
-                },
-                accept: 'YES, DELETE FIELD',
-              );
+      subtitle: Column(
+        children: [
+          if (field is PhoneNumberField) ...{
+            BorderlessTextField(
+              initialValue: field.phoneExtension,
+              floatingLabel: 'Ext.',
+              onChanged: (String? text) {
+                profile.fields[index].subtitle = text!;
+                _dirty = true;
+              },
+            ),
+          },
+          BorderlessTextField(
+            initialValue: field.subtitle,
+            floatingLabel: 'Label (optional)',
+            onChanged: (String? text) {
+              profile.fields[index].subtitle = text!;
+              _dirty = true;
             },
-          );
-        },
-        icon: const Icon(
-          FontAwesomeIcons.xmark,
-          color: Colors.black,
-        ),
+          ),
+        ],
+      ),
+      trailing: getDeleteFieldButton(profile: profile, index: index),
+    );
+  }
+
+  Widget getDeleteFieldButton({
+    required Profile profile,
+    required int index,
+  }) {
+    return IconButton(
+      splashRadius: kSplashRadius,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return WarningBox(
+              dialog: 'Are you sure you want to delete this field?',
+              onAccept: () {
+                Navigator.pop(context);
+                deleteField(
+                  profile: profile,
+                  context: context,
+                  index: index,
+                );
+              },
+              accept: 'YES, DELETE FIELD',
+            );
+          },
+        );
+      },
+      icon: const Icon(
+        FontAwesomeIcons.xmark,
+        color: Colors.black,
       ),
     );
   }

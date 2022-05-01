@@ -67,10 +67,11 @@ class Profile {
 
   static List<ProfileField> fieldsFromJson(List<dynamic> fields) {
     // 'fields' variable is actually a List<Map<String, dynamic>>.
+    if (fields.isEmpty) return [];
     final List<ProfileField> allFields = [];
     for (Map<String, dynamic> field in fields) {
       final String title = field['title'];
-      final String subtitle = field['subtitle'];
+      final subtitle = field.containsKey('subtitle') ? field['subtitle'] : '';
       switch (field['type'] as String) {
         case FieldIdentifier.phoneNumber:
           allFields.add(
@@ -85,20 +86,25 @@ class Profile {
           throw ('');
       }
     }
+
     return allFields;
   }
 
   List<Map<String, dynamic>> fieldsToJson() {
+    print('fields to json');
     final List<Map<String, dynamic>> allJsons = [];
     for (ProfileField field in fields) {
-      allJsons.add(
-        {
-          'type': field.type.id,
-          'title': field.title,
-          'subtitle': field.subtitle,
-        },
-      );
+      final Map<String, dynamic> currentField = {
+        'type': field.type.id,
+        'title': field.title,
+        'subtitle': field.subtitle,
+      };
+      if (field is PhoneNumberField) {
+        currentField['phoneExtension'] = field.phoneExtension;
+      }
+      allJsons.add(currentField);
     }
+
     return allJsons;
   }
 
