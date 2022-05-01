@@ -15,4 +15,11 @@ class PhoneNumberField extends ProfileField {
           type: ProfileFieldType.phoneNumber,
           floatingLabel: 'Phone Number',
         );
+  String getPhoneNumber() {
+    if (phoneExtension != null) {
+      return title + ' ' + 'Ext.' + phoneExtension!;
+    } else {
+      return title;
+    }
+  }
 }

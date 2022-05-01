@@ -15,14 +15,14 @@ class FirestoreDatabaseService {
 
   Future<void> setUserProfile({
     required String userId,
-    required Profile profile,
+    required ProfileModel profile,
   }) async {
     await profilesRef(userId: userId).doc(profile.title).set(profile);
   }
 
   Future<void> setDefaultUserProfile({
     required String userId,
-    required Profile profile,
+    required ProfileModel profile,
   }) async {
     await profilesRef(userId: userId).doc('Default').set(profile);
   }
@@ -44,14 +44,14 @@ class FirestoreDatabaseService {
     return doc.exists;
   }
 
-  Future<Profile> readDefaultProfile({
+  Future<ProfileModel> readDefaultProfile({
     required String userId,
   }) async {
     final json = await profilesRef(userId: userId).doc('Default').get();
     return json.data()!;
   }
 
-  Future<Profile> readProfile({
+  Future<ProfileModel> readProfile({
     required String userId,
     required String title,
   }) async {
@@ -81,15 +81,15 @@ class FirestoreDatabaseService {
         );
   }
 
-  CollectionReference<Profile> profilesRef({
+  CollectionReference<ProfileModel> profilesRef({
     required String userId,
   }) {
     return _instance
         .collection('users')
         .doc(userId)
         .collection('profiles')
-        .withConverter<Profile>(
-            fromFirestore: (doc, _) => Profile.fromJson(doc.data()!),
+        .withConverter<ProfileModel>(
+            fromFirestore: (doc, _) => ProfileModel.fromJson(doc.data()!),
             toFirestore: (model, _) => model.toJson());
   }
 }

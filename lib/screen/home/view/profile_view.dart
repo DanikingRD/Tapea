@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/field/phone_number_field.dart';
 import 'package:tapea/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
-import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
 class ProfileView extends StatefulWidget {
@@ -26,71 +26,68 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    final Profile profile = context.watch<ProfileNotifier>().profile;
+    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
-        appBar: AppBar(
-          title: Text(profile.title),
-          centerTitle: true,
-          backgroundColor: kHomeBgColor,
-          actions: [
-            IconButton(
-              onPressed: () => Navigator.pushNamed(
-                context,
-                Routes.profileEditor,
-                arguments: true,
-              ),
-              icon: const FaIcon(FontAwesomeIcons.pencil),
-            )
-          ],
-        ),
+      appBar: AppBar(
+        title: Text(profile.title),
+        centerTitle: true,
         backgroundColor: kHomeBgColor,
-        body: ListView(
-          children: [
-            getMainInfo(profile),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: profile.fields.length,
-              itemBuilder: (BuildContext context, int index) {
-                final ProfileField field = profile.fields[index];
-                return _tile(
-                  icon: field.icon,
-                  onPressed: () {},
-                  title: field.title,
-                  subtitle: field.subtitle,
-                );
-              },
-            )
-          ],
-        ));
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(
+              context,
+              Routes.profileEditor,
+              arguments: true,
+            ),
+            icon: const FaIcon(FontAwesomeIcons.pencil),
+          )
+        ],
+      ),
+      backgroundColor: kHomeBgColor,
+      body: ListView(
+        children: [
+          getMainInfo(profile),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: profile.fields.length,
+            itemBuilder: (BuildContext context, int index) {
+              final ProfileField field = profile.fields[index];
+              return _tile(
+                field: field,
+                onPressed: () {},
+              );
+            },
+          )
+        ],
+      ),
+    );
   }
 
   Widget _tile({
-    required IconData icon,
+    required ProfileField field,
     required Function() onPressed,
-    required String title,
-    String? subtitle,
   }) {
     return ListTile(
       leading: CircleIconButton(
         circleSize: 54,
         icon: Icon(
-          icon,
+          field.icon,
           size: 24,
         ),
         onPressed: onPressed,
       ),
       title: Text(
-        title,
+        field is PhoneNumberField ? field.getPhoneNumber() : field.title,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),
-      subtitle: subtitle != null ? Text(subtitle) : null,
+      subtitle: field.subtitle.isNotEmpty ? Text(field.subtitle) : null,
     );
   }
 
-  Widget getMainInfo(Profile profile) {
+  Widget getMainInfo(ProfileModel profile) {
     return ListTile(
       title: Text(
         profile.firstName + ' ' + profile.lastName,

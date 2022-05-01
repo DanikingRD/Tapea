@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +24,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController();
   late Future<UserModel> userFuture;
-  late Future<Profile> profileFuture;
+  late Future<ProfileModel> profileFuture;
   int _view = 0;
 
   @override
@@ -51,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
     return notifier.user;
   }
 
-  Future<Profile> _readProfile(
+  Future<ProfileModel> _readProfile(
     BuildContext context,
   ) async {
     final ProfileNotifier notifier = context.read<ProfileNotifier>();

@@ -33,13 +33,13 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
   bool _dirty = false;
-  late final Profile oldProfile;
+  late final ProfileModel oldProfile;
   late int _fieldsLength;
   @override
   void initState() {
     super.initState();
     if (widget.edit) {
-      final Profile profile = context.read<ProfileNotifier>().profile;
+      final ProfileModel profile = context.read<ProfileNotifier>().profile;
       oldProfile = profile;
       updateControllers(profile);
       _fieldsLength = profile.fields.length;
@@ -56,7 +56,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     super.dispose();
   }
 
-  void updateControllers(Profile profile) {
+  void updateControllers(ProfileModel profile) {
     titleField.update(profile.title);
     firstNameField.update(profile.firstName);
     lastNameField.update(profile.lastName);
@@ -64,31 +64,34 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     jobTitleField.update(profile.jobTitle);
   }
 
-  Future<void> updateDatabase(Profile profile) async {
+  Future<void> updateDatabase(ProfileModel profile) async {
     final String? id = getIdentifier(context);
     if (id != null) {
       final database = context.read<FirestoreDatabaseService>();
-      if (_dirty || _fieldsLength != profile.fields.length) {
-        await database.setDefaultUserProfile(
-          userId: id,
-          profile: profile.copyWith(
-            title: titleField.text,
-            firstName: firstNameField.text,
-            lastName: lastNameField.text,
-            company: companyField.text,
-            jobTitle: jobTitleField.text,
-          ),
-        );
-      }
+      await database.setDefaultUserProfile(
+        userId: id,
+        profile: profile.copyWith(
+          title: titleField.text,
+          firstName: firstNameField.text,
+          lastName: lastNameField.text,
+          company: companyField.text,
+          jobTitle: jobTitleField.text,
+        ),
+      );
     }
   }
 
-  Future<void> saveChanges(Profile profile) async {
-    await updateDatabase(profile);
-    await context.read<ProfileNotifier>().update(context);
+  Future<void> saveChanges(ProfileModel profile) async {
+    if (_dirty || profile.fields.length != _fieldsLength) {
+      await updateDatabase(profile);
+      await context.read<ProfileNotifier>().update(context);
+    }
   }
 
-  Future<bool> onPop(Profile profile) async {
+  Future<bool> onPop(ProfileModel profile) async {
+    if (!_dirty && _fieldsLength == profile.fields.length) {
+      return Future.value(true);
+    }
     return await showDialog(
       context: context,
       builder: (context) {
@@ -105,7 +108,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Profile profile = context.watch<ProfileNotifier>().profile;
+    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return WillPopScope(
       onWillPop: () async => await onPop(profile),
       child: Scaffold(
@@ -191,7 +194,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   Widget _editableField({
     required ProfileField field,
     required int index,
-    required Profile profile,
+    required ProfileModel profile,
   }) {
     return ListTile(
       key: ValueKey(field),
@@ -233,7 +236,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   }
 
   Widget getDeleteFieldButton({
-    required Profile profile,
+    required ProfileModel profile,
     required int index,
   }) {
     return IconButton(
@@ -266,7 +269,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   void deleteField({
     required BuildContext context,
-    required Profile profile,
+    required ProfileModel profile,
     required int index,
   }) async {
     setState(() {

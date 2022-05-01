@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:tapea/field/email_field.dart';
 import 'package:tapea/field/phone_number_field.dart';
 import 'package:tapea/field/profile_field.dart';
 
-class Profile {
+class ProfileModel {
   final String title;
   final String firstName;
   final String lastName;
@@ -11,7 +11,7 @@ class Profile {
   final String? photoUrl;
   final List<ProfileField> fields;
 
-  const Profile({
+  const ProfileModel({
     required this.title,
     required this.firstName,
     required this.lastName,
@@ -21,8 +21,8 @@ class Profile {
     this.fields = const [],
   });
 
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    return Profile(
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    return ProfileModel(
       title: json[FieldIdentifier.title],
       firstName: json[FieldIdentifier.firstName],
       lastName: json[FieldIdentifier.lastName],
@@ -33,7 +33,7 @@ class Profile {
     );
   }
 
-  Profile copyWith({
+  ProfileModel copyWith({
     String? title,
     String? firstName,
     String? lastName,
@@ -42,7 +42,7 @@ class Profile {
     String? photoUrl,
     List<ProfileField>? fields,
   }) {
-    return Profile(
+    return ProfileModel(
       title: title ?? this.title,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
@@ -82,16 +82,22 @@ class Profile {
             ),
           );
           break;
+        case FieldIdentifier.email:
+          allFields.add(
+            EmailField(
+              title: title,
+              subtitle: subtitle,
+            ),
+          );
+          break;
         default:
           throw ('');
       }
     }
-
     return allFields;
   }
 
   List<Map<String, dynamic>> fieldsToJson() {
-    print('fields to json');
     final List<Map<String, dynamic>> allJsons = [];
     for (ProfileField field in fields) {
       final Map<String, dynamic> currentField = {
