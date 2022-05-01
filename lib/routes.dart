@@ -4,7 +4,7 @@ import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
-import 'package:tapea/screen/profile/phone_number_field.dart';
+import 'package:tapea/screen/profile/field/phone_number_screen.dart';
 import 'package:tapea/screen/profile/profile_editor_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
