@@ -20,11 +20,6 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
@@ -54,6 +49,7 @@ class _ProfileViewState extends State<ProfileView> {
             itemBuilder: (BuildContext context, int index) {
               final ProfileField field = profile.fields[index];
               return _tile(
+                context: context,
                 field: field,
                 onPressed: () {},
               );
@@ -65,24 +61,41 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _tile({
+    required BuildContext context,
     required ProfileField field,
     required Function() onPressed,
   }) {
     return ListTile(
       leading: CircleIconButton(
-        circleSize: 54,
+        circleSize: 48,
         icon: Icon(
           field.icon,
-          size: 24,
+          size: 20,
         ),
         onPressed: onPressed,
       ),
-      title: Text(
-        field is PhoneNumberField ? field.getPhoneNumber() : field.title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      title: field is PhoneNumberField
+          ? RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: field.title + ' ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: field.displayExtensionOnly(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            )
+          : Text(field.title),
       subtitle: field.subtitle.isNotEmpty ? Text(field.subtitle) : null,
     );
   }
