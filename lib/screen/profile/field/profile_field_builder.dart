@@ -77,13 +77,11 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
 
   void saveField() {
     final titleText = _titleController == null ? null : _titleController!.text;
-    if (widget.save != null) {
-      widget.save(
-        titleText,
-        _labelController.text,
-        context.read<ProfileNotifier>(),
-      );
-    }
+    widget.save(
+      titleText,
+      _labelController.text,
+      context.read<ProfileNotifier>(),
+    );
   }
 
   @override
@@ -95,7 +93,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: widget.save == null ? null : () => saveField(),
+            onPressed: () => saveField(),
             child: const Text(
               'SAVE',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -126,11 +124,10 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                leading: CircleIcon(
-                  backgroundColor: kSelectedPageColor,
-                  iconData: widget.fieldIcon,
-                  iconSize: 24,
-                  circleSize: 48,
+                leading: CircleIconButton(
+                  onPressed: null,
+                  elevation: 1.0,
+                  icon: Icon(widget.fieldIcon),
                 ),
                 subtitle: getSubtitle(),
               ),

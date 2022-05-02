@@ -5,63 +5,24 @@ class CircleIconButton extends StatelessWidget {
   final Icon icon;
   final Color? circleColor;
   final Function()? onPressed;
-  final double circleSize;
+  final double elevation;
   const CircleIconButton({
     Key? key,
     required this.icon,
     required this.onPressed,
     this.circleColor = kSelectedPageColor,
-    this.circleSize = 64,
+    this.elevation = 3.0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: circleSize,
-      height: circleSize,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        child: icon,
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          primary: kSelectedPageColor, // <-- Button color
-        ),
-      ),
-    );
-  }
-}
-
-class CircleIcon extends StatelessWidget {
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final IconData iconData;
-  final double iconSize;
-  final double circleSize;
-
-  const CircleIcon({
-    Key? key,
-    this.backgroundColor = kSelectedPageColor,
-    required this.iconData,
-    this.iconSize = 24,
-    this.circleSize = 48,
-    this.foregroundColor = Colors.white,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: circleSize,
-      height: circleSize,
-      child: ClipOval(
-        child: Material(
-          color: backgroundColor,
-          child: Icon(
-            iconData,
-            color: foregroundColor,
-            size: iconSize,
-          ),
-        ),
-      ),
+    return FloatingActionButton(
+      child: icon,
+      onPressed: onPressed,
+      backgroundColor: kSelectedPageColor,
+      elevation: elevation,
+      focusElevation: 0.0,
+      highlightElevation: 0.0,
     );
   }
 }

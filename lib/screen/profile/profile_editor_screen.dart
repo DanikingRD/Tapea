@@ -198,8 +198,10 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   }) {
     return ListTile(
       key: ValueKey(field),
-      leading: CircleIcon(
-        iconData: field.icon,
+      leading: CircleIconButton(
+        onPressed: null,
+        elevation: 1.0,
+        icon: Icon(field.icon),
       ),
       title: BorderlessTextField(
         initialValue: field.title,

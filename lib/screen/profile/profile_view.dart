@@ -66,13 +66,13 @@ class _ProfileViewState extends State<ProfileView> {
     required Function() onPressed,
   }) {
     return ListTile(
-      leading: CircleIconButton(
-        circleSize: 48,
-        icon: Icon(
-          field.icon,
-          size: 20,
-        ),
+      leading: FloatingActionButton(
+        child: Icon(field.icon),
         onPressed: onPressed,
+        backgroundColor: kSelectedPageColor,
+        elevation: 3.0,
+        focusElevation: 0.0,
+        highlightElevation: 0.0,
       ),
       title: field is PhoneNumberField
           ? RichText(
