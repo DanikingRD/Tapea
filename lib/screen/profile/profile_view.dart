@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
-import 'package:tapea/widget/circle_icon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({
@@ -51,7 +52,6 @@ class _ProfileViewState extends State<ProfileView> {
               return _tile(
                 context: context,
                 field: field,
-                onPressed: () {},
               );
             },
           )
@@ -60,15 +60,43 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  void getActionFor(ProfileField field) async {
+    if (field is PhoneNumberField) {
+      final Uri resource = Uri(
+        scheme: 'tel',
+        path: field.title,
+      );
+      await openUrl(resource);
+    }
+    if (field is EmailField) {
+      final Uri resource = Uri(
+        scheme: 'mailto',
+        path: field.title,
+      );
+      await openUrl(resource);
+    }
+  }
+
+  Future<void> openUrl(Uri resource) async {
+    await launchUrl(resource);
+    if (await canLaunchUrl(resource)) {}
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((entry) =>
+            '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(entry.value)}')
+        .join('&');
+  }
+
   Widget _tile({
     required BuildContext context,
     required ProfileField field,
-    required Function() onPressed,
   }) {
     return ListTile(
       leading: FloatingActionButton(
         child: Icon(field.icon),
-        onPressed: onPressed,
+        onPressed: () => getActionFor(field),
         backgroundColor: kSelectedPageColor,
         elevation: 3.0,
         focusElevation: 0.0,

@@ -4,7 +4,6 @@ import 'package:tapea/constants.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
-import 'package:tapea/widget/notification_box.dart';
 import 'package:tapea/widget/suggestion_button.dart';
 
 class ProfileFieldScreenBuilder extends StatefulWidget {
