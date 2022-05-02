@@ -93,6 +93,10 @@ class _ProfileViewState extends State<ProfileView> {
     required BuildContext context,
     required ProfileField field,
   }) {
+    final TextStyle style = Theme.of(context)
+        .textTheme
+        .bodyLarge!
+        .copyWith(fontWeight: FontWeight.bold);
     return ListTile(
       leading: FloatingActionButton(
         child: Icon(field.icon),
@@ -108,10 +112,7 @@ class _ProfileViewState extends State<ProfileView> {
                 children: [
                   TextSpan(
                     text: field.title + ' ',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
+                    style: style,
                   ),
                   TextSpan(
                     text: field.displayExtensionOnly(),
@@ -123,7 +124,10 @@ class _ProfileViewState extends State<ProfileView> {
                 ],
               ),
             )
-          : Text(field.title),
+          : Text(
+              field.title,
+              style: style,
+            ),
       subtitle: field.subtitle.isNotEmpty ? Text(field.subtitle) : null,
     );
   }
