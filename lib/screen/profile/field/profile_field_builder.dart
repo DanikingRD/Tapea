@@ -16,11 +16,13 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
   final bool withSuggestions;
   final bool withLabel;
   final Widget? suggestionTitle;
-  final Function(String labelText, ProfileNotifier notifier) save;
   final List<String>? suggestions;
   final bool isPhoneNumberField;
-  final String? filterMessage;
-  final bool Function()? customFilter;
+  final Function(
+    String? fieldTitle,
+    String labelText,
+    ProfileNotifier notifier,
+  ) save;
   const ProfileFieldScreenBuilder({
     Key? key,
     required this.title,
@@ -42,8 +44,6 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
     this.suggestions,
     required this.save,
     this.isPhoneNumberField = false,
-    this.filterMessage,
-    this.customFilter,
   }) : super(key: key);
 
   @override
@@ -75,30 +75,14 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
     super.dispose();
   }
 
-  bool saveFilter() {
-    if (_titleController != null) {
-      if (_titleController!.text.isEmpty) {
-        showDialog(
-            context: context,
-            builder: (BuildContext ctx) {
-              // If this method was triggered, the filter message shouldn't be null
-              return NotificationBox(msg: widget.filterMessage!);
-            });
-        return true; // Filter was accessed
-      }
-    }
-    return false; // We can save changes
-  }
-
   void saveField() {
-    if (_titleController == null) {
-      if (!widget.customFilter!()) {
-        widget.save(_labelController.text, context.read<ProfileNotifier>());
-      }
-    } else {
-      if (!saveFilter()) {
-        widget.save(_labelController.text, context.read<ProfileNotifier>());
-      }
+    final titleText = _titleController == null ? null : _titleController!.text;
+    if (widget.save != null) {
+      widget.save(
+        titleText,
+        _labelController.text,
+        context.read<ProfileNotifier>(),
+      );
     }
   }
 
@@ -111,7 +95,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: saveField,
+            onPressed: widget.save == null ? null : () => saveField(),
             child: const Text(
               'SAVE',
               style: TextStyle(fontWeight: FontWeight.bold),

@@ -8,7 +8,6 @@ import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/screen/profile/field/profile_field_builder.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
-import 'package:tapea/widget/notification_box.dart';
 
 class PhoneNumberFieldScreen extends StatefulWidget {
   const PhoneNumberFieldScreen({
@@ -43,20 +42,7 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
           textFieldLabel: 'Phone Number',
           isPhoneNumberField: true,
           content: getContent(),
-          suggestions: getSuggestions(),
-          customFilter: () {
-            if (_phoneNumberController.text.isEmpty) {
-              showDialog(
-                context: context,
-                builder: (ctx) {
-                  return NotificationBox(msg: getFilterMessage());
-                },
-              );
-              return false;
-            } else {
-              return true;
-            }
-          },
+          suggestions: const ['Home', 'Mobile', 'Work', 'Cell'],
           save: save,
         );
       }),
@@ -67,14 +53,19 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
     );
   }
 
-  void save(String labelText, ProfileNotifier notifier) {
-    notifier.profile.fields.add(
-      PhoneNumberField(
-        title: _phoneNumberController.text,
-        subtitle: labelText,
-        phoneExtension: _phoneExtController.text,
-      ),
-    );
+  void save(String? titleText, String labelText, ProfileNotifier notifier) {
+    if (_phoneNumberController.text.isEmpty) {
+      notify(msg: getFilterMessage(), context: context);
+    } else {
+      notifier.profile.fields.add(
+        PhoneNumberField(
+          title: _phoneNumberController.text,
+          subtitle: labelText,
+          phoneExtension: _phoneExtController.text,
+        ),
+      );
+      Navigator.pop(context);
+    }
   }
 
   String getFilterMessage() {
@@ -135,7 +126,7 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: buildSwitch(),
+            child: getSwitch(),
           ),
           Text(
             'Use international number',
@@ -171,7 +162,7 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
     );
   }
 
-  Widget buildSwitch() {
+  Widget getSwitch() {
     return Switch.adaptive(
       value: internationalNumber,
       activeColor: kSelectedPageColor,
@@ -181,9 +172,5 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
         });
       },
     );
-  }
-
-  List<String> getSuggestions() {
-    return ['Home', 'Mobile', 'Work', 'Cell'];
   }
 }
