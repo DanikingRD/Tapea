@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/widget/loading_indicator.dart';
+import 'package:tapea/widget/notification_box.dart';
 
 String? getIdentifier(BuildContext context) {
   final provider = context.read<FirebaseAuthService>();
@@ -68,36 +69,18 @@ void showWarning({
 }
 
 void notify({
-  required BuildContext context,
   required String msg,
-  Function()? onClose,
+  required BuildContext context,
+  VoidCallback? onClose,
   Widget? content,
-  bool dismissible = true,
 }) {
   showDialog(
     context: context,
-    barrierDismissible: dismissible,
-    builder: (ctx) {
-      return AlertDialog(
-        title: Text(
-          msg,
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontWeight: FontWeight.bold),
-        ),
+    builder: (context) {
+      return NotificationBox(
+        msg: msg,
+        onClose: onClose,
         content: content,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              if (onClose != null) {
-                onClose();
-              }
-            },
-            child: const Text('OK'),
-          ),
-        ],
       );
     },
   );

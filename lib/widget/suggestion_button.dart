@@ -3,7 +3,7 @@ import 'package:tapea/constants.dart';
 
 class SuggestionButton extends StatelessWidget {
   final String suggestion;
-  final Function() onPressed;
+  final VoidCallback onPressed;
   const SuggestionButton({
     Key? key,
     required this.suggestion,

@@ -307,12 +307,14 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     );
   }
 
-  void selectIcon(BuildContext context, IconData profileIcon) {
+  void openScreenByIndex(BuildContext context, int index) {
     final String route;
-    if (profileIcon == FontAwesomeIcons.phone) {
-      route = Routes.addPhoneField;
+    if (index == 0) {
+      route = Routes.phoneNumberField;
+    } else if (index == 1) {
+      route = Routes.emailField;
     } else {
-      throw ('aosdaa');
+      throw ('Tried to access an unregistered screen');
     }
     Navigator.pushNamed(context, route);
   }
@@ -338,7 +340,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
         children: List.generate(3, (index) {
           return CircleIconButton(
-            onPressed: () => selectIcon(context, icons[index]),
+            onPressed: () => openScreenByIndex(context, index),
             icon: Icon(
               icons[index],
               color: Colors.white,

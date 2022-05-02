@@ -4,7 +4,8 @@ import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
-import 'package:tapea/screen/profile/field/phone_number_screen.dart';
+import 'package:tapea/screen/profile/field/email_field_screen.dart';
+import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
 import 'package:tapea/screen/profile/profile_editor_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
@@ -17,7 +18,8 @@ class Routes {
   static const String profileSetup = '/profile_setup';
   static const String home = '/home';
   static const String profileEditor = '/profile_editor';
-  static const String addPhoneField = '/add_phone_field';
+  static const String phoneNumberField = '/phone_number';
+  static const String emailField = '/email';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -54,11 +56,17 @@ class Routes {
           ),
           settings: settings,
         );
-      case addPhoneField:
+      case phoneNumberField:
         return rightToLeft(
-          screen: const PhoneNumberScreen(),
+          screen: const PhoneNumberFieldScreen(),
           settings: settings,
         );
+      case emailField:
+        return rightToLeft(
+          screen: const EmailScreenField(),
+          settings: settings,
+        );
+
       default:
         throw ('Tried to access an unregistered named route');
     }

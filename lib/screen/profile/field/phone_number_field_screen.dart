@@ -1,28 +1,27 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_code_picker/country_codes.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/screen/profile/field/profile_field_builder.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
-import 'package:tapea/widget/suggestion_button.dart';
+import 'package:tapea/widget/notification_box.dart';
 
-class PhoneNumberScreen extends StatefulWidget {
-  const PhoneNumberScreen({
+class PhoneNumberFieldScreen extends StatefulWidget {
+  const PhoneNumberFieldScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PhoneNumberScreen> createState() => _PhoneNumberScreenState();
+  State<PhoneNumberFieldScreen> createState() => _PhoneNumberFieldScreenState();
 }
 
-class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
+class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _phoneExtController = TextEditingController();
-  final TextEditingController _labelController = TextEditingController();
-
   CountryCode _code = CountryCode.fromJson(codes[61]);
   bool internationalNumber = true;
 
@@ -30,60 +29,60 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   void dispose() {
     _phoneNumberController.dispose();
     _phoneExtController.dispose();
-    _labelController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ProfileFieldScreenBuilder(
-      title: 'Add Phone Number',
-      fieldTitle: getFieldTitle(context),
-      content: getContent(),
-      suggestions: getSuggestions(),
-      labelController: _labelController,
-      subtitle: getSubtitle(),
-      save: save,
+    return AnimatedBuilder(
+      builder: ((context, child) {
+        return ProfileFieldScreenBuilder(
+          title: 'Add Phone Number',
+          fieldTitle: getFieldTitle(context),
+          fieldIcon: FontAwesomeIcons.phone,
+          textFieldLabel: 'Phone Number',
+          isPhoneNumberField: true,
+          content: getContent(),
+          suggestions: getSuggestions(),
+          customFilter: () {
+            if (_phoneNumberController.text.isEmpty) {
+              showDialog(
+                context: context,
+                builder: (ctx) {
+                  return NotificationBox(msg: getFilterMessage());
+                },
+              );
+              return false;
+            } else {
+              return true;
+            }
+          },
+          save: save,
+        );
+      }),
+      animation: Listenable.merge([
+        _phoneNumberController,
+        _phoneExtController,
+      ]),
     );
   }
 
-  void save(ProfileNotifier notifier) {
-    if (saveFilter()) onSave(notifier);
-  }
-
-  void onSave(ProfileNotifier notifier) {
+  void save(String labelText, ProfileNotifier notifier) {
     notifier.profile.fields.add(
       PhoneNumberField(
         title: _phoneNumberController.text,
-        subtitle: _labelController.text,
+        subtitle: labelText,
         phoneExtension: _phoneExtController.text,
       ),
     );
   }
 
-  bool saveFilter() {
-    if (_phoneNumberController.text.isEmpty) {
-      notify(
-        context: context,
-        msg:
-            'Enter your phone number if you want to save this field to your profile.',
-      );
-      return false;
-    } else {
-      return true;
-    }
+  String getFilterMessage() {
+    return 'Enter your phone number if you want to save this field to your profile.';
   }
 
   String fullPhoneNumber() {
     return getCode() + _phoneNumberController.text;
-  }
-
-  Widget? getSubtitle() {
-    return _labelController.text.isEmpty
-        ? null
-        : Text(
-            _labelController.text,
-          );
   }
 
   String getCode() {
@@ -117,7 +116,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 controller: _phoneNumberController,
                 floatingLabel: 'Phone Number',
                 keyboardType: TextInputType.phone,
-                onChanged: (_) => setState((() => {})),
               ),
             ),
           ),
@@ -127,7 +125,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
               child: BorderlessTextField(
                 controller: _phoneExtController,
                 floatingLabel: 'Ext.',
-                onChanged: (_) => setState(() => {}),
                 keyboardType: TextInputType.phone,
               ),
             ),
@@ -186,24 +183,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     );
   }
 
-  Widget getSuggestions() {
-    return Row(
-      children: [
-        getButton('Home'),
-        getButton('Mobile'),
-        getButton('Work'),
-        getButton('Cell')
-      ],
-    );
-  }
-
-  Widget getButton(String suggestion) {
-    return SuggestionButton(
-        suggestion: suggestion,
-        onPressed: () {
-          setState(
-            () => _labelController.text = suggestion,
-          );
-        });
+  List<String> getSuggestions() {
+    return ['Home', 'Mobile', 'Work', 'Cell'];
   }
 }
