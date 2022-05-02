@@ -5,6 +5,7 @@ import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/screen/profile/field/email_field_screen.dart';
+import 'package:tapea/screen/profile/field/link_field_screen.dart';
 import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
 import 'package:tapea/screen/profile/profile_editor_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
@@ -13,13 +14,14 @@ import 'package:tapea/util/transition.dart';
 class Routes {
   static const String welcome = '/welcome';
   static const String signUp = '/sign_up';
-  static const String login = '/log_in';
+  static const String login = '/l og_in';
   static const String verification = '/verification';
   static const String profileSetup = '/profile_setup';
   static const String home = '/home';
   static const String profileEditor = '/profile_editor';
   static const String phoneNumberField = '/phone_number';
   static const String emailField = '/email';
+  static const String linkField = '/link';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -63,7 +65,12 @@ class Routes {
         );
       case emailField:
         return rightToLeft(
-          screen: const EmailScreenField(),
+          screen: const EmailFieldScreen(),
+          settings: settings,
+        );
+      case linkField:
+        return rightToLeft(
+          screen: const LinkFieldScreen(),
           settings: settings,
         );
 

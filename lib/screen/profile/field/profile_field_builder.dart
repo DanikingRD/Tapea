@@ -10,6 +10,7 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
   final String title;
   final IconData fieldIcon;
   final Widget? fieldTitle;
+  final String? fieldTitlePrefix;
   final String textFieldLabel;
   final List<Widget>? content;
   final bool withSuggestions;
@@ -27,6 +28,7 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
     required this.title,
     required this.fieldIcon,
     this.fieldTitle,
+    this.fieldTitlePrefix,
     required this.textFieldLabel,
     this.content,
     this.withSuggestions = true,

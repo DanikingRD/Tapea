@@ -49,10 +49,7 @@ class _ProfileViewState extends State<ProfileView> {
             itemCount: profile.fields.length,
             itemBuilder: (BuildContext context, int index) {
               final ProfileField field = profile.fields[index];
-              return _tile(
-                context: context,
-                field: field,
-              );
+              return _tile(context: context, field: field, index: index);
             },
           )
         ],
@@ -92,6 +89,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _tile({
     required BuildContext context,
     required ProfileField field,
+    required int index,
   }) {
     final TextStyle style = Theme.of(context)
         .textTheme
@@ -99,6 +97,7 @@ class _ProfileViewState extends State<ProfileView> {
         .copyWith(fontWeight: FontWeight.bold);
     return ListTile(
       leading: FloatingActionButton(
+        heroTag: Text('btn#$index'),
         child: Icon(field.icon),
         onPressed: () => getActionFor(field),
         backgroundColor: kSelectedPageColor,

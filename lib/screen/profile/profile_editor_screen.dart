@@ -315,6 +315,8 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       route = Routes.phoneNumberField;
     } else if (index == 1) {
       route = Routes.emailField;
+    } else if (index == 2) {
+      route = Routes.linkField;
     } else {
       throw ('Tried to access an unregistered screen');
     }
@@ -326,7 +328,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     final List<IconData> icons = [
       FontAwesomeIcons.phone,
       Icons.email,
-      FontAwesomeIcons.youtube,
+      FontAwesomeIcons.link
     ];
     return Container(
       width: size.width,
@@ -342,6 +344,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
         children: List.generate(3, (index) {
           return CircleIconButton(
+            heroTag: Text('btn#$index'),
             onPressed: () => openScreenByIndex(context, index),
             icon: Icon(
               icons[index],

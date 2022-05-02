@@ -6,17 +6,20 @@ class CircleIconButton extends StatelessWidget {
   final Color? circleColor;
   final Function()? onPressed;
   final double elevation;
+  final Object? heroTag;
   const CircleIconButton({
     Key? key,
     required this.icon,
     required this.onPressed,
     this.circleColor = kSelectedPageColor,
     this.elevation = 3.0,
+    this.heroTag,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: heroTag,
       child: icon,
       onPressed: onPressed,
       backgroundColor: kSelectedPageColor,

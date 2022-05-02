@@ -4,14 +4,11 @@ import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/screen/profile/field/profile_field_builder.dart';
 import 'package:tapea/util/util.dart';
 
-class EmailScreenField extends StatefulWidget {
-  const EmailScreenField({Key? key}) : super(key: key);
+class EmailFieldScreen extends StatelessWidget {
+  const EmailFieldScreen({
+    Key? key,
+  }) : super(key: key);
 
-  @override
-  State<EmailScreenField> createState() => _EmailScreenFieldState();
-}
-
-class _EmailScreenFieldState extends State<EmailScreenField> {
   @override
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
@@ -22,24 +19,22 @@ class _EmailScreenFieldState extends State<EmailScreenField> {
         'Work',
         'Personal',
       ],
-      save: save,
+      save: (String? titleText, String labelText, ProfileNotifier notifier) {
+        if (titleText!.isEmpty) {
+          notify(
+            msg: 'Enter your email if you want to save this field',
+            context: context,
+          );
+        } else {
+          notifier.profile.fields.add(
+            EmailField(
+              title: titleText,
+              subtitle: labelText,
+            ),
+          );
+          Navigator.pop(context);
+        }
+      },
     );
-  }
-
-  void save(String? titleText, String labelText, ProfileNotifier notifier) {
-    if (titleText!.isEmpty) {
-      notify(
-        msg: 'Enter your email if you want to save this field',
-        context: context,
-      );
-    } else {
-      notifier.profile.fields.add(
-        EmailField(
-          title: titleText,
-          subtitle: labelText,
-        ),
-      );
-      Navigator.pop(context);
-    }
   }
 }

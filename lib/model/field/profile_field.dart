@@ -9,6 +9,7 @@ enum ProfileFieldType {
   jobTitle,
   phoneNumber,
   email,
+  link,
 }
 
 extension ProfileTypeExt on ProfileFieldType {
@@ -28,6 +29,8 @@ extension ProfileTypeExt on ProfileFieldType {
         return FieldIdentifier.phoneNumber;
       case ProfileFieldType.email:
         return FieldIdentifier.email;
+      case ProfileFieldType.link:
+        return FieldIdentifier.link;
     }
   }
 
@@ -42,7 +45,8 @@ class FieldIdentifier {
   static const String company = 'company';
   static const String phoneNumber = 'phoneNumber';
   static const String email = 'email';
-  static const fields = 'fields';
+  static const String link = 'link';
+  static const String fields = 'fields';
 }
 
 // Represents a Profile field.
