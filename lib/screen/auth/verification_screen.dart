@@ -6,7 +6,6 @@ import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
-import 'package:tapea/widget/notification_box.dart';
 
 class VerificationScreen extends StatelessWidget {
   const VerificationScreen({Key? key}) : super(key: key);

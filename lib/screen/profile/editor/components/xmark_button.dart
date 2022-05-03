@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/widget/warning_box.dart';
 
 class XMarkButton extends StatelessWidget {
