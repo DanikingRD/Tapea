@@ -49,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
             msg: 'Signed In successfully!',
             onClose: () {
               onLoggedIn(user!.uid);
-              setState(() => _loading = false);
             },
           );
         }

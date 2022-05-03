@@ -7,6 +7,7 @@ import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
+import 'package:tapea/screen/profile/editor/components/xmark_button.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
@@ -33,14 +34,12 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   final TextFieldManager companyField = TextFieldManager(label: 'Company');
   final TextFieldManager jobTitleField = TextFieldManager(label: 'Job Title');
   bool _dirty = false;
-  late final ProfileModel oldProfile;
   late int _fieldsLength;
   @override
   void initState() {
     super.initState();
     if (widget.edit) {
       final ProfileModel profile = context.read<ProfileNotifier>().profile;
-      oldProfile = profile;
       updateControllers(profile);
       _fieldsLength = profile.fields.length;
     }
@@ -140,12 +139,13 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                     vertical: 2.0,
                   ),
                   child: BorderlessTextField(
-                      centerAll: index == 0,
-                      controller: getControllers(index),
-                      floatingLabel: getLabels(index),
-                      onChanged: (String? str) {
-                        _dirty = true;
-                      }),
+                    centerAll: index == 0,
+                    controller: getControllers(index),
+                    floatingLabel: getLabels(index),
+                    onChanged: (String? str) {
+                      _dirty = true;
+                    },
+                  ),
                 ),
                 if (index == 4) ...{
                   const SizedBox(
@@ -171,7 +171,16 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                         );
                       },
                       itemCount: profile.fields.length,
-                      onReorder: (previousIndex, newIndex) {},
+                      onReorder: (previousIndex, newIndex) {
+                        setState(() {
+                          _dirty = true;
+                          final field = profile.fields.removeAt(previousIndex);
+                          final pos = newIndex > previousIndex
+                              ? newIndex - 1
+                              : newIndex;
+                          profile.fields.insert(pos, field);
+                        });
+                      },
                     )
                   },
                   _explanationBox(
@@ -197,7 +206,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     required ProfileModel profile,
   }) {
     return ListTile(
-      key: ValueKey(field),
+      key: ValueKey(profile),
       leading: CircleIconButton(
         onPressed: null,
         elevation: 1.0,
@@ -233,52 +242,68 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
           ),
         ],
       ),
-      trailing: getDeleteFieldButton(profile: profile, index: index),
-    );
-  }
-
-  Widget getDeleteFieldButton({
-    required ProfileModel profile,
-    required int index,
-  }) {
-    return IconButton(
-      splashRadius: kSplashRadius,
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return WarningBox(
-              dialog: 'Are you sure you want to delete this field?',
-              onAccept: () {
-                Navigator.pop(context);
-                deleteField(
-                  profile: profile,
-                  context: context,
-                  index: index,
-                );
-              },
-              accept: 'YES, DELETE FIELD',
-            );
+      trailing: IconButton(
+          onPressed: () {
+            print('onPressed');
           },
-        );
-      },
-      icon: const Icon(
-        FontAwesomeIcons.xmark,
-        color: Colors.black,
-      ),
+          icon: Icon(Icons.e_mobiledata)),
+      // trailing: XMarkButton(
+      //   onAccept: onDeleteField,
+      //   index: index,
+      // ),
     );
   }
 
-  void deleteField({
-    required BuildContext context,
-    required ProfileModel profile,
-    required int index,
-  }) async {
+  // Widget getDeleteFieldButton({
+  //   required ProfileModel profile,
+  //   required int index,
+  // }) {
+  //   return IconButton(
+  //     splashRadius: kSplashRadius,
+  //     onPressed: () {
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return WarningBox(
+  //             dialog: 'Are you sure you want to delete this field?',
+  //             onAccept: () {
+  //               Navigator.pop(context);
+  //               deleteField(
+  //                 profile: profile,
+  //                 context: context,
+  //                 index: index,
+  //               );
+  //             },
+  //             accept: 'YES, DELETE FIELD',
+  //           );
+  //         },
+  //       );
+  //     },
+  //     icon: const Icon(
+  //       FontAwesomeIcons.xmark,
+  //       color: Colors.black,
+  //     ),
+  //   );
+  // }
+
+  void onDeleteField(int index) {
+    final profile = context.read<ProfileNotifier>().profile;
     setState(() {
       profile.fields.removeAt(index);
       _dirty = true;
     });
   }
+
+  // void deleteField({
+  //   required BuildContext context,
+  //   required ProfileModel profile,
+  //   required int index,
+  // }) async {
+  //   setState(() {
+  //     profile.fields.removeAt(index);
+  //     _dirty = true;
+  //   });
+  // }
 
   Widget _explanationBox({
     required String explanation,

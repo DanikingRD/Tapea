@@ -56,8 +56,7 @@ abstract class ProfileField {
   final IconData icon;
   final ProfileFieldType type;
   final String floatingLabel;
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController subtitleController = TextEditingController();
+
   ProfileField({
     required this.title,
     required this.subtitle,
@@ -65,11 +64,6 @@ abstract class ProfileField {
     required this.type,
     required this.floatingLabel,
   });
-
-  void dispose() {
-    titleController.dispose();
-    subtitleController.dispose();
-  }
 
   @override
   bool operator ==(Object other) {

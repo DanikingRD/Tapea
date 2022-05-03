@@ -7,7 +7,7 @@ import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/screen/profile/field/email_field_screen.dart';
 import 'package:tapea/screen/profile/field/link_field_screen.dart';
 import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
-import 'package:tapea/screen/profile/profile_editor_screen.dart';
+import 'package:tapea/screen/profile/editor/profile_editor_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
 

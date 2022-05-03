@@ -17,6 +17,7 @@ class LinkFieldScreen extends StatelessWidget {
       fieldIcon: FontAwesomeIcons.link,
       textFieldLabel: 'Link',
       suggestions: const ['Personal Site', 'Google', 'Youtube'],
+      fieldTitlePrefix: 'https://',
       save: (String? fieldTitle, String labelText, ProfileNotifier notifier) {
         save(fieldTitle, labelText, notifier, context);
       },

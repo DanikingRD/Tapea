@@ -10,7 +10,7 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
   final String title;
   final IconData fieldIcon;
   final Widget? fieldTitle;
-  final String? fieldTitlePrefix;
+  final String fieldTitlePrefix;
   final String textFieldLabel;
   final List<Widget>? content;
   final bool withSuggestions;
@@ -28,7 +28,7 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
     required this.title,
     required this.fieldIcon,
     this.fieldTitle,
-    this.fieldTitlePrefix,
+    this.fieldTitlePrefix = '',
     required this.textFieldLabel,
     this.content,
     this.withSuggestions = true,
@@ -120,7 +120,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
                       // then this is not a phone number fied
                       // therefore we can assume the title controller
                       // will be initialied.
-                      _titleController!.text,
+                      widget.fieldTitlePrefix + _titleController!.text,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
