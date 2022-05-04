@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
@@ -63,20 +64,28 @@ class _ProfileViewState extends State<ProfileView> {
         scheme: 'tel',
         path: field.title,
       );
-      await openUrl(resource);
+      await doAction(resource);
     }
     if (field is EmailField) {
       final Uri resource = Uri(
         scheme: 'mailto',
         path: field.title,
       );
-      await openUrl(resource);
+      await doAction(resource);
+    }
+    if (field is LinkField) {
+      // TODO: move this to launchUrl
+      await launch(
+        field.title,
+        forceSafariVC: false,
+      );
     }
   }
 
-  Future<void> openUrl(Uri resource) async {
-    await launchUrl(resource);
-    if (await canLaunchUrl(resource)) {}
+  Future<void> doAction(Uri resource) async {
+    if (await canLaunchUrl(resource)) {
+      await launchUrl(resource);
+    }
   }
 
   String? encodeQueryParameters(Map<String, String> params) {

@@ -7,6 +7,7 @@ import 'package:tapea/util/util.dart';
 
 class LinkFieldScreen extends StatelessWidget {
   final VoidCallback onSaved;
+  static const String _httpsProtocolPrefix = 'https://';
 
   const LinkFieldScreen({
     Key? key,
@@ -20,20 +21,20 @@ class LinkFieldScreen extends StatelessWidget {
       fieldIcon: FontAwesomeIcons.link,
       textFieldLabel: 'Link',
       suggestions: const ['Personal Site', 'Google', 'Youtube'],
-      fieldTitlePrefix: 'https://',
+      fieldTitlePrefix: _httpsProtocolPrefix,
       save: (String? fieldTitle, String labelText, ProfileNotifier notifier) {
-        save(fieldTitle, labelText, notifier, context);
+        save(_httpsProtocolPrefix + fieldTitle!, labelText, notifier, context);
       },
     );
   }
 
   void save(
-    String? fieldTitle,
+    String fieldTitle,
     String labelText,
     ProfileNotifier notifier,
     BuildContext context,
   ) {
-    if (fieldTitle!.isEmpty) {
+    if (fieldTitle.isEmpty) {
       notify(msg: getErrorMessage(), context: context);
     } else {
       notifier.profile.fields.add(

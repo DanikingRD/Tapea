@@ -113,30 +113,30 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                     ReorderableListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (_, index) {
-                        final ProfileField field = profile.fields[index];
+                      itemBuilder: (_, pos) {
+                        final ProfileField field = profile.fields[pos];
                         return EditableField(
-                          key: ValueKey(index),
-                          index: index,
+                          key: ValueKey(field.title + ' loaded at index $pos'),
+                          index: pos,
                           field: field,
                           onTitleUpdate: updateTitle,
                           onSubtitleUpdate: updateSubtitle,
                           onPhoneExtUpdate: updatePhoneExt,
                           trailing: XMarkButton(
                             onAccept: removeField,
-                            index: index,
+                            index: pos,
                           ),
                         );
                       },
                       itemCount: profile.fields.length,
                       onReorder: (previousIndex, newIndex) {
                         setState(() {
-                          _dirty = true;
-                          final field = profile.fields.removeAt(previousIndex);
-                          final pos = newIndex > previousIndex
+                          int _pos = newIndex > previousIndex
                               ? newIndex - 1
                               : newIndex;
-                          profile.fields.insert(pos, field);
+                          final field = profile.fields.removeAt(previousIndex);
+                          profile.fields.insert(_pos, field);
+                          _dirty = true;
                         });
                       },
                     )

@@ -65,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       route = Routes.home;
     }
+    Navigator.pop(context);
     Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
   }
 

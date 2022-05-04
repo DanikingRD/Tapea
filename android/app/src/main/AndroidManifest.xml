@@ -12,6 +12,11 @@
     <action android:name="android.intent.action.SEND" />
     <data android:mimeType="*/*" />
   </intent>
+  <!-- HTTPS URLs -->
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <data android:scheme="https" />
+  </intent>
 </queries>
    <application
         android:label="tapea"
