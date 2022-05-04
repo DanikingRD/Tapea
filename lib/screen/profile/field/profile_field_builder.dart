@@ -1,7 +1,13 @@
+import 'package:country_code_picker/country_code.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:country_code_picker/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/field/phone_number_field.dart';
+import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/provider/profile_notifier.dart';
+import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
 import 'package:tapea/widget/suggestion_button.dart';
@@ -18,11 +24,8 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
   final Widget? suggestionTitle;
   final List<String>? suggestions;
   final bool isPhoneNumberField;
-  final Function(
-    String? fieldTitle,
-    String labelText,
-    ProfileNotifier notifier,
-  ) save;
+  final ProfileField field;
+  final VoidCallback onSaved;
   const ProfileFieldScreenBuilder({
     Key? key,
     required this.title,
@@ -43,8 +46,9 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
       ),
     ),
     this.suggestions,
-    required this.save,
     this.isPhoneNumberField = false,
+    required this.field,
+    required this.onSaved,
   }) : super(key: key);
 
   @override
@@ -53,36 +57,54 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
 }
 
 class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
-  late final TextEditingController? _titleController;
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _labelController = TextEditingController();
+  late final TextEditingController? _phoneExtController;
+  late CountryCode _code;
+  bool internationalNumber = true;
 
   @override
   void initState() {
-    // Don't initialize if this is a phone number field
-    if (!widget.isPhoneNumberField) {
-      _titleController = TextEditingController();
+    // initialize if this is  phone number field
+    if (widget.field is PhoneNumberField) {
+      _phoneExtController = TextEditingController();
+      _code = CountryCode.fromJson(codes[61]);
     } else {
-      _titleController = null;
+      _phoneExtController = null;
     }
     super.initState();
   }
 
   @override
   void dispose() {
-    if (_titleController != null) {
-      _titleController!.dispose();
-    }
+    _titleController.dispose();
     _labelController.dispose();
+    if (_phoneExtController != null) {
+      _phoneExtController!.dispose();
+    }
     super.dispose();
   }
 
-  void saveField() {
-    final titleText = _titleController == null ? null : _titleController!.text;
-    widget.save(
-      titleText,
-      _labelController.text,
-      context.read<ProfileNotifier>(),
-    );
+  bool saveField() {
+    if (!widget.isPhoneNumberField) {
+      if (_titleController.text.isEmpty) {
+        notify(msg: widget.field.displayName, context: context);
+        return false;
+      } else {
+        final profile = context.read<ProfileNotifier>().profile;
+        widget.field.profileTitle = _titleController.text;
+        widget.field.profileSubtitle = _labelController.text;
+        profile.fields.add(widget.field);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  String getErrorMessageFor(String fieldType) {
+    return 'Enter your ' +
+        fieldType.toLowerCase() +
+        ' if you want to save this field to your profile.';
   }
 
   @override
@@ -94,7 +116,12 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () => saveField(),
+            onPressed: () {
+              if (saveField()) {
+                widget.onSaved();
+                Navigator.pop(context);
+              }
+            },
             child: const Text(
               'SAVE',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -114,17 +141,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
                 color: kFieldIconScreenDivider,
               ),
               ListTile(
-                title: widget.fieldTitle ??
-                    Text(
-                      // If we don't provide a field title
-                      // then this is not a phone number fied
-                      // therefore we can assume the title controller
-                      // will be initialied.
-                      widget.fieldTitlePrefix + _titleController!.text,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                title: getIconTitle(context),
                 leading: CircleIconButton(
                   onPressed: null,
                   elevation: 1.0,
@@ -136,14 +153,19 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
                 thickness: 6.0,
                 color: kFieldIconScreenDivider,
               ),
-              if (!widget.isPhoneNumberField) ...{
-                Padding(
-                  padding: globalPadding,
-                  child: BorderlessTextField(
-                    controller: _titleController,
-                    floatingLabel: widget.textFieldLabel,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
+              getTitleTextField(),
+              if (widget.field is PhoneNumberField) ...{
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: getSwitch(),
+                    ),
+                    Text(
+                      'Use international number',
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                  ],
                 ),
               },
               if (widget.content != null) ...widget.content!,
@@ -181,13 +203,49 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
           );
         }),
         animation: Listenable.merge([
-          if (_titleController != null) ...{
-            _titleController,
-          },
+          _titleController,
           _labelController,
         ]),
       ),
     );
+  }
+
+  Widget getIconTitle(BuildContext context) {
+    return Text(
+      widget.fieldTitlePrefix + _titleController.text,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    );
+    // final theme = Theme.of(context);
+    // if (widget.field is PhoneNumberField) {
+    //   if (_phoneExtController!.text.isNotEmpty) {
+    //     return Padding(
+    //       padding: const EdgeInsets.only(left: 5),
+    //       child: Text(
+    //         'Ext. ' + _phoneExtController!.text,
+    //         style: theme.textTheme.bodyMedium!.copyWith(
+    //           color: Colors.grey[600],
+    //         ),
+    //       ),
+    //     );
+    //   }
+    // } else {
+    //   return Text(
+    //     widget.fieldTitlePrefix + _titleController.text,
+    //     style: const TextStyle(
+    //       fontWeight: FontWeight.bold,
+    //     ),
+    //   );
+    // }
+  }
+
+  String fullPhoneNumber() {
+    return getCode() + _titleController.text;
+  }
+
+  String getCode() {
+    return internationalNumber ? _code.toString() : '';
   }
 
   List<Widget> getSuggestions() {
@@ -212,5 +270,64 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         : Text(
             _labelController.text,
           );
+  }
+
+  Widget getTitleTextField() {
+    if (widget.field is PhoneNumberField) {
+      return Row(
+        children: [
+          if (internationalNumber) ...{
+            Align(
+              alignment: Alignment.topCenter,
+              child: CountryCodePicker(
+                initialSelection: 'DO',
+                favorite: const ['DO', 'US'],
+                onChanged: (CountryCode code) {
+                  setState(() {
+                    _code = code;
+                  });
+                },
+              ),
+            ),
+          },
+          Expanded(
+            flex: 2,
+            child: BorderlessTextField(
+              controller: _titleController,
+              floatingLabel: 'Phone Number',
+              keyboardType: TextInputType.phone,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: BorderlessTextField(
+                controller: _phoneExtController,
+                floatingLabel: 'Ext.',
+                keyboardType: TextInputType.phone,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return BorderlessTextField(
+        controller: _titleController,
+        floatingLabel: widget.textFieldLabel,
+        keyboardType: TextInputType.emailAddress,
+      );
+    }
+  }
+
+  Widget getSwitch() {
+    return Switch.adaptive(
+      value: internationalNumber,
+      activeColor: kSelectedPageColor,
+      onChanged: (value) {
+        setState(() {
+          internationalNumber = value;
+        });
+      },
+    );
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
 class FieldGridView extends StatelessWidget {
-  final List<IconData> fields;
+  final List<ProfileField> fields;
   final Function(int index) onFieldPressed;
   const FieldGridView({
     Key? key,
@@ -23,17 +24,25 @@ class FieldGridView extends StatelessWidget {
       ),
       child: GridView.count(
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisSpacing: 50,
         crossAxisCount: 3,
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-        children: List.generate(3, (index) {
-          return CircleIconButton(
-            heroTag: Text('btn#$index'),
-            onPressed: () => onFieldPressed(index),
-            icon: Icon(
-              fields[index],
-              color: Colors.white,
-            ),
+        padding: const EdgeInsets.only(top: 16.0),
+        children: List.generate(fields.length, (index) {
+          final field = fields[index];
+          return Column(
+            children: [
+              CircleIconButton(
+                heroTag: Text('btn#$index'),
+                onPressed: () => onFieldPressed(index),
+                icon: Icon(
+                  field.icon,
+                  color: Colors.white,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Text(field.displayName),
+              )
+            ],
           );
         }),
       ),

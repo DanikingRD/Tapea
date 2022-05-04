@@ -6,6 +6,7 @@ import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/screen/profile/field/email_field_screen.dart';
 import 'package:tapea/screen/profile/field/link_field_screen.dart';
+import 'package:tapea/screen/profile/field/location_field.screen.dart';
 import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
 import 'package:tapea/screen/profile/editor/profile_editor_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
@@ -14,7 +15,7 @@ import 'package:tapea/util/transition.dart';
 class Routes {
   static const String welcome = '/welcome';
   static const String signUp = '/sign_up';
-  static const String login = '/l og_in';
+  static const String login = '/log_in';
   static const String verification = '/verification';
   static const String profileSetup = '/profile_setup';
   static const String home = '/home';
@@ -22,6 +23,7 @@ class Routes {
   static const String phoneNumberField = '/phone_number';
   static const String emailField = '/email';
   static const String linkField = '/link';
+  static const String locationField = '/location';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -80,7 +82,12 @@ class Routes {
           screen: LinkFieldScreen(onSaved: onSaved),
           settings: settings,
         );
-
+      case locationField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: LocationFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
       default:
         throw ('Tried to access an unregistered named route');
     }

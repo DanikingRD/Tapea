@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_code_picker/country_codes.dart';
@@ -45,9 +45,9 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
           fieldIcon: FontAwesomeIcons.phone,
           textFieldLabel: 'Phone Number',
           isPhoneNumberField: true,
-          content: getContent(),
           suggestions: const ['Home', 'Mobile', 'Work', 'Cell'],
-          save: save,
+          field: PhoneNumberField(),
+          onSaved: widget.onSaved,
         );
       }),
       animation: Listenable.merge([
@@ -57,97 +57,12 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
     );
   }
 
-  void save(String? titleText, String labelText, ProfileNotifier notifier) {
-    if (_phoneNumberController.text.isEmpty) {
-      notify(msg: getFilterMessage(), context: context);
-    } else {
-      notifier.profile.fields.add(
-        PhoneNumberField(
-          title: _phoneNumberController.text,
-          subtitle: labelText,
-          phoneExtension: _phoneExtController.text,
-        ),
-      );
-      widget.onSaved();
-      Navigator.pop(context);
-    }
-  }
-
-  String getFilterMessage() {
-    return 'Enter your phone number if you want to save this field to your profile.';
-  }
-
-  String fullPhoneNumber() {
-    return getCode() + _phoneNumberController.text;
-  }
-
-  String getCode() {
-    return internationalNumber ? _code.toString() : '';
-  }
-
-  List<Widget> getContent() {
-    final padding = EdgeInsets.only(left: internationalNumber ? 0 : 20);
-    return [
-      Row(
-        children: [
-          if (internationalNumber) ...{
-            Align(
-              alignment: Alignment.topCenter,
-              child: CountryCodePicker(
-                initialSelection: 'DO',
-                favorite: const ['DO', 'US'],
-                onChanged: (CountryCode code) {
-                  setState(() {
-                    _code = code;
-                  });
-                },
-              ),
-            ),
-          },
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: padding,
-              child: BorderlessTextField(
-                controller: _phoneNumberController,
-                floatingLabel: 'Phone Number',
-                keyboardType: TextInputType.phone,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: BorderlessTextField(
-                controller: _phoneExtController,
-                floatingLabel: 'Ext.',
-                keyboardType: TextInputType.phone,
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: getSwitch(),
-          ),
-          Text(
-            'Use international number',
-            style: TextStyle(color: Colors.grey[700]),
-          ),
-        ],
-      ),
-    ];
-  }
-
   Widget getFieldTitle(BuildContext context) {
     final theme = Theme.of(context);
     return Row(
       children: [
         Text(
-          fullPhoneNumber(),
+          'asda',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -164,18 +79,6 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
           )
         }
       ],
-    );
-  }
-
-  Widget getSwitch() {
-    return Switch.adaptive(
-      value: internationalNumber,
-      activeColor: kSelectedPageColor,
-      onChanged: (value) {
-        setState(() {
-          internationalNumber = value;
-        });
-      },
     );
   }
 }

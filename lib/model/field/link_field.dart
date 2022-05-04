@@ -3,13 +3,15 @@ import 'package:tapea/model/field/profile_field.dart';
 
 class LinkField extends ProfileField {
   LinkField({
-    required String title,
-    required String subtitle,
+    String title = '',
+    String subtitle = '',
   }) : super(
           title: title,
           subtitle: subtitle,
           icon: FontAwesomeIcons.link,
           type: ProfileFieldType.link,
-          floatingLabel: 'Link',
         );
+
+  @override
+  String get displayName => 'Link';
 }

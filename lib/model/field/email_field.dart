@@ -3,13 +3,15 @@ import 'package:tapea/model/field/profile_field.dart';
 
 class EmailField extends ProfileField {
   EmailField({
-    required String title,
-    required String subtitle,
+    String title = '',
+    String subtitle = '',
   }) : super(
           title: title,
           subtitle: subtitle,
           icon: Icons.email,
           type: ProfileFieldType.email,
-          floatingLabel: 'Email',
         );
+
+  @override
+  String get displayName => 'Email';
 }

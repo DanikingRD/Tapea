@@ -5,15 +5,14 @@ class PhoneNumberField extends ProfileField {
   String? phoneExtension;
 
   PhoneNumberField({
-    required String title,
-    required String subtitle,
+    String title = '',
+    String subtitle = '',
     this.phoneExtension,
   }) : super(
           title: title,
           subtitle: subtitle,
           icon: FontAwesomeIcons.phone,
           type: ProfileFieldType.phoneNumber,
-          floatingLabel: 'Phone Number',
         );
   String displayExtensionOnly() {
     if (phoneExtension != null) {
@@ -22,4 +21,7 @@ class PhoneNumberField extends ProfileField {
       return '';
     }
   }
+
+  @override
+  String get displayName => 'Phone Number';
 }

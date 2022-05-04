@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/link_field.dart';
+import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
@@ -149,10 +152,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                     height: 10,
                   ),
                   FieldGridView(
-                    fields: const [
-                      FontAwesomeIcons.phone,
-                      Icons.email,
-                      FontAwesomeIcons.link
+                    fields: [
+                      PhoneNumberField(),
+                      EmailField(),
+                      LinkField(),
+                      LocationField(),
                     ],
                     onFieldPressed: openScreenByIndex,
                   ),
@@ -256,6 +260,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         break;
       case 2:
         route = Routes.linkField;
+        break;
+      case 3:
+        route = Routes.locationField;
         break;
       default:
         throw ('Tried to access an undefined screen');

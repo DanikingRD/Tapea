@@ -32,7 +32,7 @@ class EditableField extends StatelessWidget {
       ),
       title: BorderlessTextField(
         initialValue: field.title,
-        floatingLabel: field.floatingLabel,
+        floatingLabel: field.displayName,
         onChanged: (String? text) => onTitleUpdate(text!, index),
       ),
       subtitle: Column(

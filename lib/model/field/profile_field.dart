@@ -10,6 +10,7 @@ enum ProfileFieldType {
   phoneNumber,
   email,
   link,
+  location,
 }
 
 extension ProfileTypeExt on ProfileFieldType {
@@ -31,6 +32,8 @@ extension ProfileTypeExt on ProfileFieldType {
         return FieldIdentifier.email;
       case ProfileFieldType.link:
         return FieldIdentifier.link;
+      case ProfileFieldType.location:
+        return FieldIdentifier.location;
     }
   }
 
@@ -46,6 +49,7 @@ class FieldIdentifier {
   static const String phoneNumber = 'phoneNumber';
   static const String email = 'email';
   static const String link = 'link';
+  static const String location = 'location';
   static const String fields = 'fields';
 }
 
@@ -55,16 +59,18 @@ abstract class ProfileField {
   String subtitle;
   final IconData icon;
   final ProfileFieldType type;
-  final String floatingLabel;
 
   ProfileField({
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.type,
-    required this.floatingLabel,
   });
 
+  String get displayName;
+
+  set profileTitle(String title) => this.title = title;
+  set profileSubtitle(String subtitle) => this.subtitle = subtitle;
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

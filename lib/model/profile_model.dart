@@ -1,4 +1,5 @@
 import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/field/link_field.dart';
@@ -94,6 +95,14 @@ class ProfileModel {
         case FieldIdentifier.link:
           allFields.add(
             LinkField(
+              title: title,
+              subtitle: subtitle,
+            ),
+          );
+          break;
+        case FieldIdentifier.location:
+          allFields.add(
+            LocationField(
               title: title,
               subtitle: subtitle,
             ),
