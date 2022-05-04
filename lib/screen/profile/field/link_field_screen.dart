@@ -6,8 +6,11 @@ import 'package:tapea/screen/profile/field/profile_field_builder.dart';
 import 'package:tapea/util/util.dart';
 
 class LinkFieldScreen extends StatelessWidget {
+  final VoidCallback onSaved;
+
   const LinkFieldScreen({
     Key? key,
+    required this.onSaved,
   }) : super(key: key);
 
   @override
@@ -36,6 +39,8 @@ class LinkFieldScreen extends StatelessWidget {
       notifier.profile.fields.add(
         LinkField(title: fieldTitle, subtitle: labelText),
       );
+      onSaved();
+      Navigator.pop(context);
     }
   }
 

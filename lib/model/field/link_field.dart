@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/model/field/profile_field.dart';
 
 class LinkField extends ProfileField {
@@ -8,7 +9,7 @@ class LinkField extends ProfileField {
   }) : super(
           title: title,
           subtitle: subtitle,
-          icon: Icons.link,
+          icon: FontAwesomeIcons.link,
           type: ProfileFieldType.link,
           floatingLabel: 'Link',
         );

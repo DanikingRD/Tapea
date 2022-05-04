@@ -5,8 +5,11 @@ import 'package:tapea/screen/profile/field/profile_field_builder.dart';
 import 'package:tapea/util/util.dart';
 
 class EmailFieldScreen extends StatelessWidget {
+  final VoidCallback onSaved;
+
   const EmailFieldScreen({
     Key? key,
+    required this.onSaved,
   }) : super(key: key);
 
   @override
@@ -32,6 +35,7 @@ class EmailFieldScreen extends StatelessWidget {
               subtitle: labelText,
             ),
           );
+          onSaved();
           Navigator.pop(context);
         }
       },

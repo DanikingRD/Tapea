@@ -113,7 +113,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                     ReorderableListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
+                      itemBuilder: (_, index) {
                         final ProfileField field = profile.fields[index];
                         return EditableField(
                           key: ValueKey(index),
@@ -188,24 +188,8 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   void removeField(int index) {
     final profile = context.read<ProfileNotifier>().profile;
-    setState(() {
-      profile.fields.removeAt(index);
-      _dirty = true;
-    });
-  }
-
-  void openScreenByIndex(int index) {
-    final String route;
-    if (index == 0) {
-      route = Routes.phoneNumberField;
-    } else if (index == 1) {
-      route = Routes.emailField;
-    } else if (index == 2) {
-      route = Routes.linkField;
-    } else {
-      throw ('Tried to access an unregistered screen');
-    }
-    Navigator.pushNamed(context, route);
+    profile.fields.removeAt(index);
+    markDirty();
   }
 
   void updateControllers(ProfileModel profile) {
@@ -256,6 +240,30 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         );
       },
     );
+  }
+
+  void openScreenByIndex(int index) {
+    final String route;
+    switch (index) {
+      case 0:
+        route = Routes.phoneNumberField;
+        break;
+      case 1:
+        route = Routes.emailField;
+        break;
+      case 2:
+        route = Routes.linkField;
+        break;
+      default:
+        throw ('Tried to access an undefined screen');
+    }
+    Navigator.pushNamed(context, route, arguments: markDirty);
+  }
+
+  void markDirty() {
+    setState(() {
+      _dirty = true;
+    });
   }
 
   TextEditingController getControllers(int index) {

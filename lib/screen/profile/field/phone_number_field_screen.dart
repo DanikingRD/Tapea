@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_code_picker/country_codes.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +12,10 @@ import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 
 class PhoneNumberFieldScreen extends StatefulWidget {
+  final VoidCallback onSaved;
   const PhoneNumberFieldScreen({
     Key? key,
+    required this.onSaved,
   }) : super(key: key);
 
   @override
@@ -64,6 +68,7 @@ class _PhoneNumberFieldScreenState extends State<PhoneNumberFieldScreen> {
           phoneExtension: _phoneExtController.text,
         ),
       );
+      widget.onSaved();
       Navigator.pop(context);
     }
   }

@@ -59,18 +59,25 @@ class Routes {
           settings: settings,
         );
       case phoneNumberField:
+        final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
-          screen: const PhoneNumberFieldScreen(),
+          screen: PhoneNumberFieldScreen(
+            onSaved: onSaved,
+          ),
           settings: settings,
         );
       case emailField:
+        final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
-          screen: const EmailFieldScreen(),
+          screen: EmailFieldScreen(
+            onSaved: onSaved,
+          ),
           settings: settings,
         );
       case linkField:
+        final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
-          screen: const LinkFieldScreen(),
+          screen: LinkFieldScreen(onSaved: onSaved),
           settings: settings,
         );
 
