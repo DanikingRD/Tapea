@@ -229,12 +229,15 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
       return Future.value(true);
     }
     return await showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return WarningBox(
           dialog: 'Are you sure you want to discard your changes?',
           onAccept: () {
             Navigator.of(context).pop(true);
+            // sync with database
+            context.read<ProfileNotifier>().update(context);
           },
           onCancel: () => Navigator.of(context).pop(false),
         );
