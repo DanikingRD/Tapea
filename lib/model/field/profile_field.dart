@@ -58,6 +58,15 @@ class FieldIdentifier {
   static const String location = 'location';
   static const String companyWebsite = 'companyWebsite';
   static const String linkedIn = 'linkedIn';
+  static const String paypal = 'paypal';
+  static const String instagram = 'instagram';
+  static const String twitter = 'twitter';
+  static const String facebook = 'facebook';
+  static const String youtube = 'youtube';
+  static const String discord = 'discord';
+  static const String whatsapp = 'whatsapp';
+  static const String tiktok = 'tiktok';
+  static const String twitch = 'twitch';
   static const String fields = 'fields';
 }
 
