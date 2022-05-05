@@ -14,8 +14,6 @@ import 'package:tapea/widget/suggestion_button.dart';
 
 class ProfileFieldScreenBuilder extends StatefulWidget {
   final String title;
-  final IconData fieldIcon;
-  final Widget? fieldTitle;
   final String fieldTitlePrefix;
   final String textFieldLabel;
   final List<Widget>? content;
@@ -23,14 +21,11 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
   final bool withLabel;
   final Widget? suggestionTitle;
   final List<String>? suggestions;
-  final bool isPhoneNumberField;
   final ProfileField field;
   final VoidCallback onSaved;
   const ProfileFieldScreenBuilder({
     Key? key,
     required this.title,
-    required this.fieldIcon,
-    this.fieldTitle,
     this.fieldTitlePrefix = '',
     required this.textFieldLabel,
     this.content,
@@ -46,7 +41,6 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
       ),
     ),
     this.suggestions,
-    this.isPhoneNumberField = false,
     required this.field,
     required this.onSaved,
   }) : super(key: key);
@@ -86,19 +80,21 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
   }
 
   bool saveField() {
-    if (!widget.isPhoneNumberField) {
-      if (_titleController.text.isEmpty) {
-        notify(msg: widget.field.displayName, context: context);
-        return false;
-      } else {
-        final profile = context.read<ProfileNotifier>().profile;
-        widget.field.profileTitle = _titleController.text;
-        widget.field.profileSubtitle = _labelController.text;
-        profile.fields.add(widget.field);
-        return true;
-      }
+    if (_titleController.text.isEmpty) {
+      notify(
+        msg: getErrorMessageFor(
+          widget.field.displayName,
+        ),
+        context: context,
+      );
+      return false;
+    } else {
+      final profile = context.read<ProfileNotifier>().profile;
+      widget.field.profileTitle = _titleController.text;
+      widget.field.profileSubtitle = _labelController.text;
+      profile.fields.add(widget.field);
+      return true;
     }
-    return false;
   }
 
   String getErrorMessageFor(String fieldType) {
@@ -145,7 +141,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
                 leading: CircleIconButton(
                   onPressed: null,
                   elevation: 1.0,
-                  icon: Icon(widget.fieldIcon),
+                  icon: Icon(widget.field.icon),
                 ),
                 subtitle: getSubtitle(),
               ),
@@ -205,39 +201,34 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         animation: Listenable.merge([
           _titleController,
           _labelController,
+          if (_phoneExtController != null) ...{_phoneExtController}
         ]),
       ),
     );
   }
 
   Widget getIconTitle(BuildContext context) {
-    return Text(
-      widget.fieldTitlePrefix + _titleController.text,
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Text(
+          widget.fieldTitlePrefix + _titleController.text,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        if (widget.field is PhoneNumberField) ...{
+          if (_phoneExtController!.text.isNotEmpty) ...{
+            Text(
+              ' Ext. ' + _phoneExtController!.text,
+              style: theme.textTheme.bodyMedium!.copyWith(
+                color: Colors.grey[600],
+              ),
+            ),
+          }
+        }
+      ],
     );
-    // final theme = Theme.of(context);
-    // if (widget.field is PhoneNumberField) {
-    //   if (_phoneExtController!.text.isNotEmpty) {
-    //     return Padding(
-    //       padding: const EdgeInsets.only(left: 5),
-    //       child: Text(
-    //         'Ext. ' + _phoneExtController!.text,
-    //         style: theme.textTheme.bodyMedium!.copyWith(
-    //           color: Colors.grey[600],
-    //         ),
-    //       ),
-    //     );
-    //   }
-    // } else {
-    //   return Text(
-    //     widget.fieldTitlePrefix + _titleController.text,
-    //     style: const TextStyle(
-    //       fontWeight: FontWeight.bold,
-    //     ),
-    //   );
-    // }
   }
 
   String fullPhoneNumber() {

@@ -14,7 +14,6 @@ class EmailFieldScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
       title: 'Add Email',
-      fieldIcon: Icons.email,
       textFieldLabel: 'Email',
       suggestions: const [
         'Work',

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/screen/profile/field/profile_field_builder.dart';
 
@@ -16,7 +15,6 @@ class LinkFieldScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
       title: 'Add Link',
-      fieldIcon: FontAwesomeIcons.link,
       textFieldLabel: 'Link',
       suggestions: const ['Personal Site', 'Google', 'Youtube'],
       field: LinkField(),
