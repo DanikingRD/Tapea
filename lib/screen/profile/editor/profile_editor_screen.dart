@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/location_field.dart';
@@ -125,6 +126,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                           onTitleUpdate: updateTitle,
                           onSubtitleUpdate: updateSubtitle,
                           onPhoneExtUpdate: updatePhoneExt,
+                          onLinkUpdate: updateLink,
                           trailing: XMarkButton(
                             onAccept: removeField,
                             index: pos,
@@ -157,6 +159,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                       EmailField(),
                       LinkField(),
                       LocationField(),
+                      CompanyWebsiteField(),
                     ],
                     onFieldPressed: openScreenByIndex,
                   ),
@@ -186,6 +189,15 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     final ProfileField field = profile.fields[index];
     if (field is PhoneNumberField) {
       field.phoneExtension = text;
+      _dirty = true;
+    }
+  }
+
+  void updateLink(String text, int index) {
+    final profile = context.read<ProfileNotifier>().profile;
+    final ProfileField field = profile.fields[index];
+    if (field is LinkField) {
+      field.link = text;
       _dirty = true;
     }
   }
@@ -263,6 +275,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         break;
       case 3:
         route = Routes.locationField;
+        break;
+      case 4:
+        route = Routes.companyWebsiteField;
         break;
       default:
         throw ('Tried to access an undefined screen');

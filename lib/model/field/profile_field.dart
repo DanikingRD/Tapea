@@ -11,6 +11,7 @@ enum ProfileFieldType {
   email,
   link,
   location,
+  companyWebsite,
 }
 
 extension ProfileTypeExt on ProfileFieldType {
@@ -34,6 +35,8 @@ extension ProfileTypeExt on ProfileFieldType {
         return FieldIdentifier.link;
       case ProfileFieldType.location:
         return FieldIdentifier.location;
+      case ProfileFieldType.companyWebsite:
+        return FieldIdentifier.companyWebsite;
     }
   }
 
@@ -50,6 +53,7 @@ class FieldIdentifier {
   static const String email = 'email';
   static const String link = 'link';
   static const String location = 'location';
+  static const String companyWebsite = 'companyWebsite';
   static const String fields = 'fields';
 }
 
@@ -57,17 +61,15 @@ class FieldIdentifier {
 abstract class ProfileField {
   String title;
   String subtitle;
-  final IconData icon;
-  final ProfileFieldType type;
 
   ProfileField({
     required this.title,
     required this.subtitle,
-    required this.icon,
-    required this.type,
   });
 
   String get displayName;
+  IconData get icon;
+  ProfileFieldType get type;
 
   set profileTitle(String title) => this.title = title;
   set profileSubtitle(String subtitle) => this.subtitle = subtitle;

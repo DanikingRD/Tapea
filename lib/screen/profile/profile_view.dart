@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/link_field.dart';
+import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
@@ -76,10 +77,11 @@ class _ProfileViewState extends State<ProfileView> {
     if (field is LinkField) {
       // TODO: move this to launchUrl
       await launch(
-        field.title,
+        field.link,
         forceSafariVC: false,
       );
     }
+    if (field is LocationField) {}
   }
 
   Future<void> doAction(Uri resource) async {

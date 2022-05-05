@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
@@ -9,7 +10,8 @@ class EditableField extends StatelessWidget {
   final int index;
   final Function(String text, int index) onTitleUpdate;
   final Function(String text, int index) onSubtitleUpdate;
-  final Function(String text, int index)? onPhoneExtUpdate;
+  final Function(String text, int index) onPhoneExtUpdate;
+  final Function(String text, int index) onLinkUpdate;
   final Widget? trailing;
 
   const EditableField({
@@ -18,7 +20,8 @@ class EditableField extends StatelessWidget {
     required this.field,
     required this.onTitleUpdate,
     required this.onSubtitleUpdate,
-    this.onPhoneExtUpdate,
+    required this.onPhoneExtUpdate,
+    required this.onLinkUpdate,
     this.trailing,
   }) : super(key: key);
 
@@ -41,10 +44,15 @@ class EditableField extends StatelessWidget {
             BorderlessTextField(
               initialValue: (field as PhoneNumberField).phoneExtension,
               floatingLabel: 'Ext.',
-              onChanged: (String? text) {
-                if (onPhoneExtUpdate != null) onPhoneExtUpdate!(text!, index);
-              },
+              onChanged: (String? text) => onPhoneExtUpdate(text!, index),
             ),
+          },
+          if (field is LinkField) ...{
+            BorderlessTextField(
+              initialValue: (field as LinkField).link,
+              floatingLabel: 'Link',
+              onChanged: (String? text) => onLinkUpdate(text!, index),
+            )
           },
           BorderlessTextField(
             initialValue: field.subtitle,

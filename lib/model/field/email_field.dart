@@ -8,10 +8,14 @@ class EmailField extends ProfileField {
   }) : super(
           title: title,
           subtitle: subtitle,
-          icon: Icons.email,
-          type: ProfileFieldType.email,
         );
 
   @override
   String get displayName => 'Email';
+
+  @override
+  IconData get icon => Icons.email;
+
+  @override
+  ProfileFieldType get type => ProfileFieldType.email;
 }

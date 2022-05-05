@@ -10,10 +10,12 @@ class LocationField extends ProfileField {
   }) : super(
           title: title,
           subtitle: subtitle,
-          icon: FontAwesomeIcons.locationDot,
-          type: ProfileFieldType.location,
         );
 
   @override
   String get displayName => 'Location';
+  @override
+  IconData get icon => FontAwesomeIcons.locationDot;
+  @override
+  ProfileFieldType get type => ProfileFieldType.location;
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:tapea/model/field/location_field.dart';
+import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/screen/profile/field/builder/profile_field_builder.dart';
 
-class LocationFieldScreen extends StatelessWidget {
+class CompanyWebsiteFieldScreen extends StatelessWidget {
   final VoidCallback onSaved;
-  const LocationFieldScreen({
+  const CompanyWebsiteFieldScreen({
     Key? key,
     required this.onSaved,
   }) : super(key: key);
@@ -12,15 +12,14 @@ class LocationFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
-      title: 'Add Address',
-      textFieldLabel: 'Address',
-      suggestions: const [
-        'Work',
-        'Office',
-        'Mailing Address',
-      ],
-      field: LocationField(),
+      title: 'Add Company Website',
+      textFieldLabel: 'Company Website',
+      field: CompanyWebsiteField(),
       onSaved: onSaved,
+      suggestions: const [
+        'Website',
+        'Visit our website',
+      ],
     );
   }
 }

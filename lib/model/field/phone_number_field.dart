@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/icon_data.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/model/field/profile_field.dart';
 
@@ -11,9 +12,9 @@ class PhoneNumberField extends ProfileField {
   }) : super(
           title: title,
           subtitle: subtitle,
-          icon: FontAwesomeIcons.phone,
-          type: ProfileFieldType.phoneNumber,
         );
+  set phoneExt(String phoneExtension) => this.phoneExtension = phoneExtension;
+
   String displayExtensionOnly() {
     if (phoneExtension != null) {
       return 'Ext.' ' ' + phoneExtension!;
@@ -24,4 +25,10 @@ class PhoneNumberField extends ProfileField {
 
   @override
   String get displayName => 'Phone Number';
+
+  @override
+  IconData get icon => FontAwesomeIcons.phone;
+
+  @override
+  ProfileFieldType get type => ProfileFieldType.phoneNumber;
 }

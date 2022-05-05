@@ -1,3 +1,4 @@
+import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
@@ -97,6 +98,7 @@ class ProfileModel {
             LinkField(
               title: title,
               subtitle: subtitle,
+              link: field['link'],
             ),
           );
           break;
@@ -108,6 +110,16 @@ class ProfileModel {
             ),
           );
           break;
+        case FieldIdentifier.companyWebsite:
+          allFields.add(
+            CompanyWebsiteField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
+
         default:
           throw ('');
       }
@@ -125,6 +137,9 @@ class ProfileModel {
       };
       if (field is PhoneNumberField) {
         currentField['phoneExtension'] = field.phoneExtension;
+      }
+      if (field is LinkField) {
+        currentField['link'] = field.link;
       }
       allJsons.add(currentField);
     }
