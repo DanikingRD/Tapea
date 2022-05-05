@@ -16,6 +16,10 @@ class LinkField extends ProfileField {
   @override
   String get displayName => 'Link';
 
+  String getUrl(String domain) {
+    return 'https://www.' + domain.toLowerCase() + '.com';
+  }
+
   void setLink(String link) {
     this.link = link;
   }

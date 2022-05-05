@@ -14,7 +14,6 @@ class LinkFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
-      title: 'Add Link',
       textFieldLabel: 'Link',
       suggestions: const ['Personal Site', 'Google', 'Youtube'],
       field: LinkField(),

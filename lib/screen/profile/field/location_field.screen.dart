@@ -12,7 +12,6 @@ class LocationFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
-      title: 'Add Address',
       textFieldLabel: 'Address',
       suggestions: const [
         'Work',

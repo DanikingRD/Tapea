@@ -12,6 +12,7 @@ enum ProfileFieldType {
   link,
   location,
   companyWebsite,
+  linkedIn,
 }
 
 extension ProfileTypeExt on ProfileFieldType {
@@ -37,6 +38,8 @@ extension ProfileTypeExt on ProfileFieldType {
         return FieldIdentifier.location;
       case ProfileFieldType.companyWebsite:
         return FieldIdentifier.companyWebsite;
+      case ProfileFieldType.linkedIn:
+        return FieldIdentifier.linkedIn;
     }
   }
 
@@ -54,6 +57,7 @@ class FieldIdentifier {
   static const String link = 'link';
   static const String location = 'location';
   static const String companyWebsite = 'companyWebsite';
+  static const String linkedIn = 'linkedIn';
   static const String fields = 'fields';
 }
 

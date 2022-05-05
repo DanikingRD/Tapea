@@ -12,7 +12,6 @@ class PhoneNumberFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
-      title: 'Add Phone Number',
       textFieldLabel: 'Phone Number',
       suggestions: const ['Home', 'Mobile', 'Work', 'Cell'],
       field: PhoneNumberField(),

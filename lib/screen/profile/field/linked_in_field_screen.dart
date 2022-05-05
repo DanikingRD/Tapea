@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:tapea/model/field/email_field.dart';
+import 'package:flutter/widgets.dart';
+import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/screen/profile/field/builder/profile_field_builder.dart';
 
-class EmailFieldScreen extends StatelessWidget {
+class LinkedInFieldScreen extends StatelessWidget {
   final VoidCallback onSaved;
 
-  const EmailFieldScreen({
+  const LinkedInFieldScreen({
     Key? key,
     required this.onSaved,
   }) : super(key: key);
@@ -13,12 +13,9 @@ class EmailFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
-      textFieldLabel: 'Email',
-      suggestions: const [
-        'Work',
-        'Personal',
-      ],
-      field: EmailField(),
+      textFieldLabel: 'Username',
+      suggestions: const ['Connect with me on LinkedIn'],
+      field: LinkedInField(),
       onSaved: onSaved,
     );
   }

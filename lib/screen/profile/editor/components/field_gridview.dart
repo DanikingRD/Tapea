@@ -36,6 +36,7 @@ class FieldGridView extends StatelessWidget {
                 icon: Icon(
                   field.icon,
                   color: Colors.white,
+                  size: 32,
                 ),
               ),
               Padding(

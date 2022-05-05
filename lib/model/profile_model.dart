@@ -1,5 +1,6 @@
 import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
@@ -73,6 +74,7 @@ class ProfileModel {
     if (fields.isEmpty) return [];
     final List<ProfileField> allFields = [];
     for (Map<String, dynamic> field in fields) {
+      if (field.isEmpty) continue;
       final String title = field['title'];
       final subtitle = field.containsKey('subtitle') ? field['subtitle'] : '';
       switch (field['type'] as String) {
@@ -119,7 +121,15 @@ class ProfileModel {
             ),
           );
           break;
-
+        case FieldIdentifier.linkedIn:
+          allFields.add(
+            LinkedInField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
         default:
           throw ('');
       }
@@ -130,6 +140,7 @@ class ProfileModel {
   List<Map<String, dynamic>> fieldsToJson() {
     final List<Map<String, dynamic>> allJsons = [];
     for (ProfileField field in fields) {
+      print('saving field ${field.type}');
       final Map<String, dynamic> currentField = {
         'type': field.type.id,
         'title': field.title,
@@ -143,7 +154,6 @@ class ProfileModel {
       }
       allJsons.add(currentField);
     }
-
     return allJsons;
   }
 

@@ -12,7 +12,6 @@ class CompanyWebsiteFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileFieldScreenBuilder(
-      title: 'Add Company Website',
       textFieldLabel: 'Company Website',
       field: CompanyWebsiteField(),
       onSaved: onSaved,

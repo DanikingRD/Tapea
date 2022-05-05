@@ -14,7 +14,6 @@ import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 
 class ProfileFieldScreenBuilder extends StatefulWidget {
-  final String title;
   final String fieldTitlePrefix;
   final String textFieldLabel;
   final bool withSuggestions;
@@ -25,7 +24,6 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
   final VoidCallback onSaved;
   const ProfileFieldScreenBuilder({
     Key? key,
-    required this.title,
     this.fieldTitlePrefix = '',
     required this.textFieldLabel,
     this.withSuggestions = true,
@@ -79,7 +77,6 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
   }
 
   bool saveField() {
-    print('save()');
     if (_titleController.text.isEmpty) {
       notify(
         msg: getErrorMessageFor(
@@ -99,10 +96,8 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         }
       }
       if (widget.field is LinkField) {
-        print('saving link field!');
-        ((widget.field) as LinkField).setLink(
-          'https://www.' + _titleController.text.toLowerCase() + '.com',
-        );
+        final linkField = ((widget.field) as LinkField);
+        linkField.setLink(linkField.getUrl(_titleController.text));
       }
       profile.fields.add(widget.field);
       return true;
@@ -120,7 +115,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
     const EdgeInsets globalPadding = EdgeInsets.symmetric(horizontal: 20);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Add ${widget.field.displayName}'),
         centerTitle: true,
         actions: [
           TextButton(

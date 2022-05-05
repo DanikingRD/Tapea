@@ -51,7 +51,7 @@ class _ProfileViewState extends State<ProfileView> {
             itemCount: profile.fields.length,
             itemBuilder: (BuildContext context, int index) {
               final ProfileField field = profile.fields[index];
-              return _tile(context: context, field: field, index: index);
+              return getField(context: context, field: field, index: index);
             },
           )
         ],
@@ -59,45 +59,7 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  void getActionFor(ProfileField field) async {
-    if (field is PhoneNumberField) {
-      final Uri resource = Uri(
-        scheme: 'tel',
-        path: field.title,
-      );
-      await doAction(resource);
-    }
-    if (field is EmailField) {
-      final Uri resource = Uri(
-        scheme: 'mailto',
-        path: field.title,
-      );
-      await doAction(resource);
-    }
-    if (field is LinkField) {
-      // TODO: move this to launchUrl
-      await launch(
-        field.link,
-        forceSafariVC: false,
-      );
-    }
-    if (field is LocationField) {}
-  }
-
-  Future<void> doAction(Uri resource) async {
-    if (await canLaunchUrl(resource)) {
-      await launchUrl(resource);
-    }
-  }
-
-  String? encodeQueryParameters(Map<String, String> params) {
-    return params.entries
-        .map((entry) =>
-            '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(entry.value)}')
-        .join('&');
-  }
-
-  Widget _tile({
+  Widget getField({
     required BuildContext context,
     required ProfileField field,
     required int index,
@@ -109,7 +71,10 @@ class _ProfileViewState extends State<ProfileView> {
     return ListTile(
       leading: FloatingActionButton(
         heroTag: Text('btn#$index'),
-        child: Icon(field.icon),
+        child: Icon(
+          field.icon,
+          size: 28,
+        ),
         onPressed: () => getActionFor(field),
         backgroundColor: kSelectedPageColor,
         elevation: 3.0,
@@ -172,5 +137,43 @@ class _ProfileViewState extends State<ProfileView> {
       ),
       isThreeLine: true,
     );
+  }
+
+  void getActionFor(ProfileField field) async {
+    if (field is PhoneNumberField) {
+      final Uri resource = Uri(
+        scheme: 'tel',
+        path: field.title,
+      );
+      await doAction(resource);
+    }
+    if (field is EmailField) {
+      final Uri resource = Uri(
+        scheme: 'mailto',
+        path: field.title,
+      );
+      await doAction(resource);
+    }
+    if (field is LinkField) {
+      // TODO: move this to launchUrl
+      await launch(
+        field.link,
+        forceSafariVC: false,
+      );
+    }
+    if (field is LocationField) {}
+  }
+
+  Future<void> doAction(Uri resource) async {
+    if (await canLaunchUrl(resource)) {
+      await launchUrl(resource);
+    }
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((entry) =>
+            '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(entry.value)}')
+        .join('&');
   }
 }

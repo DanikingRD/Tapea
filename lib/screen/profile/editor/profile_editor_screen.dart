@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/link_field.dart';
+import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
@@ -160,6 +161,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                       LinkField(),
                       LocationField(),
                       CompanyWebsiteField(),
+                      LinkedInField(),
                     ],
                     onFieldPressed: openScreenByIndex,
                   ),
@@ -278,6 +280,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         break;
       case 4:
         route = Routes.companyWebsiteField;
+        break;
+      case 5:
+        route = Routes.linkedInField;
         break;
       default:
         throw ('Tried to access an undefined screen');

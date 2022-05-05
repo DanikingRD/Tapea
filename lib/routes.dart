@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:tapea/model/field/company_website_field.dart';
+import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/screen/auth/login_screen.dart';
 import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
@@ -8,6 +9,7 @@ import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/screen/profile/field/company_website_field_screen.dart';
 import 'package:tapea/screen/profile/field/email_field_screen.dart';
 import 'package:tapea/screen/profile/field/link_field_screen.dart';
+import 'package:tapea/screen/profile/field/linked_in_field_screen.dart';
 import 'package:tapea/screen/profile/field/location_field.screen.dart';
 import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
 import 'package:tapea/screen/profile/editor/profile_editor_screen.dart';
@@ -27,6 +29,7 @@ class Routes {
   static const String linkField = '/link';
   static const String locationField = '/location';
   static const String companyWebsiteField = '/company_website';
+  static const String linkedInField = '/linked_in';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -95,6 +98,12 @@ class Routes {
         final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
           screen: CompanyWebsiteFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case linkedInField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: LinkedInFieldScreen(onSaved: onSaved),
           settings: settings,
         );
       default:
