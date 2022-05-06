@@ -1,14 +1,20 @@
 import 'package:flutter/widgets.dart';
 import 'package:tapea/model/field/company_website_field.dart';
+import 'package:tapea/model/field/facebook_field.dart';
 import 'package:tapea/model/field/instagram_field.dart';
 import 'package:tapea/model/field/linked_in.dart';
+import 'package:tapea/model/field/telegram_field.dart';
+import 'package:tapea/model/field/tiktok_field.dart';
+import 'package:tapea/model/field/twitch_field.dart';
 import 'package:tapea/screen/auth/login_screen.dart';
 import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/screen/profile/field/company_website_field_screen.dart';
+import 'package:tapea/screen/profile/field/discord_field_screen.dart';
 import 'package:tapea/screen/profile/field/email_field_screen.dart';
+import 'package:tapea/screen/profile/field/facebook_field_screen.dart';
 import 'package:tapea/screen/profile/field/instagram_field_screen.dart';
 import 'package:tapea/screen/profile/field/link_field_screen.dart';
 import 'package:tapea/screen/profile/field/linked_in_field_screen.dart';
@@ -16,7 +22,11 @@ import 'package:tapea/screen/profile/field/location_field.screen.dart';
 import 'package:tapea/screen/profile/field/paypal_field_screen.dart';
 import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
 import 'package:tapea/screen/profile/editor/profile_editor_screen.dart';
+import 'package:tapea/screen/profile/field/tiktok_field_screen.dart';
+import 'package:tapea/screen/profile/field/twitch_field_screen.dart';
 import 'package:tapea/screen/profile/field/twitter_field_screen.dart';
+import 'package:tapea/screen/profile/field/whatsapp_field_screen.dart';
+import 'package:tapea/screen/profile/field/youtube_field_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
 
@@ -37,6 +47,12 @@ class Routes {
   static const String paypalField = '/paypal';
   static const String instagramField = '/instagram';
   static const String twitterField = '/twitter';
+  static const String facebookField = '/facebook';
+  static const String youtubeField = '/youtube';
+  static const String discordField = '/discord';
+  static const String telegramField = '/telegram';
+  static const String tiktokField = '/tiktok';
+  static const String twitchField = '/twitch';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -129,6 +145,42 @@ class Routes {
         final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
           screen: TwitterFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case facebookField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: FacebookFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case youtubeField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: YoutubeFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case discordField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: DiscordFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case telegramField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: TelegramFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case tiktokField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: TiktokFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case twitchField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: TwitchFieldScreen(onSaved: onSaved),
           settings: settings,
         );
       default:

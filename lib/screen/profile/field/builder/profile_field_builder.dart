@@ -22,6 +22,7 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
   final List<String> suggestions;
   final ProfileField field;
   final VoidCallback onSaved;
+  final TextInputType? titleKeyboard;
   const ProfileFieldScreenBuilder({
     Key? key,
     this.fieldTitlePrefix = '',
@@ -40,6 +41,7 @@ class ProfileFieldScreenBuilder extends StatefulWidget {
     required this.suggestions,
     required this.field,
     required this.onSaved,
+    this.titleKeyboard,
   }) : super(key: key);
 
   @override
@@ -157,6 +159,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
                 internationalNumber: internationalNumber,
                 onCountryChanged: onCountryChanged,
                 label: widget.textFieldLabel,
+                titleKeyboard: widget.titleKeyboard,
               ),
               if (widget.field is PhoneNumberField) ...{
                 CountryCodeSwitch(

@@ -24,6 +24,6 @@ class InstagramField extends LinkField {
 
   @override
   String getUrl(String domain) {
-    return 'https://instagram.com/' + domain;
+    return 'https://instagram.com/' + domain.toLowerCase();
   }
 }

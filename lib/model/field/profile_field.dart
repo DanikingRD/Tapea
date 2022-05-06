@@ -19,7 +19,7 @@ enum ProfileFieldType {
   facebook,
   youtube,
   discord,
-  whatsApp,
+  telegram,
   tiktok,
   twitch
 }
@@ -61,8 +61,8 @@ extension ProfileTypeExt on ProfileFieldType {
         return FieldIdentifier.youtube;
       case ProfileFieldType.discord:
         return FieldIdentifier.discord;
-      case ProfileFieldType.whatsApp:
-        return FieldIdentifier.whatsapp;
+      case ProfileFieldType.telegram:
+        return FieldIdentifier.telegram;
       case ProfileFieldType.tiktok:
         return FieldIdentifier.tiktok;
       case ProfileFieldType.twitch:
@@ -91,7 +91,7 @@ class FieldIdentifier {
   static const String facebook = 'facebook';
   static const String youtube = 'youtube';
   static const String discord = 'discord';
-  static const String whatsapp = 'whatsapp';
+  static const String telegram = 'telegram';
   static const String tiktok = 'tiktok';
   static const String twitch = 'twitch';
   static const String fields = 'fields';

@@ -42,7 +42,7 @@ class EditableField extends StatelessWidget {
         children: [
           if (field is PhoneNumberField) ...{
             BorderlessTextField(
-              initialValue: (field as PhoneNumberField).phoneExtension,
+              initialValue: (field as PhoneNumberField).ext,
               floatingLabel: 'Ext.',
               onChanged: (String? text) => onPhoneExtUpdate(text!, index),
             ),

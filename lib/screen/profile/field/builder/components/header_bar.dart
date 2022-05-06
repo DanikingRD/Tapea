@@ -48,20 +48,26 @@ class HeaderBar extends StatelessWidget {
     final theme = Theme.of(context);
     return Row(
       children: [
-        Text(
-          titleController.text,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+        Expanded(
+          child: Text(
+            titleController.text,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
         if (field is PhoneNumberField) ...{
           if (phoneExtController!.text.isNotEmpty) ...{
-            Text(
-              ' Ext. ' + phoneExtController!.text,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: Colors.grey[600],
+            Expanded(
+              child: Text(
+                ' Ext. ' + phoneExtController!.text,
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  color: Colors.grey[600],
+                ),
               ),
-            ),
+            )
           }
         }
       ],

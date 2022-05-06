@@ -90,7 +90,7 @@ class _ProfileViewState extends State<ProfileView> {
                     style: style,
                   ),
                   TextSpan(
-                    text: field.displayExtensionOnly(),
+                    text: field.displayExtension(),
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!

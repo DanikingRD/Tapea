@@ -13,6 +13,7 @@ class TitleTextField extends StatelessWidget {
   final String label;
   final Function(CountryCode code) onCountryChanged;
   final bool internationalNumber;
+  final TextInputType? titleKeyboard;
   const TitleTextField({
     Key? key,
     required this.field,
@@ -21,6 +22,7 @@ class TitleTextField extends StatelessWidget {
     required this.internationalNumber,
     required this.onCountryChanged,
     required this.label,
+    this.titleKeyboard,
   }) : super(key: key);
 
   @override
@@ -80,9 +82,11 @@ class TitleTextField extends StatelessWidget {
                         ),
                       ),
                       if (titleController.text.isNotEmpty) ...{
-                        Text(
-                          (field as LinkField).getUrl(getTitleString()),
-                          style: const TextStyle(color: Colors.grey),
+                        Expanded(
+                          child: Text(
+                            (field as LinkField).getUrl(getTitleString()),
+                            style: const TextStyle(color: Colors.grey),
+                          ),
                         ),
                       }
                     ],
@@ -104,7 +108,7 @@ class TitleTextField extends StatelessWidget {
       child: BorderlessTextField(
         controller: titleController,
         floatingLabel: label,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: titleKeyboard,
       ),
     );
   }

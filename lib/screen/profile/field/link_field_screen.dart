@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tapea/model/field/link_field.dart';
+import 'package:tapea/model/field/link_field_impl.dart';
 import 'package:tapea/screen/profile/field/builder/profile_field_builder.dart';
 
 class LinkFieldScreen extends StatelessWidget {
@@ -16,7 +16,7 @@ class LinkFieldScreen extends StatelessWidget {
     return ProfileFieldScreenBuilder(
       textFieldLabel: 'Link',
       suggestions: const ['Personal Site', 'Google', 'Youtube'],
-      field: LinkField(),
+      field: LinkFieldImpl(),
       fieldTitlePrefix: _httpsProtocolPrefix,
       onSaved: onSaved,
     );

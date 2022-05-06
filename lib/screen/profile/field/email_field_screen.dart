@@ -19,6 +19,7 @@ class EmailFieldScreen extends StatelessWidget {
         'Personal',
       ],
       field: EmailField(),
+      titleKeyboard: TextInputType.emailAddress,
       onSaved: onSaved,
     );
   }

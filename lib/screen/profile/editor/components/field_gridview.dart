@@ -17,12 +17,13 @@ class FieldGridView extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
-      height: size.height / 2,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         color: kProfileEditorFieldContainer,
       ),
       child: GridView.count(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 3,
         padding: const EdgeInsets.only(top: 16.0),

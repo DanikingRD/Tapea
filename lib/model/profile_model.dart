@@ -1,13 +1,21 @@
 import 'package:tapea/model/field/company_website_field.dart';
+import 'package:tapea/model/field/discord_field.dart';
 import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/facebook_field.dart';
 import 'package:tapea/model/field/instagram_field.dart';
+import 'package:tapea/model/field/link_field_impl.dart';
 import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/paypal_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
+import 'package:tapea/model/field/phone_number_field_impl.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/field/link_field.dart';
+import 'package:tapea/model/field/tiktok_field.dart';
+import 'package:tapea/model/field/twitch_field.dart';
 import 'package:tapea/model/field/twitter_field.dart';
+import 'package:tapea/model/field/telegram_field.dart';
+import 'package:tapea/model/field/youtube_field.dart';
 
 class ProfileModel {
   final String title;
@@ -80,13 +88,14 @@ class ProfileModel {
       if (field.isEmpty) continue;
       final String title = field['title'];
       final subtitle = field.containsKey('subtitle') ? field['subtitle'] : '';
-      switch (field['type'] as String) {
+      final String type = field['type'];
+      switch (type) {
         case FieldIdentifier.phoneNumber:
           allFields.add(
-            PhoneNumberField(
+            PhoneNumberFieldImpl(
               title: title,
               subtitle: subtitle,
-              phoneExtension: field['phoneExtension'],
+              ext: field['phoneExtension'],
             ),
           );
           break;
@@ -100,7 +109,7 @@ class ProfileModel {
           break;
         case FieldIdentifier.link:
           allFields.add(
-            LinkField(
+            LinkFieldImpl(
               title: title,
               subtitle: subtitle,
               link: field['link'],
@@ -160,8 +169,60 @@ class ProfileModel {
             ),
           );
           break;
+        case FieldIdentifier.facebook:
+          allFields.add(
+            FacebookField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
+        case FieldIdentifier.youtube:
+          allFields.add(
+            YoutubeField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
+        case FieldIdentifier.discord:
+          allFields.add(
+            DiscordField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
+        case FieldIdentifier.telegram:
+          allFields.add(
+            TelegramField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
+        case FieldIdentifier.tiktok:
+          allFields.add(TikTokField(
+            title: title,
+            subtitle: subtitle,
+            link: field['link'],
+          ));
+          break;
+        case FieldIdentifier.twitch:
+          allFields.add(
+            TwitchField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
         default:
-          throw ('');
+          throw ('Field with id $type was not handled');
       }
     }
     return allFields;
@@ -176,7 +237,7 @@ class ProfileModel {
         'subtitle': field.subtitle,
       };
       if (field is PhoneNumberField) {
-        currentField['phoneExtension'] = field.phoneExtension;
+        currentField['phoneExtension'] = field.ext;
       }
       if (field is LinkField) {
         currentField['link'] = field.link;

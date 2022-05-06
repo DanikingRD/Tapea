@@ -1,9 +1,6 @@
-import 'package:flutter/src/widgets/icon_data.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/model/field/profile_field.dart';
-import 'package:tapea/routes.dart';
 
-class LinkField extends ProfileField {
+abstract class LinkField extends ProfileField {
   String link;
   LinkField({
     String title = '',
@@ -14,23 +11,9 @@ class LinkField extends ProfileField {
           subtitle: subtitle,
         );
 
-  @override
-  String get displayName => 'Link';
-
-  String getUrl(String domain) {
-    return 'https://www.' + domain.toLowerCase() + '.com';
-  }
+  String getUrl(String domain);
 
   void setLink(String link) {
     this.link = link;
   }
-
-  @override
-  IconData get icon => FontAwesomeIcons.link;
-
-  @override
-  ProfileFieldType get type => ProfileFieldType.link;
-
-  @override
-  String get route => Routes.linkField;
 }

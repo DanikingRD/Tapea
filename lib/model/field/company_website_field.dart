@@ -4,9 +4,11 @@ import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/routes.dart';
 
 class CompanyWebsiteField extends LinkField {
-  CompanyWebsiteField(
-      {String title = '', String subtitle = '', String link = ''})
-      : super(
+  CompanyWebsiteField({
+    String title = '',
+    String subtitle = '',
+    String link = '',
+  }) : super(
           title: title,
           subtitle: subtitle,
           link: link,
@@ -23,4 +25,9 @@ class CompanyWebsiteField extends LinkField {
 
   @override
   String get route => Routes.companyWebsiteField;
+
+  @override
+  String getUrl(String domain) {
+    return 'https://www.' + domain.toLowerCase() + '.com';
+  }
 }
