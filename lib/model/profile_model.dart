@@ -1,11 +1,13 @@
 import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/instagram_field.dart';
 import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/paypal_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/field/link_field.dart';
+import 'package:tapea/model/field/twitter_field.dart';
 
 class ProfileModel {
   final String title;
@@ -134,6 +136,24 @@ class ProfileModel {
         case FieldIdentifier.paypal:
           allFields.add(
             PaypalField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
+        case FieldIdentifier.instagram:
+          allFields.add(
+            InstagramField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
+        case FieldIdentifier.twitter:
+          allFields.add(
+            TwitterField(
               title: title,
               subtitle: subtitle,
               link: field['link'],

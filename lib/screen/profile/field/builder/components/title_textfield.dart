@@ -5,7 +5,6 @@ import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
-import 'package:url_launcher/link.dart';
 
 class TitleTextField extends StatelessWidget {
   final ProfileField field;
@@ -82,7 +81,7 @@ class TitleTextField extends StatelessWidget {
                       ),
                       if (titleController.text.isNotEmpty) ...{
                         Text(
-                          (field as LinkField).getUrl(titleController.text),
+                          (field as LinkField).getUrl(getTitleString()),
                           style: const TextStyle(color: Colors.grey),
                         ),
                       }
@@ -93,6 +92,10 @@ class TitleTextField extends StatelessWidget {
             )
           : getTextField();
     }
+  }
+
+  String getTitleString() {
+    return titleController.text.replaceAll('@', '');
   }
 
   Widget getTextField() {

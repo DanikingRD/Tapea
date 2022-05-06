@@ -3,12 +3,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/email_field.dart';
+import 'package:tapea/model/field/instagram_field.dart';
 import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
 import 'package:tapea/model/field/paypal_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/model/field/twitter_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
@@ -164,6 +166,8 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                       CompanyWebsiteField(),
                       LinkedInField(),
                       PaypalField(),
+                      InstagramField(),
+                      TwitterField(),
                     ],
                     onFieldPressed: (field) => Navigator.pushNamed(
                       context,

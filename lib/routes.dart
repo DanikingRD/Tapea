@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:tapea/model/field/company_website_field.dart';
+import 'package:tapea/model/field/instagram_field.dart';
 import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/screen/auth/login_screen.dart';
 import 'package:tapea/screen/auth/sign_up_screen.dart';
@@ -8,12 +9,14 @@ import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/screen/profile/field/company_website_field_screen.dart';
 import 'package:tapea/screen/profile/field/email_field_screen.dart';
+import 'package:tapea/screen/profile/field/instagram_field_screen.dart';
 import 'package:tapea/screen/profile/field/link_field_screen.dart';
 import 'package:tapea/screen/profile/field/linked_in_field_screen.dart';
 import 'package:tapea/screen/profile/field/location_field.screen.dart';
 import 'package:tapea/screen/profile/field/paypal_field_screen.dart';
 import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
 import 'package:tapea/screen/profile/editor/profile_editor_screen.dart';
+import 'package:tapea/screen/profile/field/twitter_field_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
 
@@ -32,6 +35,8 @@ class Routes {
   static const String companyWebsiteField = '/company_website';
   static const String linkedInField = '/linked_in';
   static const String paypalField = '/paypal';
+  static const String instagramField = '/instagram';
+  static const String twitterField = '/twitter';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -112,6 +117,18 @@ class Routes {
         final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
           screen: PaypalFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case instagramField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: InstagramFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case twitterField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: TwitterFieldScreen(onSaved: onSaved),
           settings: settings,
         );
       default:

@@ -97,7 +97,11 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
       }
       if (widget.field is LinkField) {
         final linkField = ((widget.field) as LinkField);
-        linkField.setLink(linkField.getUrl(_titleController.text));
+        linkField.setLink(
+          linkField.getUrl(
+            _titleController.text.replaceAll('@', ''),
+          ),
+        );
       }
       profile.fields.add(widget.field);
       return true;
