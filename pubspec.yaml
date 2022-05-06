@@ -38,6 +38,7 @@ dependencies:
   # Misc
   country_code_picker: ^2.0.2
   url_launcher: ^6.1.0
+  flutter_colorpicker: ^1.0.3
 
 
 dev_dependencies:

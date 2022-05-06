@@ -24,6 +24,7 @@ import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/screen/profile/editor/components/editable_field.dart';
 import 'package:tapea/screen/profile/editor/components/explanation_box.dart';
+import 'package:tapea/screen/profile/editor/components/field_color_picker.dart';
 import 'package:tapea/screen/profile/editor/components/field_gridview.dart';
 import 'package:tapea/screen/profile/editor/components/xmark_button.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
@@ -114,6 +115,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                     },
                   ),
                 ),
+                if (index == 0) ...{
+                  FieldColorPicker(),
+                },
                 if (index == 4) ...{
                   const SizedBox(
                     height: 20,
@@ -158,12 +162,12 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                       },
                     )
                   },
+                  const SizedBox(
+                    height: 15,
+                  ),
                   const ExplanationBox(
                     explanation: 'Tap a field below to add it',
                     icon: FontAwesomeIcons.plus,
-                  ),
-                  const SizedBox(
-                    height: 10,
                   ),
                   FieldGridView(
                     fields: [
