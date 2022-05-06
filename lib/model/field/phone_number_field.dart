@@ -1,6 +1,7 @@
 import 'package:flutter/src/widgets/icon_data.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/routes.dart';
 
 class PhoneNumberField extends ProfileField {
   String? phoneExtension;
@@ -31,4 +32,7 @@ class PhoneNumberField extends ProfileField {
 
   @override
   ProfileFieldType get type => ProfileFieldType.phoneNumber;
+
+  @override
+  String get route => Routes.phoneNumberField;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/routes.dart';
 
 class EmailField extends ProfileField {
   EmailField({
@@ -18,4 +19,7 @@ class EmailField extends ProfileField {
 
   @override
   ProfileFieldType get type => ProfileFieldType.email;
+
+  @override
+  String get route => Routes.emailField;
 }

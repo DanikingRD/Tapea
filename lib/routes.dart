@@ -11,6 +11,7 @@ import 'package:tapea/screen/profile/field/email_field_screen.dart';
 import 'package:tapea/screen/profile/field/link_field_screen.dart';
 import 'package:tapea/screen/profile/field/linked_in_field_screen.dart';
 import 'package:tapea/screen/profile/field/location_field.screen.dart';
+import 'package:tapea/screen/profile/field/paypal_field_screen.dart';
 import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
 import 'package:tapea/screen/profile/editor/profile_editor_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
@@ -30,6 +31,7 @@ class Routes {
   static const String locationField = '/location';
   static const String companyWebsiteField = '/company_website';
   static const String linkedInField = '/linked_in';
+  static const String paypalField = '/paypal';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -104,6 +106,12 @@ class Routes {
         final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
           screen: LinkedInFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case paypalField:
+        final onSaved = settings.arguments as VoidCallback;
+        return rightToLeft(
+          screen: PaypalFieldScreen(onSaved: onSaved),
           settings: settings,
         );
       default:

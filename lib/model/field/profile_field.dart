@@ -13,6 +13,15 @@ enum ProfileFieldType {
   location,
   companyWebsite,
   linkedIn,
+  paypal,
+  instagram,
+  twitter,
+  facebook,
+  youtube,
+  discord,
+  whatsApp,
+  tiktok,
+  twitch
 }
 
 extension ProfileTypeExt on ProfileFieldType {
@@ -40,6 +49,24 @@ extension ProfileTypeExt on ProfileFieldType {
         return FieldIdentifier.companyWebsite;
       case ProfileFieldType.linkedIn:
         return FieldIdentifier.linkedIn;
+      case ProfileFieldType.paypal:
+        return FieldIdentifier.paypal;
+      case ProfileFieldType.instagram:
+        return FieldIdentifier.instagram;
+      case ProfileFieldType.twitter:
+        return FieldIdentifier.twitter;
+      case ProfileFieldType.facebook:
+        return FieldIdentifier.facebook;
+      case ProfileFieldType.youtube:
+        return FieldIdentifier.youtube;
+      case ProfileFieldType.discord:
+        return FieldIdentifier.discord;
+      case ProfileFieldType.whatsApp:
+        return FieldIdentifier.whatsapp;
+      case ProfileFieldType.tiktok:
+        return FieldIdentifier.tiktok;
+      case ProfileFieldType.twitch:
+        return FieldIdentifier.twitch;
     }
   }
 
@@ -80,12 +107,14 @@ abstract class ProfileField {
     required this.subtitle,
   });
 
+  String get route;
   String get displayName;
   IconData get icon;
   ProfileFieldType get type;
 
   set profileTitle(String title) => this.title = title;
   set profileSubtitle(String subtitle) => this.subtitle = subtitle;
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

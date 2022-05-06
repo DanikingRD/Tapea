@@ -5,7 +5,7 @@ import 'package:tapea/widget/circle_icon.dart';
 
 class FieldGridView extends StatelessWidget {
   final List<ProfileField> fields;
-  final Function(int index) onFieldPressed;
+  final Function(ProfileField field) onFieldPressed;
   const FieldGridView({
     Key? key,
     required this.fields,
@@ -32,7 +32,7 @@ class FieldGridView extends StatelessWidget {
             children: [
               CircleIconButton(
                 heroTag: Text('btn#$index'),
-                onPressed: () => onFieldPressed(index),
+                onPressed: () => onFieldPressed(field),
                 icon: Icon(
                   field.icon,
                   color: Colors.white,

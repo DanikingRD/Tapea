@@ -6,6 +6,7 @@ import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
+import 'package:tapea/model/field/paypal_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
@@ -162,8 +163,13 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                       LocationField(),
                       CompanyWebsiteField(),
                       LinkedInField(),
+                      PaypalField(),
                     ],
-                    onFieldPressed: openScreenByIndex,
+                    onFieldPressed: (field) => Navigator.pushNamed(
+                      context,
+                      field.route,
+                      arguments: markDirty,
+                    ),
                   ),
                 }
               ],
@@ -261,33 +267,6 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         );
       },
     );
-  }
-
-  void openScreenByIndex(int index) {
-    final String route;
-    switch (index) {
-      case 0:
-        route = Routes.phoneNumberField;
-        break;
-      case 1:
-        route = Routes.emailField;
-        break;
-      case 2:
-        route = Routes.linkField;
-        break;
-      case 3:
-        route = Routes.locationField;
-        break;
-      case 4:
-        route = Routes.companyWebsiteField;
-        break;
-      case 5:
-        route = Routes.linkedInField;
-        break;
-      default:
-        throw ('Tried to access an undefined screen');
-    }
-    Navigator.pushNamed(context, route, arguments: markDirty);
   }
 
   void markDirty() {

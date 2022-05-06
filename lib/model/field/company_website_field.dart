@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/routes.dart';
 
 class CompanyWebsiteField extends LinkField {
   CompanyWebsiteField(
@@ -20,4 +20,7 @@ class CompanyWebsiteField extends LinkField {
 
   @override
   ProfileFieldType get type => ProfileFieldType.companyWebsite;
+
+  @override
+  String get route => Routes.companyWebsiteField;
 }

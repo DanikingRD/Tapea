@@ -2,6 +2,7 @@ import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
+import 'package:tapea/model/field/paypal_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/field/link_field.dart';
@@ -130,6 +131,15 @@ class ProfileModel {
             ),
           );
           break;
+        case FieldIdentifier.paypal:
+          allFields.add(
+            PaypalField(
+              title: title,
+              subtitle: subtitle,
+              link: field['link'],
+            ),
+          );
+          break;
         default:
           throw ('');
       }
@@ -140,7 +150,6 @@ class ProfileModel {
   List<Map<String, dynamic>> fieldsToJson() {
     final List<Map<String, dynamic>> allJsons = [];
     for (ProfileField field in fields) {
-      print('saving field ${field.type}');
       final Map<String, dynamic> currentField = {
         'type': field.type.id,
         'title': field.title,

@@ -1,6 +1,7 @@
 import 'package:flutter/src/widgets/icon_data.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/routes.dart';
 
 class LinkField extends ProfileField {
   String link;
@@ -29,4 +30,7 @@ class LinkField extends ProfileField {
 
   @override
   ProfileFieldType get type => ProfileFieldType.link;
+
+  @override
+  String get route => Routes.linkField;
 }
