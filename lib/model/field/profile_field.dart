@@ -79,6 +79,7 @@ class FieldIdentifier {
   static const String lastName = 'lastName';
   static const String jobTitle = 'jobTitle';
   static const String company = 'company';
+  static const String color = 'color';
   static const String phoneNumber = 'phoneNumber';
   static const String email = 'email';
   static const String link = 'link';

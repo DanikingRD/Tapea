@@ -10,6 +10,7 @@ import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
+import 'package:tapea/screen/profile/components/floating_sender_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileView extends StatefulWidget {
@@ -56,6 +57,8 @@ class _ProfileViewState extends State<ProfileView> {
           )
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: QrSenderButton(),
     );
   }
 
@@ -76,7 +79,7 @@ class _ProfileViewState extends State<ProfileView> {
           size: 28,
         ),
         onPressed: () => getActionFor(field),
-        backgroundColor: kSelectedPageColor,
+        backgroundColor: context.read<ProfileNotifier>().color,
         elevation: 3.0,
         focusElevation: 0.0,
         highlightElevation: 0.0,

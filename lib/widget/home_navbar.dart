@@ -49,20 +49,23 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
               onTap: () {
                 widget.onTap!(index);
               },
-              child: Column(
-                children: [
-                  Icon(
-                    widget.icons[index],
-                    size: 28,
-                    color: selected ? kSelectedPageColor : kRedColor,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  if (selected) ...{
-                    getIndicator(),
-                  }
-                ],
+              child: SizedBox(
+                width: 64,
+                child: Column(
+                  children: [
+                    Icon(
+                      widget.icons[index],
+                      size: 28,
+                      color: selected ? kSelectedPageColor : kRedColor,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    if (selected) ...{
+                      getIndicator(),
+                    }
+                  ],
+                ),
               ),
             );
           }),

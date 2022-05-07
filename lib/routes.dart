@@ -1,32 +1,26 @@
 import 'package:flutter/widgets.dart';
-import 'package:tapea/model/field/company_website_field.dart';
-import 'package:tapea/model/field/facebook_field.dart';
-import 'package:tapea/model/field/instagram_field.dart';
-import 'package:tapea/model/field/linked_in.dart';
-import 'package:tapea/model/field/telegram_field.dart';
-import 'package:tapea/model/field/tiktok_field.dart';
-import 'package:tapea/model/field/twitch_field.dart';
 import 'package:tapea/screen/auth/login_screen.dart';
 import 'package:tapea/screen/auth/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
-import 'package:tapea/screen/profile/field/company_website_field_screen.dart';
-import 'package:tapea/screen/profile/field/discord_field_screen.dart';
-import 'package:tapea/screen/profile/field/email_field_screen.dart';
-import 'package:tapea/screen/profile/field/facebook_field_screen.dart';
-import 'package:tapea/screen/profile/field/instagram_field_screen.dart';
-import 'package:tapea/screen/profile/field/link_field_screen.dart';
-import 'package:tapea/screen/profile/field/linked_in_field_screen.dart';
-import 'package:tapea/screen/profile/field/location_field.screen.dart';
-import 'package:tapea/screen/profile/field/paypal_field_screen.dart';
-import 'package:tapea/screen/profile/field/phone_number_field_screen.dart';
-import 'package:tapea/screen/profile/editor/profile_editor_screen.dart';
-import 'package:tapea/screen/profile/field/tiktok_field_screen.dart';
-import 'package:tapea/screen/profile/field/twitch_field_screen.dart';
-import 'package:tapea/screen/profile/field/twitter_field_screen.dart';
-import 'package:tapea/screen/profile/field/whatsapp_field_screen.dart';
-import 'package:tapea/screen/profile/field/youtube_field_screen.dart';
+import 'package:tapea/screen/profile/components/editor/profile_editor_screen.dart';
+import 'package:tapea/screen/profile/components/field/phone_number_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/company_website_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/discord_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/email_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/facebook_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/instagram_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/link_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/linked_in_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/location_field.screen.dart';
+import 'package:tapea/screen/profile/components/field/paypal_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/tiktok_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/twitch_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/twitter_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/whatsapp_field_screen.dart';
+import 'package:tapea/screen/profile/components/field/youtube_field_screen.dart';
+import 'package:tapea/screen/profile/profile_qr_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
 
@@ -53,6 +47,7 @@ class Routes {
   static const String telegramField = '/telegram';
   static const String tiktokField = '/tiktok';
   static const String twitchField = '/twitch';
+  static const String profileQr = '/profile_qr';
 
   static Route<dynamic> build(RouteSettings settings) {
     switch (settings.name) {
@@ -181,6 +176,11 @@ class Routes {
         final onSaved = settings.arguments as VoidCallback;
         return rightToLeft(
           screen: TwitchFieldScreen(onSaved: onSaved),
+          settings: settings,
+        );
+      case profileQr:
+        return bottomToTop(
+          screen: const ProfileQrScreen(),
           settings: settings,
         );
       default:

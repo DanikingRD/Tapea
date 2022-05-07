@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
@@ -29,6 +31,7 @@ class EditableField extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleIconButton(
+        circleColor: context.watch<ProfileNotifier>().color,
         onPressed: null,
         elevation: 1.0,
         icon: Icon(field.icon),

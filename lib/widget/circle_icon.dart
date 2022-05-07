@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tapea/constants.dart';
 
 class CircleIconButton extends StatelessWidget {
   final Icon icon;
@@ -11,7 +10,7 @@ class CircleIconButton extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.onPressed,
-    this.circleColor = kSelectedPageColor,
+    this.circleColor,
     this.elevation = 3.0,
     this.heroTag,
   }) : super(key: key);
@@ -22,7 +21,7 @@ class CircleIconButton extends StatelessWidget {
       heroTag: heroTag,
       child: icon,
       onPressed: onPressed,
-      backgroundColor: kSelectedPageColor,
+      backgroundColor: circleColor,
       elevation: elevation,
       focusElevation: 0.0,
       highlightElevation: 0.0,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
 class FieldGridView extends StatelessWidget {
@@ -32,6 +34,7 @@ class FieldGridView extends StatelessWidget {
           return Column(
             children: [
               CircleIconButton(
+                circleColor: context.watch<ProfileNotifier>().color,
                 heroTag: Text('btn#$index'),
                 onPressed: () => onFieldPressed(field),
                 icon: Icon(

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:tapea/model/field/location_field.dart';
-import 'package:tapea/screen/profile/field/builder/profile_field_builder.dart';
+import 'package:tapea/screen/profile/components/field/builder/profile_field_builder.dart';
 
 class LocationFieldScreen extends StatelessWidget {
   final VoidCallback onSaved;

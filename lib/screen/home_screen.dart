@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:tapea/screen/home_view.dart';
 import 'package:tapea/screen/profile/profile_view.dart';

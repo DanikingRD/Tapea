@@ -6,10 +6,10 @@ import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
 import 'package:tapea/provider/profile_notifier.dart';
-import 'package:tapea/screen/profile/field/builder/components/country_code_switch.dart';
-import 'package:tapea/screen/profile/field/builder/components/header_bar.dart';
-import 'package:tapea/screen/profile/field/builder/components/suggestions_builder.dart';
-import 'package:tapea/screen/profile/field/builder/components/title_textfield.dart';
+import 'package:tapea/screen/profile/components/field/builder/components/country_code_switch.dart';
+import 'package:tapea/screen/profile/components/field/builder/components/header_bar.dart';
+import 'package:tapea/screen/profile/components/field/builder/components/suggestions_builder.dart';
+import 'package:tapea/screen/profile/components/field/builder/components/title_textfield.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 
@@ -53,7 +53,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _labelController = TextEditingController();
   late final TextEditingController? _phoneExtController;
-  late CountryCode _code;
+  late CountryCode? _code;
   bool internationalNumber = true;
 
   @override
@@ -64,6 +64,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
       _code = CountryCode.fromJson(codes[61]);
     } else {
       _phoneExtController = null;
+      _code = null;
     }
     super.initState();
   }
@@ -95,6 +96,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         if (widget.field is PhoneNumberField) {
           ((widget.field) as PhoneNumberField).phoneExt =
               _phoneExtController!.text;
+          widget.field.profileTitle = _code.toString() + _titleController.text;
         }
       }
       if (widget.field is LinkField) {
@@ -151,6 +153,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
                 titleController: _titleController,
                 labelController: _labelController,
                 phoneExtController: _phoneExtController,
+                code: _code.toString(),
               ),
               TitleTextField(
                 field: widget.field,

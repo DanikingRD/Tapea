@@ -1,8 +1,10 @@
+import 'package:tapea/constants.dart';
 import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/discord_field.dart';
 import 'package:tapea/model/field/email_field.dart';
 import 'package:tapea/model/field/facebook_field.dart';
 import 'package:tapea/model/field/instagram_field.dart';
+import 'package:tapea/model/field/link_field.dart';
 import 'package:tapea/model/field/link_field_impl.dart';
 import 'package:tapea/model/field/linked_in.dart';
 import 'package:tapea/model/field/location_field.dart';
@@ -10,11 +12,10 @@ import 'package:tapea/model/field/paypal_field.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/phone_number_field_impl.dart';
 import 'package:tapea/model/field/profile_field.dart';
-import 'package:tapea/model/field/link_field.dart';
+import 'package:tapea/model/field/telegram_field.dart';
 import 'package:tapea/model/field/tiktok_field.dart';
 import 'package:tapea/model/field/twitch_field.dart';
 import 'package:tapea/model/field/twitter_field.dart';
-import 'package:tapea/model/field/telegram_field.dart';
 import 'package:tapea/model/field/youtube_field.dart';
 
 class ProfileModel {
@@ -24,6 +25,7 @@ class ProfileModel {
   final String jobTitle;
   final String company;
   final String? photoUrl;
+  final int color;
   final List<ProfileField> fields;
 
   const ProfileModel({
@@ -33,6 +35,7 @@ class ProfileModel {
     required this.jobTitle,
     required this.company,
     this.photoUrl,
+    required this.color,
     this.fields = const [],
   });
 
@@ -43,6 +46,7 @@ class ProfileModel {
       lastName: json[FieldIdentifier.lastName],
       jobTitle: json[FieldIdentifier.jobTitle],
       company: json[FieldIdentifier.company],
+      color: json[FieldIdentifier.color],
       photoUrl: json['photoUrl'],
       fields: fieldsFromJson(json['fields']),
     );
@@ -55,6 +59,7 @@ class ProfileModel {
     String? jobTitle,
     String? company,
     String? photoUrl,
+    int? color,
     List<ProfileField>? fields,
   }) {
     return ProfileModel(
@@ -63,6 +68,7 @@ class ProfileModel {
       lastName: lastName ?? this.lastName,
       jobTitle: jobTitle ?? this.jobTitle,
       company: company ?? this.company,
+      color: color ?? this.color,
       photoUrl: photoUrl ?? this.photoUrl,
       fields: fields ?? this.fields,
     );
@@ -75,6 +81,7 @@ class ProfileModel {
       FieldIdentifier.lastName: lastName,
       FieldIdentifier.jobTitle: jobTitle,
       FieldIdentifier.company: company,
+      FieldIdentifier.color: color,
       'photoUrl': photoUrl,
       FieldIdentifier.fields: fieldsToJson(),
     };

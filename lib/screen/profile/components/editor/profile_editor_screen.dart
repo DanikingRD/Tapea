@@ -21,17 +21,17 @@ import 'package:tapea/model/field/telegram_field.dart';
 import 'package:tapea/model/field/youtube_field.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
-import 'package:tapea/routes.dart';
-import 'package:tapea/screen/profile/editor/components/editable_field.dart';
-import 'package:tapea/screen/profile/editor/components/explanation_box.dart';
-import 'package:tapea/screen/profile/editor/components/field_color_picker.dart';
-import 'package:tapea/screen/profile/editor/components/field_gridview.dart';
-import 'package:tapea/screen/profile/editor/components/xmark_button.dart';
+import 'package:tapea/screen/profile/components/editor/components/explanation_box.dart';
+import 'package:tapea/screen/profile/components/editor/components/field_color_picker.dart';
+import 'package:tapea/screen/profile/components/editor/components/field_gridview.dart';
+import 'package:tapea/screen/profile/components/editor/components/xmark_button.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/text_field_manager.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/borderless_text_field.dart';
 import 'package:tapea/widget/warning_box.dart';
+
+import 'components/editable_field.dart';
 
 class ProfileEditorScreen extends StatefulWidget {
   final bool edit;
@@ -76,6 +76,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
+
     return WillPopScope(
       onWillPop: () async => await onPop(profile),
       child: Scaffold(
@@ -116,7 +117,12 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                   ),
                 ),
                 if (index == 0) ...{
-                  FieldColorPicker(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: FieldColorPicker(
+                      onChanged: updateColor,
+                    ),
+                  )
                 },
                 if (index == 4) ...{
                   const SizedBox(
@@ -162,12 +168,12 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
                       },
                     )
                   },
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const ExplanationBox(
-                    explanation: 'Tap a field below to add it',
-                    icon: FontAwesomeIcons.plus,
+                  const Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: ExplanationBox(
+                      explanation: 'Tap a field below to add it',
+                      icon: FontAwesomeIcons.plus,
+                    ),
                   ),
                   FieldGridView(
                     fields: [
@@ -200,6 +206,11 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
         )),
       ),
     );
+  }
+
+  void updateColor(Color color) {
+    context.read<ProfileNotifier>().color = color;
+    _dirty = true;
   }
 
   void updateTitle(String text, int index) {
@@ -257,6 +268,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
           firstName: firstNameField.text,
           lastName: lastNameField.text,
           company: companyField.text,
+          color: context.read<ProfileNotifier>().color.value,
           jobTitle: jobTitleField.text,
         ),
       );

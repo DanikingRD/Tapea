@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 import 'package:tapea/routes.dart';
@@ -161,6 +162,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
       lastName: _lastNameController.text,
       jobTitle: _jobController.text,
       company: _companyController.text,
+      color: kRedColor.value,
       photoUrl: photoUrl,
     );
     final database = context.read<FirestoreDatabaseService>();

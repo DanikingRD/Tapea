@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tapea/model/field/link_field_impl.dart';
-import 'package:tapea/screen/profile/field/builder/profile_field_builder.dart';
+import 'package:tapea/screen/profile/components/field/builder/profile_field_builder.dart';
 
 class LinkFieldScreen extends StatelessWidget {
   final VoidCallback onSaved;

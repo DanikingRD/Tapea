@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/model/field/phone_number_field.dart';
 import 'package:tapea/model/field/profile_field.dart';
+import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/widget/circle_icon.dart';
 
 class HeaderBar extends StatelessWidget {
@@ -10,6 +12,7 @@ class HeaderBar extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController labelController;
   final TextEditingController? phoneExtController;
+  final String? code;
   const HeaderBar({
     Key? key,
     required this.icon,
@@ -17,6 +20,7 @@ class HeaderBar extends StatelessWidget {
     required this.titleController,
     required this.labelController,
     required this.phoneExtController,
+    required this.code,
   }) : super(key: key);
 
   @override
@@ -31,6 +35,7 @@ class HeaderBar extends StatelessWidget {
           title: getIconTitle(context),
           leading: CircleIconButton(
             onPressed: null,
+            circleColor: context.read<ProfileNotifier>().color,
             elevation: 1.0,
             icon: Icon(icon),
           ),
@@ -50,7 +55,7 @@ class HeaderBar extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            titleController.text,
+            code ?? '' + titleController.text,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
