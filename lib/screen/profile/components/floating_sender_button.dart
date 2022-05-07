@@ -31,7 +31,7 @@ class QrSenderButton extends StatelessWidget {
           child: Row(
             children: const [
               Icon(Icons.send),
-              const SizedBox(width: 5),
+              SizedBox(width: 8),
               Text('SEND', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
