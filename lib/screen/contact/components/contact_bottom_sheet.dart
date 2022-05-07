@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tapea/widget/warning_box.dart';
 
 class ContactBottomSheet extends StatelessWidget {
   const ContactBottomSheet({Key? key}) : super(key: key);
@@ -23,7 +24,14 @@ class ContactBottomSheet extends StatelessWidget {
             name: 'Share profile',
           ),
           getButton(
-            onPressed: () {},
+            onPressed: () => showDialog(
+                context: context,
+                builder: (_) {
+                  return WarningBox(
+                    dialog: 'Are you sure you want to delete this contact',
+                    onAccept: () {},
+                  );
+                }),
             icon: Icons.delete,
             name: 'Delete contact',
           ),

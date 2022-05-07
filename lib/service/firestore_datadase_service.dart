@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 
@@ -6,6 +7,13 @@ class FirestoreDatabaseService {
   final FirebaseFirestore _instance;
 
   FirestoreDatabaseService(this._instance);
+
+  Future<void> setContact({
+    required Contact contact,
+    required String userId,
+  }) async {
+    await contactsRef(userId: userId).doc(userId).set(contact);
+  }
 
   Future<void> setUser({
     required UserModel user,
@@ -91,5 +99,16 @@ class FirestoreDatabaseService {
         .withConverter<ProfileModel>(
             fromFirestore: (doc, _) => ProfileModel.fromJson(doc.data()!),
             toFirestore: (model, _) => model.toJson());
+  }
+
+  CollectionReference<Contact> contactsRef({required String userId}) {
+    return _instance
+        .collection('users')
+        .doc(userId)
+        .collection('contacts')
+        .withConverter(
+          fromFirestore: (doc, _) => Contact.fromMap(doc.data()!),
+          toFirestore: (model, _) => model.toMap() as Map<String, dynamic>,
+        );
   }
 }
