@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:tapea/screen/contact/contact_view.dart';
 import 'package:tapea/screen/home_view.dart';
 import 'package:tapea/screen/profile/profile_view.dart';
-import 'package:tapea/screen/share_profile_view.dart';
+import 'package:tapea/screen/settings/settings_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       views: [
         ProfileView(),
         ContactView(),
-        ShareProfileView(),
+        SettingsView(),
       ],
     );
   }

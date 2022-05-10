@@ -11,7 +11,7 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/screen/profile/components/floating_sender_button.dart';
-import 'package:tapea/screen/settings/sidebar_menu.dart';
+import 'package:tapea/screen/settings/settings_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileView extends StatefulWidget {
@@ -28,7 +28,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
-      drawer: const SidebarMenu(),
+      drawer: const SettingsView(),
       appBar: AppBar(
         title: Text(profile.title),
         centerTitle: true,

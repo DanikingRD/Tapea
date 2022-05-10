@@ -7,7 +7,7 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
-import 'package:tapea/screen/settings/sidebar_menu.dart';
+import 'package:tapea/screen/settings/settings_view.dart';
 import 'package:tapea/widget/home_navbar.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 
@@ -63,7 +63,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const SidebarMenu(),
+      drawer: const SettingsView(),
       backgroundColor: kHomeBgColor,
       body: FutureBuilder<List<Object>>(
         future: Future.wait<Object>([
@@ -93,7 +93,7 @@ class _HomeViewState extends State<HomeView> {
         icons: const [
           FontAwesomeIcons.user,
           FontAwesomeIcons.addressBook,
-          FontAwesomeIcons.qrcode,
+          Icons.settings,
         ],
         onTap: (int index) => setView(index),
         currentIndex: _view,

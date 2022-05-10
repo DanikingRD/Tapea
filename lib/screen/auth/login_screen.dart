@@ -47,8 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
           notify(
             context: context,
             msg: 'Signed In successfully!',
-            onClose: () {
-              onLoggedIn(user!.uid);
+            onClose: () async {
+              await onLoggedIn(user!.uid);
             },
           );
         }
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void onLoggedIn(String id) async {
+  Future<void> onLoggedIn(String id) async {
     final database = context.read<FirestoreDatabaseService>();
     final bool exists = await database.containsUser(id);
     final String route;
@@ -65,8 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       route = Routes.home;
     }
-    Navigator.pop(context);
-    Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
+    //  Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
   }
 
   bool hasEmptyInputs() {
