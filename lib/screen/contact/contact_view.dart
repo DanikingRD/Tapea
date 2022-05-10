@@ -1,8 +1,8 @@
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tapea/constants.dart';
 import 'package:tapea/screen/contact/components/contact_bottom_sheet.dart';
-import 'package:contacts_service/contacts_service.dart';
 
 class ContactView extends StatefulWidget {
   const ContactView({
@@ -15,7 +15,9 @@ class ContactView extends StatefulWidget {
 
 class _ContactViewState extends State<ContactView> {
   List<Contact> contacts = [];
-
+  List<Contact> filteredContacts = [];
+  final TextEditingController _searchController = TextEditingController();
+  bool _searching = false;
   @override
   void initState() {
     super.initState();
@@ -32,7 +34,34 @@ class _ContactViewState extends State<ContactView> {
           company: 'My Company',
         ),
       );
+      contacts.add(
+        Contact(
+          displayName: 'daniel',
+        ),
+      );
     });
+  }
+
+  void searchContacts() {
+    final List<Contact> _list = List.from(contacts);
+    if (_searchController.text.isNotEmpty) {
+      setState(() {
+        _searching = true;
+      });
+      if (_list.isNotEmpty) {
+        _list.retainWhere((element) {
+          final String searchItem = _searchController.text.toLowerCase();
+          return element.displayName!.toLowerCase().contains(searchItem);
+        });
+        setState(() {
+          filteredContacts = _list;
+        });
+      }
+    } else {
+      setState(() {
+        _searching = false;
+      });
+    }
   }
 
   @override
@@ -41,36 +70,67 @@ class _ContactViewState extends State<ContactView> {
       appBar: AppBar(
         title: const Text('Contacts'),
         centerTitle: true,
+        backgroundColor: kHomeBgColor,
       ),
-      body: ListView.builder(
-        itemCount: contacts.length,
-        itemBuilder: ((context, index) {
-          final Contact contact = contacts[index];
-          return ListTile(
-            leading: getAvatar(contact),
-            title: getTitle(contact),
-            subtitle: getSubtitle(contact),
-            trailing: FittedBox(
-              child: Column(
-                children: [
-                  const Text('May 7, 2022, 9 AM'),
-                  IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const ContactBottomSheet();
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.more_vert),
-                    splashRadius: kSplashRadius,
-                  ),
-                ],
+      body: Scaffold(
+        backgroundColor: kHomeBgColor,
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _searchController,
+                onChanged: (_) => searchContacts(),
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  contentPadding: EdgeInsets.only(bottom: 15),
+                  border: InputBorder.none,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  labelText: 'Search',
+                  filled: true,
+                ),
               ),
-            ),
-          );
-        }),
+              const SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount:
+                      _searching ? filteredContacts.length : contacts.length,
+                  itemBuilder: ((context, index) {
+                    final Contact contact =
+                        _searching ? filteredContacts[index] : contacts[index];
+                    return ListTile(
+                      leading: getAvatar(contact),
+                      title: getTitle(contact),
+                      subtitle: getSubtitle(contact),
+                      trailing: FittedBox(
+                        child: Column(
+                          children: [
+                            const Text('May 7, 2022, 9 AM'),
+                            IconButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const ContactBottomSheet();
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.more_vert),
+                              splashRadius: kSplashRadius,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

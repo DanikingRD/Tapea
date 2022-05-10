@@ -5,15 +5,13 @@ import 'package:tapea/screen/settings/components/account_option.dart';
 import 'package:tapea/screen/settings/components/option_header.dart';
 
 class SettingsView extends StatelessWidget {
-  static const List<Widget> _options = [
-    AccountOption(title: 'FREE'),
-    AccountOption(title: 'Default Card'),
-  ];
-  static const List<Widget> _headers = [
+  static const List<OptionHeader> _headers = [
     OptionHeader(
       title: 'PLAN',
     ),
-    AccountOption(title: 'Default Card'),
+    OptionHeader(
+      title: 'ACCOUNT',
+    ),
   ];
   const SettingsView({
     Key? key,
@@ -31,19 +29,27 @@ class SettingsView extends StatelessWidget {
       body: ListView.builder(
         itemCount: 1,
         itemBuilder: (BuildContext context, int index) {
-          return ListView(
-            shrinkWrap: true,
-            children: List<Widget>.generate(_options.length, (index) {
-              final Widget header = _headers[index];
-              return Column(
-                children: [],
-              );
-            }),
+          final OptionHeader header = _headers[index];
+          return Column(
+            children: [
+              header,
+              if (header.title == 'PLAN') ...{
+                const AccountOption(title: 'FREE'),
+              },
+              // if (header.title == 'PROFILE') ...{
+              //   const AccountOption(title: 'Default Card'),
+              // }
+            ],
           );
         },
       ),
     );
   }
+
+  static const List<Widget> _options = [
+    AccountOption(title: 'FREE'),
+    AccountOption(title: 'Default Card'),
+  ];
 
   Widget getItem({
     required String text,

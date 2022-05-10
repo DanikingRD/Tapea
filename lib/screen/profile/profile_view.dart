@@ -28,7 +28,6 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     final ProfileModel profile = context.watch<ProfileNotifier>().profile;
     return Scaffold(
-      drawer: const SettingsView(),
       appBar: AppBar(
         title: Text(profile.title),
         centerTitle: true,

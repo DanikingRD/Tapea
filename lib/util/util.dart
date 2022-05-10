@@ -11,6 +11,31 @@ import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 import 'package:tapea/widget/notification_box.dart';
 
+// // Returns the index of [key] in the List of objects
+// int binarySearch<T>({
+//   required List<T> entries,
+//   required Comparator<T> comparator,
+//   required T key,
+// }) {
+//   int bottom = 0;
+//   int top = entries.length - 1;
+//   while (bottom <= top) {
+//     // Return if the element is present at the middle
+//     final int mid = ((bottom + top) / 2).floor();
+//     final T midVal = entries[mid];
+//     // Comparison
+//     final int cmp = comparator(key, midVal);
+//     if (cmp < 0) {
+//       bottom = mid + 1;
+//     } else if (cmp > 0) {
+//       top = mid - 1;
+//     } else {
+//       return mid; // Key found
+//     }
+//   }
+//   return -1; // Key not found
+// }
+
 String? getIdentifier(BuildContext context) {
   final provider = context.read<FirebaseAuthService>();
   final User? user = provider.user;
