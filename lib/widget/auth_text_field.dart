@@ -28,9 +28,7 @@ class AuthTextField extends StatelessWidget {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color.fromRGBO(239, 239, 241, 1),
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
       ),
     );
