@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:tapea/constants.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/util/responsive.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
 
@@ -20,39 +22,44 @@ class VerificationScreen extends StatelessWidget {
         title: const Text('Verify your email'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Lottie.network(
-              'https://assets10.lottiefiles.com/packages/lf20_3rlzwL.json',
-              height: MediaQuery.of(context).size.height / 2,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Text(
-                'Verify your email address',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.bold),
+      body: Responsive(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            const Text('We\'ve sent a verification link to your email'),
-            margin,
-            AuthButton(
-              text: 'Resend',
-              onTap: () async => resendVerification(context),
-            ),
-            margin,
-            AuthButton(
-              text: 'Continue',
-              onTap: () async => onContinue(context),
-            ),
-          ],
+              Lottie.network(
+                'https://assets10.lottiefiles.com/packages/lf20_3rlzwL.json',
+                height: MediaQuery.of(context).size.height / 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Text(
+                  'Verify your email address',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              const Text(
+                'We\'ve sent a verification link to your email',
+                style: TextStyle(color: kRedColor, fontWeight: FontWeight.bold),
+              ),
+              margin,
+              AuthButton(
+                text: 'Resend',
+                onTap: () async => resendVerification(context),
+              ),
+              margin,
+              AuthButton(
+                text: 'Continue',
+                onTap: () async => onContinue(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -75,7 +82,12 @@ class VerificationScreen extends StatelessWidget {
 
   void onContinue(BuildContext context) async {
     final FirebaseAuthService service = context.read<FirebaseAuthService>();
-    await service.reloadUser();
+    try {
+      await service.reloadUser();
+    } on FirebaseAuthException catch (exception) {
+      notify(msg: exception.message!, context: context);
+      return null;
+    }
     if (service.isEmailVerified) {
       notify(
         context: context,

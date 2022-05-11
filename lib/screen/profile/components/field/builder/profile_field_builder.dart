@@ -107,7 +107,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
           ),
         );
       }
-      profile.fields.add(widget.field);
+      profile!.fields.add(widget.field);
       return true;
     }
   }

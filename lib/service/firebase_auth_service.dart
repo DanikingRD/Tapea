@@ -73,14 +73,6 @@ class FirebaseAuthService {
     return _instance.currentUser!.sendEmailVerification();
   }
 
-  Future<void> updateAvatar(String url) {
-    return _instance.currentUser!.updatePhotoURL(url);
-  }
-
-  Future<void> updateName(String name) {
-    return _instance.currentUser!.updateDisplayName(name);
-  }
-
   Stream<User?> get authStateChanges => _instance.authStateChanges();
 
   /// Refreshes the current user, if signed in.

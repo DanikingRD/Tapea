@@ -26,7 +26,7 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
+    final ProfileModel profile = context.watch<ProfileNotifier>().profile!;
     return Scaffold(
       appBar: AppBar(
         title: Text(profile.title),

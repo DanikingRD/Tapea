@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 
@@ -35,9 +36,19 @@ class FirestoreDatabaseService {
     await profilesRef(userId: userId).doc('Default').set(profile);
   }
 
-  Future<UserModel> readUser(String userId) async {
+  Future<UserModel?> readUser({
+    required String userId,
+    VoidCallback? catchError,
+  }) async {
     final json = await usersRef().doc(userId).get();
-    return json.data()!;
+    if (json.data() == null) {
+      if (catchError != null) {
+        catchError();
+      }
+      return null;
+    } else {
+      return json.data()!;
+    }
   }
 
   Future<void> updateUser({
@@ -52,11 +63,19 @@ class FirestoreDatabaseService {
     return doc.exists;
   }
 
-  Future<ProfileModel> readDefaultProfile({
+  Future<ProfileModel?> readDefaultProfile({
     required String userId,
+    VoidCallback? catchError,
   }) async {
     final json = await profilesRef(userId: userId).doc('Default').get();
-    return json.data()!;
+    if (json.data() == null) {
+      if (catchError != null) {
+        catchError();
+      }
+      return null;
+    } else {
+      return json.data()!;
+    }
   }
 
   Future<ProfileModel> readProfile({

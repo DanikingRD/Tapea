@@ -7,7 +7,10 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/model/user_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
+import 'package:tapea/routes.dart';
 import 'package:tapea/screen/settings/settings_view.dart';
+import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/home_navbar.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 
@@ -25,8 +28,8 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController();
-  late Future<UserModel> userFuture;
-  late Future<ProfileModel> profileFuture;
+  late Future<UserModel?> userFuture;
+  late Future<ProfileModel?> profileFuture;
   int _view = 0;
 
   @override
@@ -46,13 +49,13 @@ class _HomeViewState extends State<HomeView> {
     profileFuture = _readProfile(context);
   }
 
-  Future<UserModel> _readUser(BuildContext context) async {
+  Future<UserModel?> _readUser(BuildContext context) async {
     final UserNotifier notifier = context.read<UserNotifier>();
     await notifier.update(context);
     return notifier.user;
   }
 
-  Future<ProfileModel> _readProfile(
+  Future<ProfileModel?> _readProfile(
     BuildContext context,
   ) async {
     final ProfileNotifier notifier = context.read<ProfileNotifier>();
@@ -60,18 +63,36 @@ class _HomeViewState extends State<HomeView> {
     return notifier.profile;
   }
 
+  void checkUser() {
+    final service = context.read<FirebaseAuthService>();
+    String? route;
+    if (service.user == null) {
+      route = Routes.signUp;
+    } else if (!service.isEmailVerified) {
+      route = Routes.verification;
+    } else {
+      route = Routes.profileEditor;
+    }
+    // The widget is hasn't completely initialized
+    Future(() {
+      Navigator.pushNamedAndRemoveUntil(context, route!, (_) => false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const SettingsView(),
       backgroundColor: kHomeBgColor,
-      body: FutureBuilder<List<Object>>(
-        future: Future.wait<Object>([
+      body: FutureBuilder<List<Object?>>(
+        future: Future.wait<Object?>([
           userFuture,
           profileFuture,
         ]),
         builder: (BuildContext context, AsyncSnapshot<Object?> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData &&
+              (snapshot.data as List)[0] != null &&
+              (snapshot.data as List)[1] != null) {
             return PageView(
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
@@ -79,13 +100,12 @@ class _HomeViewState extends State<HomeView> {
               children: widget.views,
             );
           } else {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(snapshot.error.toString()), // Debugging
-                const LoadingIndicator(),
-              ],
-            );
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LoadingIndicator();
+            } else {
+              checkUser();
+              return const LoadingIndicator();
+            }
           }
         },
       ),

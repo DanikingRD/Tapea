@@ -57,7 +57,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   void initState() {
     super.initState();
     if (widget.edit) {
-      final ProfileModel profile = context.read<ProfileNotifier>().profile;
+      final ProfileModel profile = context.read<ProfileNotifier>().profile!;
       updateControllers(profile);
       _fieldsLength = profile.fields.length;
     }
@@ -75,7 +75,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ProfileModel profile = context.watch<ProfileNotifier>().profile;
+    final ProfileModel profile = context.watch<ProfileNotifier>().profile!;
 
     return WillPopScope(
       onWillPop: () async => await onPop(profile),
@@ -215,19 +215,19 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   void updateTitle(String text, int index) {
     final profile = context.read<ProfileNotifier>().profile;
-    profile.fields[index].title = text;
+    profile!.fields[index].title = text;
     _dirty = true;
   }
 
   void updateSubtitle(String text, int index) {
     final profile = context.read<ProfileNotifier>().profile;
-    profile.fields[index].subtitle = text;
+    profile!.fields[index].subtitle = text;
     _dirty = true;
   }
 
   void updatePhoneExt(String text, int index) {
     final profile = context.read<ProfileNotifier>().profile;
-    final ProfileField field = profile.fields[index];
+    final ProfileField field = profile!.fields[index];
     if (field is PhoneNumberField) {
       field.ext = text;
       _dirty = true;
@@ -236,7 +236,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   void updateLink(String text, int index) {
     final profile = context.read<ProfileNotifier>().profile;
-    final ProfileField field = profile.fields[index];
+    final ProfileField field = profile!.fields[index];
     if (field is LinkField) {
       field.link = text;
       _dirty = true;
@@ -245,7 +245,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
 
   void removeField(int index) {
     final profile = context.read<ProfileNotifier>().profile;
-    profile.fields.removeAt(index);
+    profile!.fields.removeAt(index);
     markDirty();
   }
 
