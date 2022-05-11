@@ -4,9 +4,11 @@ import 'package:tapea/screen/settings/components/option_divider.dart';
 
 class AccountOption extends StatelessWidget {
   final String title;
+  final VoidCallback? onTap;
   const AccountOption({
     Key? key,
     required this.title,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -15,7 +17,9 @@ class AccountOption extends StatelessWidget {
       children: [
         const OptionDivider(),
         GestureDetector(
-          onTap: () {},
+          onTap: (() {
+            if (onTap != null) onTap!();
+          }),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
             child: Row(

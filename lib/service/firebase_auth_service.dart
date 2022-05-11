@@ -6,6 +6,8 @@ class FirebaseAuthService {
 
   FirebaseAuthService(this._instance);
 
+  Future<void> signOut() => _instance.signOut();
+
   /// Registers a new user using the native email/password provider.
   Future<void> signUp({
     required String email,

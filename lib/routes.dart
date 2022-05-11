@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:tapea/screen/auth/login_screen.dart';
-import 'package:tapea/screen/auth/sign_up_screen.dart';
+import 'package:tapea/screen/auth/login/login_screen.dart';
+import 'package:tapea/screen/auth/sign_up/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';

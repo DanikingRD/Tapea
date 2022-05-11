@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tapea/constants.dart';
 
 class LoadingIndicatorBox extends StatelessWidget {
-  const LoadingIndicatorBox({Key? key}) : super(key: key);
+  const LoadingIndicatorBox({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +20,18 @@ class LoadingIndicatorBox extends StatelessWidget {
 }
 
 class LoadingIndicator extends StatelessWidget {
-  const LoadingIndicator({Key? key}) : super(key: key);
+  final Color color;
+  const LoadingIndicator({
+    Key? key,
+    this.color = kRedColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
+    return Center(
+      child: CircularProgressIndicator(
+        color: color,
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tapea/util/responsive.dart';
 
 class NotificationBox extends StatelessWidget {
   final String msg;
@@ -16,10 +17,10 @@ class NotificationBox extends StatelessWidget {
     return AlertDialog(
       title: Text(
         msg,
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge!
-            .copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontSize: Responsive.isDesktopScreen(context) ? 16 : 14,
+              fontWeight: FontWeight.bold,
+            ),
       ),
       content: content,
       actions: [
@@ -30,7 +31,12 @@ class NotificationBox extends StatelessWidget {
               onClose!();
             }
           },
-          child: const Text('GOT IT'),
+          child: const Text(
+            'GOT IT',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ],
     );

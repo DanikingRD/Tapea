@@ -11,13 +11,14 @@ import 'package:tapea/firebase_options.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/routes.dart';
-import 'package:tapea/screen/auth/login_screen.dart';
+import 'package:tapea/screen/auth/login/login_screen.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firebase_storage_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/colors.dart' as colors;
 import 'package:tapea/util/glowless_scroll_behaviour.dart';
+import 'package:tapea/util/responsive.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,8 +68,9 @@ class AppInitializer extends StatelessWidget {
             backgroundColor: colors.kBackgroundColor,
             elevation: 0,
             titleTextStyle: const TextStyle(
-              color: colors.kPrimaryColor,
+              fontFamily: 'Montserrat',
               fontSize: 20,
+              color: colors.kPrimaryColor,
               fontWeight: FontWeight.w600,
             ),
             iconTheme: const IconThemeData(
@@ -87,13 +89,7 @@ class AppInitializer extends StatelessWidget {
           root: LoginScreen(),
           home: HomeScreen(),
         ),
-        //home: const ProfileSetup(),
         onGenerateRoute: Routes.build,
-        // home: const ResponsiveLayout(
-        //   desktopLayout: DesktopLayout(),
-        //   tabletLayout: TabletLayout(),
-        //   mobileLayout: LoginScreen(),
-        // )
       ),
     );
   }

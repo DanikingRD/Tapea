@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/routes.dart';
 import 'package:tapea/screen/settings/components/account_option.dart';
 import 'package:tapea/screen/settings/components/option_header.dart';
+import 'package:tapea/service/firebase_auth_service.dart';
+import 'package:tapea/widget/warning_box.dart';
 
 class SettingsView extends StatelessWidget {
   static const List<OptionHeader> _headers = [
@@ -34,22 +38,35 @@ class SettingsView extends StatelessWidget {
             children: [
               header,
               if (header.title == 'PLAN') ...{
-                const AccountOption(title: 'FREE'),
+                const AccountOption(title: 'FREE', onTap: null),
               },
-              // if (header.title == 'PROFILE') ...{
-              //   const AccountOption(title: 'Default Card'),
-              // }
+              AccountOption(
+                title: 'Log Out',
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return WarningBox(
+                        dialog: 'Are you sure you want to log out?',
+                        onAccept: () async {
+                          await context.read<FirebaseAuthService>().signOut();
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.login,
+                            (_) => false,
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           );
         },
       ),
     );
   }
-
-  static const List<Widget> _options = [
-    AccountOption(title: 'FREE'),
-    AccountOption(title: 'Default Card'),
-  ];
 
   Widget getItem({
     required String text,

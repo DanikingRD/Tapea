@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tapea/constants.dart';
+import 'package:tapea/util/responsive.dart';
 import 'package:tapea/widget/loading_indicator.dart';
 
 class AuthButton extends StatelessWidget {
@@ -21,7 +22,17 @@ class AuthButton extends StatelessWidget {
         minimumSize: const Size(double.infinity, 40),
       ),
       onPressed: onTap,
-      child: loading ? const LoadingIndicator() : Text(text),
+      child: loading ? const LoadingIndicator() : getText(context),
+    );
+  }
+
+  Widget getText(BuildContext context) {
+    if (Responsive.isMobileScreen(context)) return Text(text);
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Text(
+        text,
+      ),
     );
   }
 }
