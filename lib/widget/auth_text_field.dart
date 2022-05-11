@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tapea/constants.dart';
 
 class AuthTextField extends StatelessWidget {

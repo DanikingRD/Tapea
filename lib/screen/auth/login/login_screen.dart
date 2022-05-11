@@ -89,48 +89,53 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: SafeArea(
         child: Responsive(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: size.height * 0.1),
-                const Text(
-                  'Email',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: size.height * 0.1),
+                    const Text(
+                      'Email',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: AuthTextField(
+                        controller: _emailController,
+                      ),
+                    ),
+                    margin,
+                    const Text(
+                      'Password',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: AuthTextField(
+                        hiddenText: true,
+                        controller: _passwordController,
+                      ),
+                    ),
+                    margin,
+                    AuthButton(onTap: () => logIn(), text: 'Log in'),
+                    Responsive.isDesktopScreen(context)
+                        ? const SizedBox(
+                            height: 40,
+                          )
+                        : margin,
+                    const RecoverAccountLabel(),
+                    margin,
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(
-                    controller: _emailController,
-                  ),
-                ),
-                margin,
-                const Text(
-                  'Password',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(
-                    hiddenText: true,
-                    controller: _passwordController,
-                  ),
-                ),
-                margin,
-                AuthButton(onTap: () => logIn(), text: 'Log in'),
-                Responsive.isDesktopScreen(context)
-                    ? const SizedBox(
-                        height: 40,
-                      )
-                    : margin,
-                const RecoverAccountLabel(),
-                margin,
-              ],
+              ),
             ),
           ),
         ),
