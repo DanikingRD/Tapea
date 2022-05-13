@@ -14,6 +14,7 @@ import 'package:tapea/util/responsive.dart';
 import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
 import 'package:tapea/widget/auth_text_field.dart';
+import 'package:tapea/widget/loading_indicator.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({Key? key}) : super(key: key);
@@ -30,6 +31,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final TextEditingController _companyController = TextEditingController();
   Uint8List? _selectedImage;
   bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -52,61 +58,62 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         title: const Text('Create your first profile'),
         centerTitle: true,
       ),
-      body: Responsive(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DefaultProfileAvatar(
-                  selectedImage: getAvatar(),
-                  onImagePick: (data) {
-                    // Prevents resetting the selected image back to null if the user cancels the action.
-                    if (data != null) {
-                      setState(() => _selectedImage = data);
-                    }
-                  },
+      body: _loading
+          ? const LoadingIndicator()
+          : Responsive(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DefaultProfileAvatar(
+                        selectedImage: getAvatar(),
+                        onImagePick: (data) {
+                          // Prevents resetting the selected image back to null if the user cancels the action.
+                          if (data != null) {
+                            setState(() => _selectedImage = data);
+                          }
+                        },
+                      ),
+                      SizedBox(height: size.height * 0.05),
+                      Text('Profile Title', style: textStyle),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: AuthTextField(controller: _profileTitle),
+                      ),
+                      Text('First Name', style: textStyle),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: AuthTextField(controller: _firstNameController),
+                      ),
+                      Text('Last Name', style: textStyle),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: AuthTextField(controller: _lastNameController),
+                      ),
+                      Text('Job', style: textStyle),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: AuthTextField(controller: _jobController),
+                      ),
+                      Text('Company', style: textStyle),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: AuthTextField(controller: _companyController),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      AuthButton(
+                        onTap: () async => saveAll(),
+                        text: 'Save',
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: size.height * 0.05),
-                Text('Profile Title', style: textStyle),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(controller: _profileTitle),
-                ),
-                Text('First Name', style: textStyle),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(controller: _firstNameController),
-                ),
-                Text('Last Name', style: textStyle),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(controller: _lastNameController),
-                ),
-                Text('Job', style: textStyle),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(controller: _jobController),
-                ),
-                Text('Company', style: textStyle),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: AuthTextField(controller: _companyController),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                AuthButton(
-                  onTap: () async => saveAll(),
-                  text: 'Save',
-                  loading: _loading,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 

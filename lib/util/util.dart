@@ -14,7 +14,8 @@ import 'package:tapea/widget/notification_box.dart';
 String? getIdentifier(BuildContext context) {
   final provider = context.read<FirebaseAuthService>();
   final User? user = provider.user;
-  return user!.uid;
+  if (user == null) return null;
+  return user.uid;
 }
 
 Future<Uint8List?> pickImage() async {
@@ -23,10 +24,10 @@ Future<Uint8List?> pickImage() async {
   );
   if (result != null) {
     if (kIsWeb) {
-      // TODO: MAKE IT WORK ON WEB USING
-      // result.files.single.bytes;
+      return Future(() => result.files.single.bytes);
+    } else {
+      return await File(result.files.single.path!).readAsBytes();
     }
-    return await File(result.files.single.path!).readAsBytes();
   } else {
     return null;
   }

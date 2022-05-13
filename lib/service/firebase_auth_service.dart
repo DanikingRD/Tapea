@@ -80,5 +80,5 @@ class FirebaseAuthService {
 
   bool get isEmailVerified => _instance.currentUser!.emailVerified;
 
-  User? get user => _instance.currentUser!;
+  User? get user => _instance.currentUser;
 }

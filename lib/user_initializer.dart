@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/screen/auth/default_profile/profile_setup.dart';
-import 'package:tapea/screen/auth/sign_up/sign_up_screen.dart';
+import 'package:tapea/screen/auth/login/login_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
-import 'package:tapea/widget/loading_indicator.dart';
 
 class UserInitializer extends StatefulWidget {
   const UserInitializer({
@@ -20,16 +19,17 @@ class UserInitializer extends StatefulWidget {
 }
 
 class _UserInitializerState extends State<UserInitializer> {
-  late final Future<bool> hasUser;
+  late final Future<bool?>? hasUser;
   @override
   void initState() {
     super.initState();
     hasUser = checkUser();
   }
 
-  Future<bool> checkUser() async {
+  Future<bool?>? checkUser() async {
     final database = context.read<FirestoreDatabaseService>();
-    return database.containsUser(getIdentifier(context)!);
+    final String? id = getIdentifier(context);
+    return id != null ? database.containsUser(id) : null;
   }
 
   @override
@@ -42,7 +42,7 @@ class _UserInitializerState extends State<UserInitializer> {
           if (!service.isEmailVerified) {
             return const VerificationScreen();
           } else {
-            return FutureBuilder<bool>(
+            return FutureBuilder<bool?>(
               future: hasUser,
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
@@ -52,13 +52,13 @@ class _UserInitializerState extends State<UserInitializer> {
                     return const ProfileSetupScreen();
                   }
                 } else {
-                  return const LoadingIndicator();
+                  return const LoginScreen();
                 }
               }),
             );
           }
         } else {
-          return const SignUpScreen();
+          return const LoginScreen();
         }
       },
     );

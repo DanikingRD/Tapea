@@ -39,11 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         msg: msg,
       ),
-      onSuccess: (User? user) => logInUser(user!.uid),
+      onSuccess: (User? user) async => await logInUser(user!.uid),
     );
   }
 
-  void logInUser(String id) async {
+  Future<void> logInUser(String id) async {
     final database = context.read<FirestoreDatabaseService>();
     final FirebaseAuthService service = context.read<FirebaseAuthService>();
     if (!service.isEmailVerified) {
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // If there is no record, create a new profile
       Navigator.pushNamed(context, Routes.profileSetup);
     } else {
-      Navigator.pushNamedAndRemoveUntil(context, Routes.home, (_) => false);
+      Navigator.pushReplacementNamed(context, Routes.home);
     }
   }
 
