@@ -39,26 +39,21 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         msg: msg,
       ),
-      onSuccess: (User? user) async {
-        if (!service.isEmailVerified) {
-          Navigator.pushNamed(context, Routes.verification);
-        } else {
-          await onLoggedIn(user!.uid);
-        }
-      },
+      onSuccess: (User? user) => logInUser(user!.uid),
     );
   }
 
-  Future<void> onLoggedIn(String id) async {
+  void logInUser(String id) async {
     final database = context.read<FirestoreDatabaseService>();
-    final bool exists = await database.containsUser(id);
-    final String route;
-    if (!exists) {
-      route = Routes.profileSetup;
+    final FirebaseAuthService service = context.read<FirebaseAuthService>();
+    if (!service.isEmailVerified) {
+      Navigator.pushNamed(context, Routes.verification);
+    } else if (!await database.containsUser(id)) {
+      // If there is no record, create a new profile
+      Navigator.pushNamed(context, Routes.profileSetup);
     } else {
-      route = Routes.home;
+      Navigator.pushNamedAndRemoveUntil(context, Routes.home, (_) => false);
     }
-    Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
   }
 
   bool hasEmptyInputs() {

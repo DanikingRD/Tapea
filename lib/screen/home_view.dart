@@ -63,22 +63,6 @@ class _HomeViewState extends State<HomeView> {
     return notifier.profile;
   }
 
-  void checkUser() {
-    final service = context.read<FirebaseAuthService>();
-    String? route;
-    if (service.user == null) {
-      route = Routes.signUp;
-    } else if (!service.isEmailVerified) {
-      route = Routes.verification;
-    } else {
-      route = Routes.profileEditor;
-    }
-    // The widget is hasn't completely initialized
-    Future(() {
-      Navigator.pushNamedAndRemoveUntil(context, route!, (_) => false);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,12 +84,7 @@ class _HomeViewState extends State<HomeView> {
               children: widget.views,
             );
           } else {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LoadingIndicator();
-            } else {
-              checkUser();
-              return const LoadingIndicator();
-            }
+            return const LoadingIndicator();
           }
         },
       ),

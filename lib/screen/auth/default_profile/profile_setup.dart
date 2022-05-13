@@ -15,14 +15,14 @@ import 'package:tapea/util/util.dart';
 import 'package:tapea/widget/auth_button.dart';
 import 'package:tapea/widget/auth_text_field.dart';
 
-class ProfileSetup extends StatefulWidget {
-  const ProfileSetup({Key? key}) : super(key: key);
+class ProfileSetupScreen extends StatefulWidget {
+  const ProfileSetupScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfileSetup> createState() => _ProfileSetupState();
+  State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
 }
 
-class _ProfileSetupState extends State<ProfileSetup> {
+class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final TextEditingController _profileTitle = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -93,6 +93,9 @@ class _ProfileSetupState extends State<ProfileSetup> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: AuthTextField(controller: _companyController),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 AuthButton(
                   onTap: () async => saveAll(),

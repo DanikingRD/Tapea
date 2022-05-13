@@ -7,7 +7,8 @@
         {
             "name": "Tapea",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            
         },
         {
             "name": "Tapea (profile mode)",

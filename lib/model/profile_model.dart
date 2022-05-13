@@ -1,4 +1,3 @@
-import 'package:tapea/constants.dart';
 import 'package:tapea/model/field/company_website_field.dart';
 import 'package:tapea/model/field/discord_field.dart';
 import 'package:tapea/model/field/email_field.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:tapea/screen/auth/default_profile/profile_setup.dart';
 import 'package:tapea/screen/auth/login/login_screen.dart';
 import 'package:tapea/screen/auth/sign_up/sign_up_screen.dart';
 import 'package:tapea/screen/auth/verification_screen.dart';
-import 'package:tapea/screen/auth/profile_setup.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/screen/profile/components/editor/profile_editor_screen.dart';
 import 'package:tapea/screen/profile/components/field/phone_number_field_screen.dart';
@@ -70,7 +70,8 @@ class Routes {
           settings: settings,
         );
       case profileSetup:
-        return bottomToTop(screen: const ProfileSetup(), settings: settings);
+        return bottomToTop(
+            screen: const ProfileSetupScreen(), settings: settings);
       case home:
         return fade(
           screen: const HomeScreen(),

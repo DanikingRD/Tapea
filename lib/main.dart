@@ -11,14 +11,17 @@ import 'package:tapea/firebase_options.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/provider/user_notifier.dart';
 import 'package:tapea/routes.dart';
+import 'package:tapea/screen/auth/default_profile/profile_setup.dart';
 import 'package:tapea/screen/auth/login/login_screen.dart';
+import 'package:tapea/screen/auth/sign_up/sign_up_screen.dart';
+import 'package:tapea/screen/auth/verification_screen.dart';
 import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firebase_storage_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
+import 'package:tapea/user_initializer.dart';
 import 'package:tapea/util/colors.dart' as colors;
 import 'package:tapea/util/glowless_scroll_behaviour.dart';
-import 'package:tapea/util/responsive.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,11 +32,11 @@ void main(List<String> args) async {
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent),
   );
-  runApp(const AppInitializer());
+  runApp(const App());
 }
 
-class AppInitializer extends StatelessWidget {
-  const AppInitializer({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +88,7 @@ class AppInitializer extends StatelessWidget {
           ),
         ),
         themeMode: ThemeMode.light,
-        home: const AuthListener(
-          root: LoginScreen(),
-          home: HomeScreen(),
-        ),
+        home: const UserInitializer(),
         onGenerateRoute: Routes.build,
       ),
     );

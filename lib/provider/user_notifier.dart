@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/model/user_model.dart';
-import 'package:tapea/routes.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 
