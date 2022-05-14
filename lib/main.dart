@@ -26,18 +26,16 @@ void main(List<String> args) async {
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent),
   );
-  runApp(const App());
-}
-
-class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
+  final service = FirebaseAuthService(FirebaseAuth.instance);
+  runApp(
+    MultiProvider(
       providers: [
         Provider<FirebaseAuthService>(
-          create: (_) => FirebaseAuthService(FirebaseAuth.instance),
+          create: (_) => service,
+        ),
+        StreamProvider<User?>(
+          create: (_) => service.authStateChanges,
+          initialData: null,
         ),
         Provider<FirestoreDatabaseService>(
           create: (_) => FirestoreDatabaseService(FirebaseFirestore.instance),
@@ -52,39 +50,48 @@ class App extends StatelessWidget {
           create: (_) => ProfileNotifier(),
         )
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Tapea',
-        scrollBehavior: const GlowlessScrollBehaviour(),
-        // Light theme
-        theme: ThemeData(
-          brightness: Brightness.light,
-          scaffoldBackgroundColor: colors.kBackgroundColor,
-          fontFamily: 'Montserrat',
-          appBarTheme: AppBarTheme.of(context).copyWith(
-            backgroundColor: colors.kBackgroundColor,
-            elevation: 0,
-            titleTextStyle: const TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: 20,
-              color: colors.kPrimaryColor,
-              fontWeight: FontWeight.w600,
-            ),
-            iconTheme: const IconThemeData(
-              color: kRedColor,
-            ),
+      child: const App(),
+    ),
+  );
+}
+
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Tapea',
+      scrollBehavior: const GlowlessScrollBehaviour(),
+      // Light theme
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: colors.kBackgroundColor,
+        fontFamily: 'Montserrat',
+        appBarTheme: AppBarTheme.of(context).copyWith(
+          backgroundColor: colors.kBackgroundColor,
+          elevation: 0,
+          titleTextStyle: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 20,
+            color: colors.kPrimaryColor,
+            fontWeight: FontWeight.w600,
           ),
-          primarySwatch: Colors.red,
-          textButtonTheme: TextButtonThemeData(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(kRedColor),
-            ),
+          iconTheme: const IconThemeData(
+            color: kRedColor,
           ),
         ),
-        themeMode: ThemeMode.light,
-        home: const UserInitializer(),
-        onGenerateRoute: Routes.build,
+        primarySwatch: Colors.red,
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(kRedColor),
+          ),
+        ),
       ),
+      themeMode: ThemeMode.light,
+      home: const UserInitializer(),
+      onGenerateRoute: Routes.build,
     );
   }
 }

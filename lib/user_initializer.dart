@@ -8,6 +8,7 @@ import 'package:tapea/screen/home_screen.dart';
 import 'package:tapea/service/firebase_auth_service.dart';
 import 'package:tapea/service/firestore_datadase_service.dart';
 import 'package:tapea/util/util.dart';
+import 'package:tapea/widget/loading_indicator.dart';
 
 class UserInitializer extends StatefulWidget {
   const UserInitializer({
@@ -19,48 +20,56 @@ class UserInitializer extends StatefulWidget {
 }
 
 class _UserInitializerState extends State<UserInitializer> {
-  late final Future<bool?>? hasUser;
+  late final Future<bool>? hasUser;
   @override
   void initState() {
     super.initState();
-    hasUser = checkUser();
+    String? id = getIdentifier(context);
+    if (id != null) {
+      hasUser = checkUser(id);
+    } else {
+      hasUser = null;
+    }
   }
 
-  Future<bool?>? checkUser() async {
+  Future<bool> checkUser(String id) async {
     final database = context.read<FirestoreDatabaseService>();
-    final String? id = getIdentifier(context);
-    return id != null ? database.containsUser(id) : null;
+    return database.containsUser(id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final service = context.watch<FirebaseAuthService>();
-    return StreamBuilder<User?>(
-      stream: service.authStateChanges,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          if (!service.isEmailVerified) {
-            return const VerificationScreen();
+    final user = context.watch<User?>();
+    // Signed in
+    if (user != null) {
+      if (!user.emailVerified) {
+        return const VerificationScreen();
+      }
+      return FutureBuilder<bool>(
+        future: hasUser,
+        builder: ((BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.data != null) {
+            if (snapshot.data!) {
+              // There is a record of this user
+              return const HomeScreen();
+            } else {
+              // This is a new user without record
+              return const ProfileSetupScreen();
+            }
           } else {
-            return FutureBuilder<bool?>(
-              future: hasUser,
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data!) {
-                    return const HomeScreen();
-                  } else {
-                    return const ProfileSetupScreen();
-                  }
-                } else {
-                  return const LoginScreen();
-                }
-              }),
-            );
+            // Data is loading
+            if (ConnectionState.waiting == snapshot.connectionState) {
+              return const LoadingIndicator();
+            } else {
+              // The data never arrived?.
+              return const LoginScreen();
+            }
           }
-        } else {
-          return const LoginScreen();
-        }
-      },
-    );
+        }),
+      );
+    } else {
+      // Not signed in
+      return const LoginScreen();
+    }
   }
 }
