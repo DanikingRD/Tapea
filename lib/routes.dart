@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tapea/screen/auth/default_profile/profile_setup.dart';
 import 'package:tapea/screen/auth/login/login_screen.dart';
@@ -185,8 +186,19 @@ class Routes {
           settings: settings,
         );
       default:
-        throw ('Tried to access an unregistered named route');
+        return _errorRoute(settings);
     }
+  }
+
+  static Route<dynamic> _errorRoute(RouteSettings settings) {
+    return fade(
+      screen: Scaffold(
+        appBar: AppBar(
+          title: const Text('Page not found'),
+        ),
+      ),
+      settings: settings,
+    );
   }
 
   static Transition bottomToTop({

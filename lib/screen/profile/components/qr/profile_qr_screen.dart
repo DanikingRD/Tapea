@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/screen/profile/components/qr/components/qr_card.dart';
+import 'package:tapea/service/firebase_dynamic_link_service.dart';
 
 class ProfileQrScreen extends StatelessWidget {
   const ProfileQrScreen({Key? key}) : super(key: key);
@@ -87,8 +88,12 @@ class ProfileQrScreen extends StatelessWidget {
     );
   }
 
-  void getLink() {
+  void getLink() async {
     // Deep link implementation
-    print('getLink()');
+    String link = await FirebaseDynamicLinkService.createDynamicLink(
+      false,
+      '/sign_up',
+    );
+    print(link);
   }
 }

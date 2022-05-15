@@ -10,3 +10,4 @@ const double kDesktopScreenWidth = 1200;
 const kSplashRadius = Material.defaultSplashRadius * 0.70; // 70%
 const kHomeBgColor = Color.fromARGB(255, 253, 251, 244);
 const kProgressIndicatorBox = Color.fromARGB(255, 234, 226, 203);
+const String kAppLink = 'https://digitalprofile.page.link';

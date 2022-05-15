@@ -1,28 +1,30 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tapea/constants.dart';
 import 'package:tapea/model/profile_model.dart';
 
 class FirebaseDynamicLinkService {
-  const FirebaseDynamicLinkService({
+  FirebaseDynamicLinkService({
     Key? key,
   });
 
-  static Future<String> createDynamicLink(
-      {required ProfileModel profile, required bool shortLink}) async {
-    final DynamicLinkParameters dynLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://digitalprofile.page.link"),
-      uriPrefix: "https://google.com",
-      androidParameters: AndroidParameters(
-        fallbackUrl: Uri.parse('https://tapea.do'),
-        packageName: "com.example.tapea",
-        minimumVersion: 30,
+  static Future<String> createDynamicLink(bool short, String link) async {
+    final dynLinkInstance = FirebaseDynamicLinks.instance;
+    final DynamicLinkParameters params = DynamicLinkParameters(
+      link: Uri.parse(kAppLink + link),
+      uriPrefix: kAppLink,
+      androidParameters: const AndroidParameters(
+        packageName: 'com.example.tapea',
       ),
     );
-
-    if (shortLink) {
-      var result =
-          await FirebaseDynamicLinks.instance.buildShortLink(dynLinkParams);
+    if (short) {
+      final ShortDynamicLink shortLink = await dynLinkInstance.buildShortLink(
+        params,
+      );
+      return shortLink.shortUrl.toString();
+    } else {
+      final Uri uri = await dynLinkInstance.buildLink(params);
+      return uri.toString();
     }
-    return Future(() => '');
   }
 }
