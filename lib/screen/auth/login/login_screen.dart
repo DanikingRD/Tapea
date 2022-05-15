@@ -46,13 +46,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> logInUser(String id) async {
     final database = context.read<FirestoreDatabaseService>();
     final FirebaseAuthService service = context.read<FirebaseAuthService>();
-    if (!service.isEmailVerified) {
+    if (!service.user!.emailVerified) {
       Navigator.pushNamed(context, Routes.verification);
     } else if (!await database.containsUser(id)) {
       // If there is no record, create a new profile
       Navigator.pushNamed(context, Routes.profileSetup);
     } else {
-      Navigator.pushReplacementNamed(context, Routes.home);
+      Navigator.pushNamedAndRemoveUntil(context, Routes.home, (_) => false);
     }
   }
 

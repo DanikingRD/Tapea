@@ -67,7 +67,7 @@ class VerificationScreen extends StatelessWidget {
 
   void resendVerification(BuildContext context) async {
     final FirebaseAuthService service = context.read<FirebaseAuthService>();
-    if (!service.isEmailVerified) {
+    if (service.user!.emailVerified) {
       try {
         await service.sendEmailVerification();
         notify(
@@ -88,7 +88,7 @@ class VerificationScreen extends StatelessWidget {
       notify(msg: exception.message!, context: context);
       return null;
     }
-    if (service.isEmailVerified) {
+    if (service.user!.emailVerified) {
       notify(
         context: context,
         msg: 'Your email has been successfully verified!',

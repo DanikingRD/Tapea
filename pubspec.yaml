@@ -25,8 +25,8 @@ dependencies:
   firebase_auth: ^3.3.14
   cloud_firestore: ^3.1.12
   firebase_storage: ^10.2.12
-  google_sign_in: ^5.3.0
-  font_awesome_flutter: ^10.1.0
+  firebase_dynamic_links: ^4.2.3
+  google_sign_in: ^5.3.0  
   # State managemenet
   provider: ^6.0.2
   # Animations
@@ -41,6 +41,7 @@ dependencies:
   url_launcher: ^6.1.0
   flutter_colorpicker: ^1.0.3
   contacts_service: ^0.6.3
+  font_awesome_flutter: ^10.1.0
 
 
 dev_dependencies:

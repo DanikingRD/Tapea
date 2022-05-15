@@ -20,7 +20,7 @@ import 'package:tapea/screen/profile/components/field/twitch_field_screen.dart';
 import 'package:tapea/screen/profile/components/field/twitter_field_screen.dart';
 import 'package:tapea/screen/profile/components/field/whatsapp_field_screen.dart';
 import 'package:tapea/screen/profile/components/field/youtube_field_screen.dart';
-import 'package:tapea/screen/profile/profile_qr_screen.dart';
+import 'package:tapea/screen/profile/components/qr/profile_qr_screen.dart';
 import 'package:tapea/screen/welcome_screen.dart';
 import 'package:tapea/util/transition.dart';
 

@@ -11,7 +11,7 @@ import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/routes.dart';
 import 'package:tapea/screen/profile/components/floating_sender_button.dart';
-import 'package:tapea/screen/settings/settings_view.dart';
+import 'package:tapea/util/responsive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileView extends StatefulWidget {
@@ -44,19 +44,21 @@ class _ProfileViewState extends State<ProfileView> {
         ],
       ),
       backgroundColor: kHomeBgColor,
-      body: ListView(
-        children: [
-          getMainInfo(profile),
-          ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: profile.fields.length,
-            itemBuilder: (BuildContext context, int index) {
-              final ProfileField field = profile.fields[index];
-              return getField(context: context, field: field, index: index);
-            },
-          )
-        ],
+      body: Responsive(
+        child: ListView(
+          children: [
+            getMainInfo(profile),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: profile.fields.length,
+              itemBuilder: (BuildContext context, int index) {
+                final ProfileField field = profile.fields[index];
+                return getField(context: context, field: field, index: index);
+              },
+            )
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: const QrSenderButton(),

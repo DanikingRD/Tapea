@@ -78,7 +78,5 @@ class FirebaseAuthService {
   /// Refreshes the current user, if signed in.
   Future<void> reloadUser() => _instance.currentUser!.reload();
 
-  bool get isEmailVerified => _instance.currentUser!.emailVerified;
-
   User? get user => _instance.currentUser;
 }

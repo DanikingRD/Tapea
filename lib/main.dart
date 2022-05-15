@@ -33,10 +33,6 @@ void main(List<String> args) async {
         Provider<FirebaseAuthService>(
           create: (_) => service,
         ),
-        StreamProvider<User?>(
-          create: (_) => service.authStateChanges,
-          initialData: null,
-        ),
         Provider<FirestoreDatabaseService>(
           create: (_) => FirestoreDatabaseService(FirebaseFirestore.instance),
         ),

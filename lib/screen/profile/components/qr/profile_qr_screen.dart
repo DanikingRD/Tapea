@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tapea/provider/profile_notifier.dart';
+import 'package:tapea/screen/profile/components/qr/components/qr_card.dart';
 
 class ProfileQrScreen extends StatelessWidget {
   const ProfileQrScreen({Key? key}) : super(key: key);
@@ -66,10 +67,28 @@ class ProfileQrScreen extends StatelessWidget {
                   ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            QrCard(
+              title: 'Copy Link',
+              icon: Icons.copy,
+              onClick: getLink,
+            ),
+            QrCard(
+              title: 'Send QR code',
+              icon: Icons.send,
+              onClick: () {},
+            ),
           ],
         ),
       ),
       backgroundColor: notifier.color,
     );
+  }
+
+  void getLink() {
+    // Deep link implementation
+    print('getLink()');
   }
 }

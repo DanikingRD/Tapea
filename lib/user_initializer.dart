@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tapea/screen/auth/default_profile/profile_setup.dart';
@@ -20,15 +21,15 @@ class UserInitializer extends StatefulWidget {
 }
 
 class _UserInitializerState extends State<UserInitializer> {
-  late final Future<bool>? hasUser;
+  late final Future<bool>? hasRecord;
   @override
   void initState() {
     super.initState();
     String? id = getIdentifier(context);
     if (id != null) {
-      hasUser = checkUser(id);
+      hasRecord = checkUser(id);
     } else {
-      hasUser = null;
+      hasRecord = null;
     }
   }
 
@@ -39,37 +40,32 @@ class _UserInitializerState extends State<UserInitializer> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<User?>();
-    // Signed in
-    if (user != null) {
-      if (!user.emailVerified) {
-        return const VerificationScreen();
-      }
-      return FutureBuilder<bool>(
-        future: hasUser,
-        builder: ((BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.data != null) {
-            if (snapshot.data!) {
-              // There is a record of this user
-              return const HomeScreen();
-            } else {
-              // This is a new user without record
-              return const ProfileSetupScreen();
-            }
-          } else {
-            // Data is loading
-            if (ConnectionState.waiting == snapshot.connectionState) {
-              return const LoadingIndicator();
-            } else {
-              // The data never arrived?.
-              return const LoginScreen();
-            }
-          }
-        }),
-      );
-    } else {
-      // Not signed in
+    final service = context.read<FirebaseAuthService>();
+    if (service.user == null) {
       return const LoginScreen();
     }
+    // User is not null
+    if (!service.user!.emailVerified) {
+      return const VerificationScreen();
+    }
+    // User is signed in with email verified
+    return FutureBuilder(
+      future: hasRecord,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        // Waiting for data
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingIndicator();
+        }
+        if (snapshot.data != null) {
+          // User has a profile
+          if (snapshot.data!) {
+            return const HomeScreen();
+          } else {
+            return const ProfileSetupScreen();
+          }
+        }
+        return const LoginScreen();
+      },
+    );
   }
 }

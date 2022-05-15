@@ -49,13 +49,21 @@ class HeaderBar extends StatelessWidget {
     );
   }
 
+  String _getCode() {
+    if (code == null) return '';
+    return code!;
+  }
+
   Widget getIconTitle(BuildContext context) {
     final theme = Theme.of(context);
+    String text = field is PhoneNumberField
+        ? _getCode() + titleController.text
+        : titleController.text;
     return Row(
       children: [
         Expanded(
           child: Text(
-            code ?? '' + titleController.text,
+            text,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),

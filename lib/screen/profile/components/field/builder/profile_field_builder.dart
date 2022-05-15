@@ -144,7 +144,7 @@ class ProfileFieldScreenBuilderState extends State<ProfileFieldScreenBuilder> {
         ],
       ),
       body: AnimatedBuilder(
-        builder: ((context, child) {
+        builder: ((_, __) {
           return ListView(
             children: [
               HeaderBar(
