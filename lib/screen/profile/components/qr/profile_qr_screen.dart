@@ -1,21 +1,27 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:tapea/model/profile_model.dart';
 import 'package:tapea/provider/profile_notifier.dart';
 import 'package:tapea/screen/profile/components/qr/components/qr_card.dart';
 import 'package:tapea/service/firebase_dynamic_link_service.dart';
+import 'package:tapea/util/util.dart';
 
 class ProfileQrScreen extends StatelessWidget {
-  const ProfileQrScreen({Key? key}) : super(key: key);
+  const ProfileQrScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final notifier = context.read<ProfileNotifier>();
-    final Color foregroundColor =
-        useWhiteForeground(notifier.color) ? Colors.white : Colors.black;
+    final Color foregroundColor = useWhiteForeground(
+      notifier.color,
+    )
+        ? Colors.white
+        : Colors.black;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -74,7 +80,12 @@ class ProfileQrScreen extends StatelessWidget {
             QrCard(
               title: 'Copy Link',
               icon: Icons.copy,
-              onClick: getLink,
+              onClick: () async {
+                final String? id = getIdentifier(context);
+                if (id != null) {
+                  await getLink(id, notifier.profile!);
+                }
+              },
             ),
             QrCard(
               title: 'Send QR code',
@@ -88,12 +99,12 @@ class ProfileQrScreen extends StatelessWidget {
     );
   }
 
-  void getLink() async {
+  Future<void> getLink(String uid, ProfileModel profile) async {
     // Deep link implementation
-    String link = await FirebaseDynamicLinkService.createDynamicLink(
-      false,
-      '/sign_up',
+    String generatedLink = await FirebaseDynamicLinkService.createDynamicLink(
+      uid,
+      profile.index.toString(),
     );
-    print(link);
+    print('generated link: $generatedLink');
   }
 }

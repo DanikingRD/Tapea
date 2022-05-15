@@ -26,6 +26,7 @@ class ProfileModel {
   final String? photoUrl;
   final int color;
   final List<ProfileField> fields;
+  final int index;
 
   const ProfileModel({
     required this.title,
@@ -36,6 +37,7 @@ class ProfileModel {
     this.photoUrl,
     required this.color,
     this.fields = const [],
+    required this.index,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class ProfileModel {
       color: json[FieldIdentifier.color],
       photoUrl: json['photoUrl'],
       fields: fieldsFromJson(json['fields']),
+      index: json[FieldIdentifier.index],
     );
   }
 
@@ -60,6 +63,7 @@ class ProfileModel {
     String? photoUrl,
     int? color,
     List<ProfileField>? fields,
+    int? index,
   }) {
     return ProfileModel(
       title: title ?? this.title,
@@ -70,6 +74,7 @@ class ProfileModel {
       color: color ?? this.color,
       photoUrl: photoUrl ?? this.photoUrl,
       fields: fields ?? this.fields,
+      index: index ?? this.index,
     );
   }
 
@@ -83,6 +88,7 @@ class ProfileModel {
       FieldIdentifier.color: color,
       'photoUrl': photoUrl,
       FieldIdentifier.fields: fieldsToJson(),
+      FieldIdentifier.index: index,
     };
   }
 

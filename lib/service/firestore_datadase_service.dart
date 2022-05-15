@@ -22,20 +22,6 @@ class FirestoreDatabaseService {
     await usersRef().doc(user.id).set(user);
   }
 
-  Future<void> setUserProfile({
-    required String userId,
-    required ProfileModel profile,
-  }) async {
-    await profilesRef(userId: userId).doc(profile.title).set(profile);
-  }
-
-  Future<void> setDefaultUserProfile({
-    required String userId,
-    required ProfileModel profile,
-  }) async {
-    await profilesRef(userId: userId).doc('Default').set(profile);
-  }
-
   Future<UserModel?> readUser({
     required String userId,
     VoidCallback? catchError,
@@ -63,42 +49,21 @@ class FirestoreDatabaseService {
     return doc.exists;
   }
 
-  Future<ProfileModel?> readDefaultProfile({
+  Future<void> setProfile({
     required String userId,
-    VoidCallback? catchError,
+    required ProfileModel profile,
   }) async {
-    final json = await profilesRef(userId: userId).doc('Default').get();
-    if (json.data() == null) {
-      if (catchError != null) {
-        catchError();
-      }
-      return null;
-    } else {
-      return json.data()!;
-    }
+    await profilesRef(userId: userId)
+        .doc(profile.index.toString())
+        .set(profile);
   }
 
   Future<ProfileModel> readProfile({
     required String userId,
-    required String title,
+    required int index,
   }) async {
-    final json = await profilesRef(userId: userId).doc(title).get();
+    final json = await profilesRef(userId: userId).doc(index.toString()).get();
     return json.data()!;
-  }
-
-  Future<void> updateDefaultProfile({
-    required String userId,
-    required Map<String, Object?> data,
-  }) async {
-    await profilesRef(userId: userId).doc('Default').update(data);
-  }
-
-  Future<void> updateProfile({
-    required String userId,
-    required String title,
-    required Map<String, Object?> data,
-  }) async {
-    await profilesRef(userId: userId).doc(title).update(data);
   }
 
   CollectionReference<UserModel> usersRef() {

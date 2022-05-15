@@ -261,7 +261,7 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     final String? id = getIdentifier(context);
     if (id != null) {
       final database = context.read<FirestoreDatabaseService>();
-      await database.setDefaultUserProfile(
+      await database.setProfile(
         userId: id,
         profile: profile.copyWith(
           title: titleField.text,
@@ -278,7 +278,9 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
   Future<void> saveChanges(ProfileModel profile) async {
     if (_dirty || profile.fields.length != _fieldsLength) {
       await updateDatabase(profile);
-      await context.read<ProfileNotifier>().update(context);
+      await context
+          .read<ProfileNotifier>()
+          .update(context: context, index: profile.index);
     }
   }
 
@@ -295,7 +297,10 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
           onAccept: () {
             Navigator.of(context).pop(true);
             // sync with database
-            context.read<ProfileNotifier>().update(context);
+            context.read<ProfileNotifier>().update(
+                  context: context,
+                  index: profile.index,
+                );
           },
           onCancel: () => Navigator.of(context).pop(false),
         );

@@ -30,6 +30,7 @@ class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController();
   late Future<UserModel?> userFuture;
   late Future<ProfileModel?> profileFuture;
+  int defaultProfileIndex = 0;
   int _view = 0;
 
   @override
@@ -59,7 +60,10 @@ class _HomeViewState extends State<HomeView> {
     BuildContext context,
   ) async {
     final ProfileNotifier notifier = context.read<ProfileNotifier>();
-    await notifier.update(context);
+    await notifier.update(
+      context: context,
+      index: defaultProfileIndex,
+    );
     return notifier.profile;
   }
 

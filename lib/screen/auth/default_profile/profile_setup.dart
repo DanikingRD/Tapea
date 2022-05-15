@@ -168,9 +168,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       company: _companyController.text,
       color: kRedColor.value,
       photoUrl: photoUrl,
+      index: 0, // Default profile
     );
     final database = context.read<FirestoreDatabaseService>();
-    return await database.setDefaultUserProfile(
+    return await database.setProfile(
       userId: userId,
       profile: profile,
     );

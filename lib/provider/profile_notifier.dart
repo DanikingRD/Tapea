@@ -17,12 +17,16 @@ class ProfileNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> update(BuildContext context) async {
+  Future<void> update({
+    required BuildContext context,
+    required int index,
+  }) async {
     final String? id = getIdentifier(context);
     if (id != null) {
       final database = context.read<FirestoreDatabaseService>();
-      _profile = await database.readDefaultProfile(
+      _profile = await database.readProfile(
         userId: id,
+        index: index,
       );
       if (_profile != null) {
         _color = Color(_profile!.color).withOpacity(1);

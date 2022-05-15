@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class QrCard extends StatelessWidget {
   final String title;

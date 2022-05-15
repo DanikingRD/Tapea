@@ -96,6 +96,7 @@ class FieldIdentifier {
   static const String tiktok = 'tiktok';
   static const String twitch = 'twitch';
   static const String fields = 'fields';
+  static const String index = 'index';
 }
 
 // Represents a Profile field.
